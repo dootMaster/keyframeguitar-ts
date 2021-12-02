@@ -37,22 +37,34 @@
   }
 } */
 
+.fretboard {
+  display: flexbox;
+  width: 80vw;
+  height: 40vh;
+  align-items: center;
+}
+
+.string {
+  margin-bottom: 1rem;
+}
+
 .fret {
   border: 1px solid black;
   user-select: none;
+  padding: 1rem;
 }
 
 .neutral {
   margin: 1rem;
-  color: black;
+  background-color: white;
 }
 
 .current {
   margin: 1rem;
-  color: blue;
+  background-color: lavender;
 }
 
 .target {
   margin: 1rem;
-  color: red;
+  background-color: salmon;
 }

@@ -1,4 +1,4 @@
-import String from './String'
+import String from './GtrString'
 
 interface GtrStringProps {
   display: string
@@ -15,21 +15,24 @@ interface FretboardProps {
 }
 
 const Fretboard = (props: FretboardProps) => (
-  <>
-  {props.fretboard.map((gtrString, i) =>
-    (
-      <String
-        gtrString={gtrString}
-        i={i}
-        toggleFret={props.toggleFret}
-        accidental={props.accidental}
-        flat={props.flat}
-        sharp={props.sharp}
-        both={props.both}
-      />
-    )
-  )}
-  </>
+  <table className='fretboard'>
+    <tbody>
+      {props.fretboard.map((gtrString, i) =>
+        (
+          <String
+            gtrString={gtrString}
+            i={i}
+            toggleFret={props.toggleFret}
+            accidental={props.accidental}
+            flat={props.flat}
+            sharp={props.sharp}
+            both={props.both}
+            key={i}
+          />
+        )
+      )}
+    </tbody>
+  </table>
 )
 
 export default Fretboard;

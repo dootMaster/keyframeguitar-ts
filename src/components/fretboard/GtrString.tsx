@@ -15,17 +15,18 @@ interface StringProps {
   i: number
 }
 
-const String = (props: StringProps) => (
-  <div>
+const GtrString = (props: StringProps) => (
+  <tr className='string'>
   {props.gtrString.map((fret, j) =>
     (
       <Fret
         {...props}
         {...fret}
         j={j}
+        key={j}
       />
     )
   )}
-  </div>
+  </tr>
 )
-export default String;
+export default GtrString;
