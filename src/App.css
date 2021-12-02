@@ -68,3 +68,8 @@
   margin: 1rem;
   background-color: salmon;
 }
+
+.formsContainer {
+  display: flex;
+  flex-direction: row;
+}

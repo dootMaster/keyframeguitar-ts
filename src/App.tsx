@@ -1,37 +1,32 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css';
 import createFretboard from './components/fretboard/helpers/createFretboard';
 import Fretboard from './components/fretboard/Fretboard';
 import { flat, sharp, both } from './components/fretboard/helpers/stringDict';
-import Form from './components/form/Form'
-
-let standardTuning = [4, 9, 2, 7, 11, 4].reverse();
+import InputForm from './components/form/InputForm'
+import { updateFretboardViaToggle, updateFretboardViaForm } from './components/appHelpers/appHelpers';
 
 function App() {
-  const [tuning, setTuning] = useState(standardTuning);
+  const [tuning, setTuning] = useState([4, 11, 7, 2, 9, 4]); //std tuning
   const [fretboard, setFretboard] = useState(createFretboard(tuning));
   const [accidental, setAccidental] = useState('b'); //flat
-  const [currentForm, setCurrent] = useState([]);
-  const [targetForm, setTarget] = useState([]);
+  const [currentForm, setCurrent] = useState(new Array(12).fill(false));
+  const [targetForm, setTarget] = useState(new Array(12).fill(false));
 
-  const toggleFret = (string: number, fret: number) => {
+  useEffect(() => {
+    formHandler();
+  }, [currentForm, targetForm])
+
+  const toggleFret = (string:number, fret:number) => {
     let copy = [...fretboard];
-    switch(copy[string][fret].display) {
-      case 'neutral':
-        copy[string][fret].display = 'current';
-        break;
-      case 'current':
-        copy[string][fret].display = 'target';
-        break;
-      case 'target':
-        copy[string][fret].display = 'neutral';
-        break;
-    }
+    updateFretboardViaToggle(copy, string, fret);
     setFretboard(copy);
   }
 
-  const currentFormHandler = () => {
-    return
+  const formHandler = () => {
+    let copy = [...fretboard];
+    updateFretboardViaForm(copy, currentForm, targetForm);
+    setFretboard(copy);
   }
 
   const switchAccidental = () => {
@@ -58,20 +53,20 @@ function App() {
         toggleFret={toggleFret}
       />
       <button onClick={() => switchAccidental()}>switch accidental</button>
-      <Form
-        accidental={accidental}
-        type={setCurrent}
-      />
+      <div className='formsContainer'>
+        <InputForm
+          accidental={accidental}
+          form={currentForm}
+          setForm={setCurrent}
+        />
+        <InputForm
+          accidental={accidental}
+          form={targetForm}
+          setForm={setTarget}
+        />
+      </div>
     </div>
   );
 }
 
 export default App;
-
-
-// {fretboard.map((string, i) => {
-//   return <div>{string.map((fret, j) => {
-//     return <span className={fret.display + ` fret`} onClick={() => toggleFret(i, j)}>
-//       {accidental === 'flat' ? flat[fret.dictIndex] : accidental === 'sharp' ? sharp[fret.dictIndex] : both[fret.dictIndex]}
-//       </span>})}
-//     </div>})}

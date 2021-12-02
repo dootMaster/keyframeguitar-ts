@@ -1,11 +1,11 @@
 import Fret from './Fret'
 
-interface FretProps {
+type FretProps = {
   display: string
   dictIndex: number
 }
 
-interface StringProps {
+type StringProps = {
   gtrString: FretProps[]
   toggleFret: Function
   accidental: string
