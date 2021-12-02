@@ -1,4 +1,4 @@
-.App {
+/* .App {
   text-align: center;
 }
 
@@ -35,4 +35,24 @@
   to {
     transform: rotate(360deg);
   }
+} */
+
+.fret {
+  border: 1px solid black;
+  user-select: none;
+}
+
+.neutral {
+  margin: 1rem;
+  color: black;
+}
+
+.current {
+  margin: 1rem;
+  color: blue;
+}
+
+.target {
+  margin: 1rem;
+  color: red;
 }

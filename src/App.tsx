@@ -1,24 +1,54 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState } from 'react';
 import './App.css';
+import { createFretboard } from './components/fretboard/createFretboard'
+import { flat, sharp, both } from './components/fretboard/stringDict'
+
+let standardTuning = [4, 9, 2, 7, 11, 4].reverse();
 
 function App() {
+  const [tuning, setTuning] = useState(standardTuning);
+  const [fretboard, setFretboard] = useState(createFretboard(tuning));
+  const [accidental, setAccidental] = useState('flat');
+
+  function toggleFret(string: number, fret: number) {
+    let copy = [...fretboard];
+    switch(copy[string][fret].display) {
+      case 'neutral':
+        copy[string][fret].display = 'current';
+        break;
+      case 'current':
+        copy[string][fret].display = 'target';
+        break;
+      case 'target':
+        copy[string][fret].display = 'neutral';
+        break;
+    }
+    setFretboard(copy);
+  }
+
+  function switchAccidental() {
+    switch(accidental) {
+      case 'flat':
+        setAccidental('sharp');
+        break;
+      case 'sharp':
+        setAccidental('both');
+        break;
+      case 'both':
+        setAccidental('flat');
+    }
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {fretboard.map((string, i) => {
+        return <div>{string.map((fret, j) => {
+          return <span className={fret.display + ` fret`} onClick={() => toggleFret(i, j)}>
+            {accidental === 'flat' ? flat[fret.dictIndex] : accidental === 'sharp' ? sharp[fret.dictIndex] : both[fret.dictIndex]}
+            </span>})}
+          </div>})}
+
+      <button onClick={() => switchAccidental()}>switch accidental</button>
     </div>
   );
 }
