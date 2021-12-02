@@ -1,19 +1,18 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import './App.css';
-import createFretboard from './components/fretboard/helpers/createFretboard'
+import createFretboard from './components/fretboard/helpers/createFretboard';
 import Fretboard from './components/fretboard/Fretboard';
-import { flat, sharp, both } from './components/fretboard/helpers/stringDict'
+import { flat, sharp, both } from './components/fretboard/helpers/stringDict';
+import Form from './components/form/Form'
 
 let standardTuning = [4, 9, 2, 7, 11, 4].reverse();
 
 function App() {
   const [tuning, setTuning] = useState(standardTuning);
   const [fretboard, setFretboard] = useState(createFretboard(tuning));
-  const [accidental, setAccidental] = useState('flat');
+  const [accidental, setAccidental] = useState('b'); //flat
   const [currentForm, setCurrent] = useState([]);
   const [targetForm, setTarget] = useState([]);
-
-  console.log(fretboard)
 
   const toggleFret = (string: number, fret: number) => {
     let copy = [...fretboard];
@@ -31,16 +30,20 @@ function App() {
     setFretboard(copy);
   }
 
+  const currentFormHandler = () => {
+    return
+  }
+
   const switchAccidental = () => {
     switch(accidental) {
-      case 'flat':
-        setAccidental('sharp');
+      case 'b':
+        setAccidental('#');
         break;
-      case 'sharp':
-        setAccidental('both');
+      case '#':
+        setAccidental('*');
         break;
-      case 'both':
-        setAccidental('flat');
+      case '*':
+        setAccidental('b');
     }
   }
 
@@ -55,6 +58,10 @@ function App() {
         toggleFret={toggleFret}
       />
       <button onClick={() => switchAccidental()}>switch accidental</button>
+      <Form
+        accidental={accidental}
+        type={setCurrent}
+      />
     </div>
   );
 }
