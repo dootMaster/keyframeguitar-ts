@@ -1,7 +1,12 @@
 import String from './String'
 
-type FretboardProps = {
-  fretboard: object[][],
+interface GtrStringProps {
+  display: string
+  dictIndex: number
+}
+
+interface FretboardProps {
+  fretboard: GtrStringProps[][],
   toggleFret: Function,
   accidental: string,
   flat: {[key: number]: string},
@@ -11,10 +16,10 @@ type FretboardProps = {
 
 const Fretboard = (props: FretboardProps) => (
   <>
-  {props.fretboard.map((string, i) =>
+  {props.fretboard.map((gtrString, i) =>
     (
       <String
-        string={string}
+        gtrString={gtrString}
         i={i}
         toggleFret={props.toggleFret}
         accidental={props.accidental}

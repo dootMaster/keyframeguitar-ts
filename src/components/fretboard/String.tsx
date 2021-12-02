@@ -1,37 +1,31 @@
 import Fret from './Fret'
 
-type StringProps = {
-  string: object[],
-  toggleFret: Function,
-  i: number,
-  accidental: string,
+interface FretProps {
+  display: string
+  dictIndex: number
+}
+
+interface StringProps {
+  gtrString: FretProps[]
+  toggleFret: Function
+  accidental: string
   flat: {[key: number]: string},
   sharp: {[key: number]: string},
   both: {[key: number]: string},
-}
-
-type fretType = {
-
+  i: number
 }
 
 const String = (props: StringProps) => (
-  <>
-  {props.string.map((fret, j) =>
+  <div>
+  {props.gtrString.map((fret, j) =>
     (
       <Fret
-        display={fret.display}
-        dictIndex={fret.dictIndex}
-        toggleFret={props.toggleFret}
-        accidental={props.accidental}
-        i={props.i}
+        {...props}
+        {...fret}
         j={j}
-        flat={props.flat}
-        sharp={props.sharp}
-        both={props.both}
       />
     )
   )}
-  </>
+  </div>
 )
-
 export default String;
