@@ -1,14 +1,22 @@
-import { isPropertySignature } from 'typescript'
 import Fret from './Fret'
 
 type StringProps = {
   string: object[],
   toggleFret: Function,
+  i: number,
+  accidental: string,
+  flat: {[key: number]: string},
+  sharp: {[key: number]: string},
+  both: {[key: number]: string},
+}
+
+type fretType = {
 
 }
 
-export default function String(props: StringProps) {
-  return props.string.map((fret, j) =>
+const String = (props: StringProps) => (
+  <>
+  {props.string.map((fret, j) =>
     (
       <Fret
         display={fret.display}
@@ -22,5 +30,8 @@ export default function String(props: StringProps) {
         both={props.both}
       />
     )
-  )
-}
+  )}
+  </>
+)
+
+export default String;

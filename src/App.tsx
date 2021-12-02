@@ -15,7 +15,7 @@ function App() {
 
   console.log(fretboard)
 
-  function toggleFret(string: number, fret: number) {
+  const toggleFret = (string: number, fret: number) => {
     let copy = [...fretboard];
     switch(copy[string][fret].display) {
       case 'neutral':
@@ -31,7 +31,7 @@ function App() {
     setFretboard(copy);
   }
 
-  function switchAccidental() {
+  const switchAccidental = () => {
     switch(accidental) {
       case 'flat':
         setAccidental('sharp');

@@ -9,15 +9,22 @@ type FretboardProps = {
   both: {[key: number]: string},
 }
 
-export default function Fretboard(props: FretboardProps) {
-  return props.fretboard.map((string, i) =>
+const Fretboard = (props: FretboardProps) => (
+  <>
+  {props.fretboard.map((string, i) =>
     (
       <String
         string={string}
         i={i}
         toggleFret={props.toggleFret}
-
+        accidental={props.accidental}
+        flat={props.flat}
+        sharp={props.sharp}
+        both={props.both}
       />
     )
-  )
-}
+  )}
+  </>
+)
+
+export default Fretboard;

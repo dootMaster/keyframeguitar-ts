@@ -11,7 +11,7 @@ type FretProps = {
 }
 
 export default function Fret(props: FretProps) {
-  return <span className={props.display + ` fret`} onClick={() => props.toggleFret(i, j)}>
+  return <span className={props.display + ` fret`} onClick={() => props.toggleFret(props.i, props.j)}>
   {props.accidental === 'flat' ? props.flat[props.dictIndex] : props.accidental === 'sharp' ? props.sharp[props.dictIndex] : props.both[props.dictIndex]}
   </span>
 }
