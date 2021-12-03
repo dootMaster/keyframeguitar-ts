@@ -5,10 +5,10 @@ import Fretboard from './components/fretboard/Fretboard';
 import { flat, sharp, both } from './components/fretboard/helpers/stringDict';
 import InputForm from './components/form/InputForm'
 import { updateFretboardViaToggle, updateFretboardViaForm } from './components/appHelpers/appHelpers';
+import TuningForm from './components/form/TuningForm';
 
 function App() {
-  const [tuning, setTuning] = useState([4, 11, 7, 2, 9, 4]); //std tuning
-  const [fretboard, setFretboard] = useState(createFretboard(tuning));
+  const [fretboard, setFretboard] = useState(createFretboard([4, 11, 7, 2, 9, 4]));
   const [accidental, setAccidental] = useState('b'); //flat
   const [currentForm, setCurrent] = useState(new Array(12).fill(false));
   const [targetForm, setTarget] = useState(new Array(12).fill(false));
@@ -63,6 +63,14 @@ function App() {
           accidental={accidental}
           form={targetForm}
           setForm={setTarget}
+        />
+        <TuningForm
+          accidental={accidental}
+          setFretboard={setFretboard}
+          fretboard={fretboard}
+          formHandler={formHandler}
+          currentForm={currentForm}
+          targetForm={targetForm}
         />
       </div>
     </div>

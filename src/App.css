@@ -69,6 +69,11 @@
   background-color: salmon;
 }
 
+.common {
+  margin: 1rem;
+  background-color: yellow;
+}
+
 .formsContainer {
   display: flex;
   flex-direction: row;
