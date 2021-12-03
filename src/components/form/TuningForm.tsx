@@ -1,6 +1,7 @@
 import { returnsCommonTuningForStringQty } from './helpers/defaultTunings';
 import { updateFretboardViaForm } from '../appHelpers/appHelpers';
 import createFretboard from '../fretboard/helpers/createFretboard';
+import '../../CSS/TuningForm.css';
 
 type GtrString = {
   display: string

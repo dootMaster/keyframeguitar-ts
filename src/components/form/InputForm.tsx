@@ -1,5 +1,6 @@
 import { flats, sharps, both } from './helpers/notes'
 import { useEffect, useState } from 'react';
+import '../../CSS/InputForm.css';
 
 type FormType = {
   accidental: string,

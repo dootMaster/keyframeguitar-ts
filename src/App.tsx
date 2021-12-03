@@ -1,4 +1,4 @@
-import './App.css';
+import './CSS/App.css';
 import { useEffect, useState } from 'react';
 import InputForm from './components/form/InputForm'
 import TuningForm from './components/form/TuningForm';

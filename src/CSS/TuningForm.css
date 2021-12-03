@@ -1,0 +1,10 @@
+.string-qty-label {
+  margin-right: 1rem;
+  user-select: none;
+}
+
+.string-qty-select {
+  position: relative;
+  height: fit-content;
+  width: 80%;
+}

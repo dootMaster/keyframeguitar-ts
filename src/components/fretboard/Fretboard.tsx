@@ -1,4 +1,5 @@
 import String from './GtrString'
+import '../../CSS/Fretboard.css';
 
 interface GtrStringProps {
   display: string
