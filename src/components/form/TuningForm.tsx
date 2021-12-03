@@ -18,7 +18,6 @@ type TargetForm = {
 type PropTypes = {
   accidental: string,
   setFretboard: Function,
-  formHandler: Function,
   fretboard: Array<GtrString>[],
   currentForm: CurrentForm[],
   targetForm: TargetForm[],

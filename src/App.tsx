@@ -68,7 +68,6 @@ function App() {
           accidental={accidental}
           setFretboard={setFretboard}
           fretboard={fretboard}
-          formHandler={formHandler}
           currentForm={currentForm}
           targetForm={targetForm}
         />
