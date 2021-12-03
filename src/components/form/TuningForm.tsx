@@ -22,6 +22,7 @@ type PropTypes = {
   fretboard: Array<GtrString>[],
   currentForm: CurrentForm[],
   targetForm: TargetForm[],
+  setTuning: Function,
 }
 
 const TuningForm = (props:PropTypes) => {
@@ -30,6 +31,7 @@ const TuningForm = (props:PropTypes) => {
 
   const changeStringAmount = (event:React.ChangeEvent<HTMLSelectElement>) => {
     let newTuning = returnsCommonTuningForStringQty(event.currentTarget.value) || standardTuning;
+    props.setTuning(newTuning);
     let newFretboard = createFretboard(newTuning);
     updateFretboardViaForm(newFretboard, props.currentForm, props.targetForm)
     props.setFretboard(newFretboard);

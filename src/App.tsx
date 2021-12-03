@@ -9,6 +9,7 @@ import { updateFretboardViaToggle, updateFretboardViaForm } from './components/a
 
 
 function App() {
+  const [tuning, setTuning] = useState([4, 11, 7, 2, 9, 4]);
   const [fretboard, setFretboard] = useState(createFretboard([4, 11, 7, 2, 9, 4]));
   const [accidental, setAccidental] = useState('b'); //flat...
   //there is no word that exists that describes the collective property of having sharps or flats
@@ -45,6 +46,10 @@ function App() {
     }
   }
 
+  const reset = () => {
+    setFretboard(createFretboard(tuning));
+  }
+
   return (
     <div className="App">
       <Fretboard
@@ -56,7 +61,7 @@ function App() {
         toggleFret={toggleFret}
       />
       <div className='formsContainer'>
-        <button className='acc-button' onClick={() => switchAccidental()}>♭<br/>♯<br/>✶</button>
+        <button className='acc-button' onClick={switchAccidental}>♭<br/>♯<br/>✶</button>
         <InputForm
           accidental={accidental}
           form={currentForm}
@@ -75,7 +80,9 @@ function App() {
           fretboard={fretboard}
           currentForm={currentForm}
           targetForm={targetForm}
+          setTuning={setTuning}
         />
+        <button onClick={reset}>RESET</button>
       </div>
     </div>
   );
