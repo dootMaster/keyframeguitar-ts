@@ -9,7 +9,9 @@ import TuningForm from './components/form/TuningForm';
 
 function App() {
   const [fretboard, setFretboard] = useState(createFretboard([4, 11, 7, 2, 9, 4]));
-  const [accidental, setAccidental] = useState('b'); //flat
+  const [accidental, setAccidental] = useState('b'); //flat...
+  //there is no word that exists that describes the collective property of having sharps or flats
+  //'key' is incorrect. accidental is the word that describes the actual 'b' or '#' character.
   const [currentForm, setCurrent] = useState(new Array(12).fill(false));
   const [targetForm, setTarget] = useState(new Array(12).fill(false));
 
@@ -52,7 +54,7 @@ function App() {
         both={both}
         toggleFret={toggleFret}
       />
-      <button onClick={() => switchAccidental()}>switch accidental</button>
+      <button onClick={() => switchAccidental()}>♭/♯/✶</button>
       <div className='formsContainer'>
         <InputForm
           accidental={accidental}

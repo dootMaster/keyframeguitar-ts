@@ -34,11 +34,11 @@ const TuningForm = (props:PropTypes) => {
 
   return (
   <>
-    <label htmlFor="String Amount">Strings:</label>
-      <select id="String Amount" name="String Amount" onChange={(e) => changeStringAmount(e)}>
+    <label htmlFor="String Amount" className='string-qty-label'>Strings:</label>
+      <select name="String Amount" className='string-qty-select' onChange={(e) => changeStringAmount(e)} defaultValue={6}>
         <option value={4}>{4}</option>
         <option value={5}>{5}</option>
-        <option selected value={6}>{6}</option>
+        <option value={6}>{6}</option>
         <option value={7}>{7}</option>
         <option value={8}>{8}</option>
         <option value={9}>{9}</option>

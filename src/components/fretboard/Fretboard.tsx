@@ -32,6 +32,15 @@ const Fretboard = (props: FretboardProps) => (
         )
       )}
     </tbody>
+    <tfoot>
+      <tr className='fret-dots'>
+        {[0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0].map((fret, i) => {
+          if(fret) return <td>{'•'}</td>
+          if(i === 12) return <td>{'••'}</td>
+          else return <td></td>
+        })}
+      </tr>
+    </tfoot>
   </table>
 )
 

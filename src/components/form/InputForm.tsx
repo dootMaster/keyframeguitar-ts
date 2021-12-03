@@ -27,17 +27,17 @@ const Form = (props:FormType) => {
   }
 
   return (
-    <form>
+    <form className='input-form'>
     {accidental.map((note, i) =>
         (
-          <>
-          <input
-            type='checkbox'
-            id={note}
-            onChange={() => handleChange(i)}
-          />
-          <label htmlFor={note}>{note}</label><br/>
-          </>
+          <div key={i}>
+            <input
+              type='checkbox'
+              id={note}
+              onChange={() => handleChange(i)}
+            />
+            <label htmlFor={note} >{note}</label><br/>
+          </div>
         )
       )
     }
