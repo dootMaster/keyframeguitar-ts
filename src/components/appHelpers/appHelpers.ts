@@ -3,15 +3,7 @@ type GtrString = {
   dictIndex: number
 }
 
-type CurrentForm = {
-  currentForm: boolean,
-}
-
-type TargetForm = {
-  targetForm: boolean,
-}
-
-const updateFretboardViaForm = (fretboard:Array<GtrString[]>, currentForm:CurrentForm[], targetForm:TargetForm[]) => {
+const updateFretboardViaForm = (fretboard:Array<GtrString[]>, currentForm:boolean[], targetForm:boolean[]) => {
   fretboard.forEach((gtrString, i) => {
     gtrString.forEach((fret, j) => {
       let note = fret.dictIndex;

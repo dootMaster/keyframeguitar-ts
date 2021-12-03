@@ -7,15 +7,17 @@ import createFretboard from './components/fretboard/helpers/createFretboard';
 import { flat, sharp, both } from './components/fretboard/helpers/stringDict';
 import { updateFretboardViaToggle, updateFretboardViaForm } from './components/appHelpers/appHelpers';
 
+type GtrString = {
+  display: string
+  dictIndex: number
+}
 
 function App() {
-  const [tuning, setTuning] = useState([4, 11, 7, 2, 9, 4]);
-  const [fretboard, setFretboard] = useState(createFretboard([4, 11, 7, 2, 9, 4]));
-  const [accidental, setAccidental] = useState('b'); //flat...
-  //there is no word that exists that describes the collective property of having sharps or flats
-  //'key' is incorrect. accidental is the word that describes the actual 'b' or '#' character.
-  const [currentForm, setCurrent] = useState(new Array(12).fill(false));
-  const [targetForm, setTarget] = useState(new Array(12).fill(false));
+  const [tuning, setTuning] = useState<number[]>([4, 11, 7, 2, 9, 4]);
+  const [fretboard, setFretboard] = useState<GtrString[][]>(createFretboard([4, 11, 7, 2, 9, 4]));
+  const [accidental, setAccidental] = useState<string>('b');
+  const [currentForm, setCurrent] = useState<boolean[]>(new Array(12).fill(false));
+  const [targetForm, setTarget] = useState<boolean[]>(new Array(12).fill(false));
 
   useEffect(() => {
     formHandler();
@@ -47,6 +49,9 @@ function App() {
   }
 
   const reset = () => {
+    let resetArray = new Array(12).fill(false);
+    setCurrent(resetArray);
+    setTarget(resetArray);
     setFretboard(createFretboard(tuning));
   }
 

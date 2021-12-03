@@ -1,6 +1,7 @@
 import { flats, sharps, both } from './helpers/notes'
 import { useEffect, useState } from 'react';
 import '../../CSS/InputForm.css';
+import Checkbox from './Checkbox'
 
 type FormType = {
   accidental: string,
@@ -33,11 +34,12 @@ const Form = (props:FormType) => {
     {accidental.map((note, i) =>
         (
           <div key={i} className='checkbox-bg'>
-            <input
-              type='checkbox'
-              id={note + props.cssAppend}
-              className={'checkbox-' + props.cssAppend + ' checkbox'}
-              onChange={() => handleChange(i)}
+            <Checkbox
+              i={i}
+              note={note}
+              handleChange={handleChange}
+              cssAppend={props.cssAppend}
+              checked={props.form[i]}
             />
             <label htmlFor={note + props.cssAppend} className='checkbox-label'>{note}</label><br/>
           </div>

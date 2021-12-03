@@ -8,20 +8,12 @@ type GtrString = {
   dictIndex: number
 }
 
-type CurrentForm = {
-  currentForm: boolean,
-}
-
-type TargetForm = {
-  targetForm: boolean,
-}
-
 type PropTypes = {
   accidental: string,
   setFretboard: Function,
   fretboard: Array<GtrString>[],
-  currentForm: CurrentForm[],
-  targetForm: TargetForm[],
+  currentForm: boolean[],
+  targetForm: boolean[],
   setTuning: Function,
 }
 
