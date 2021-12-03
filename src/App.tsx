@@ -1,11 +1,12 @@
-import { useEffect, useState } from 'react';
 import './App.css';
-import createFretboard from './components/fretboard/helpers/createFretboard';
-import Fretboard from './components/fretboard/Fretboard';
-import { flat, sharp, both } from './components/fretboard/helpers/stringDict';
+import { useEffect, useState } from 'react';
 import InputForm from './components/form/InputForm'
-import { updateFretboardViaToggle, updateFretboardViaForm } from './components/appHelpers/appHelpers';
 import TuningForm from './components/form/TuningForm';
+import Fretboard from './components/fretboard/Fretboard';
+import createFretboard from './components/fretboard/helpers/createFretboard';
+import { flat, sharp, both } from './components/fretboard/helpers/stringDict';
+import { updateFretboardViaToggle, updateFretboardViaForm } from './components/appHelpers/appHelpers';
+
 
 function App() {
   const [fretboard, setFretboard] = useState(createFretboard([4, 11, 7, 2, 9, 4]));
@@ -54,17 +55,19 @@ function App() {
         both={both}
         toggleFret={toggleFret}
       />
-      <button onClick={() => switchAccidental()}>♭/♯/✶</button>
       <div className='formsContainer'>
+        <button className='acc-button' onClick={() => switchAccidental()}>♭<br/>♯<br/>✶</button>
         <InputForm
           accidental={accidental}
           form={currentForm}
           setForm={setCurrent}
+          cssAppend={'current'}
         />
         <InputForm
           accidental={accidental}
           form={targetForm}
           setForm={setTarget}
+          cssAppend={'target'}
         />
         <TuningForm
           accidental={accidental}

@@ -25,16 +25,19 @@ type PropTypes = {
 
 const TuningForm = (props:PropTypes) => {
 
+  let standardTuning = [4, 11, 7, 2, 9, 4]
+
   const changeStringAmount = (event:React.ChangeEvent<HTMLSelectElement>) => {
-    let newTuning = returnsCommonTuningForStringQty(event.currentTarget.value) || [4, 11, 7, 2, 9, 4];
+    let newTuning = returnsCommonTuningForStringQty(event.currentTarget.value) || standardTuning;
     let newFretboard = createFretboard(newTuning);
     updateFretboardViaForm(newFretboard, props.currentForm, props.targetForm)
     props.setFretboard(newFretboard);
   }
 
   return (
-  <>
+  <div>
     <label htmlFor="String Amount" className='string-qty-label'>Strings:</label>
+    <br/>
       <select name="String Amount" className='string-qty-select' onChange={(e) => changeStringAmount(e)} defaultValue={6}>
         <option value={4}>{4}</option>
         <option value={5}>{5}</option>
@@ -43,7 +46,7 @@ const TuningForm = (props:PropTypes) => {
         <option value={8}>{8}</option>
         <option value={9}>{9}</option>
       </select>
-  </>
+  </div>
   )
 }
 

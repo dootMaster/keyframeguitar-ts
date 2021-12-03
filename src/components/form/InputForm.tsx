@@ -5,6 +5,7 @@ type FormType = {
   accidental: string,
   form: boolean[],
   setForm: Function,
+  cssAppend: string,
 }
 
 const Form = (props:FormType) => {
@@ -27,16 +28,17 @@ const Form = (props:FormType) => {
   }
 
   return (
-    <form className='input-form'>
+    <form className={'input-form-' + props.cssAppend}>
     {accidental.map((note, i) =>
         (
-          <div key={i}>
+          <div key={i} className='checkbox-bg'>
             <input
               type='checkbox'
-              id={note}
+              id={note + props.cssAppend}
+              className={'checkbox-' + props.cssAppend + ' checkbox'}
               onChange={() => handleChange(i)}
             />
-            <label htmlFor={note} >{note}</label><br/>
+            <label htmlFor={note + props.cssAppend} className='checkbox-label'>{note}</label><br/>
           </div>
         )
       )
