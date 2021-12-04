@@ -1,18 +1,19 @@
-.formsContainer {
+.forms-container {
   position: relative;
   display: flex;
   flex-direction: row;
   user-select: none;
-  left: 20%;
+  margin: auto;
+  justify-content: center;
 }
 
-.acc-button {
+button {
   background-color: white;
   border: 1px solid black;
   border-radius: 5px;
 }
 
-.acc-button:hover {
+button:hover {
   animation: pulse 1s infinite;
 }
 
@@ -20,6 +21,10 @@
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   margin: 2rem;
+}
+
+.input-form-current {
+  margin: 2rem 0rem 2rem 0rem;
 }
 
 .checkbox {

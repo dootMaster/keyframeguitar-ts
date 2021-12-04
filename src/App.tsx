@@ -1,16 +1,13 @@
 import './CSS/App.css';
 import { useEffect, useState } from 'react';
 import InputForm from './components/form/InputForm'
-import TuningForm from './components/form/TuningForm';
 import Fretboard from './components/fretboard/Fretboard';
 import createFretboard from './components/fretboard/helpers/createFretboard';
 import { flat, sharp, both } from './components/fretboard/helpers/stringDict';
 import { updateFretboardViaToggle, updateFretboardViaForm } from './components/appHelpers/appHelpers';
-
-type GtrString = {
-  display: string
-  dictIndex: number
-}
+import { GtrString } from './components/AppTypes';
+import StringQtySelect from './components/form/StringQtySelect';
+import TuningModal from './components/TuningModal/TuningModal';
 
 function App() {
   const [tuning, setTuning] = useState<number[]>([4, 11, 7, 2, 9, 4]);
@@ -18,20 +15,17 @@ function App() {
   const [accidental, setAccidental] = useState<string>('b');
   const [currentForm, setCurrent] = useState<boolean[]>(new Array(12).fill(false));
   const [targetForm, setTarget] = useState<boolean[]>(new Array(12).fill(false));
+  const [showTuningModal, setShowTuningModal] = useState<boolean>(false);
 
   useEffect(() => {
-    formHandler();
+      let copy = [...fretboard];
+      updateFretboardViaForm(copy, currentForm, targetForm);
+      setFretboard(copy);
   }, [currentForm, targetForm])
 
   const toggleFret = (string:number, fret:number) => {
     let copy = [...fretboard];
     updateFretboardViaToggle(copy, string, fret);
-    setFretboard(copy);
-  }
-
-  const formHandler = () => {
-    let copy = [...fretboard];
-    updateFretboardViaForm(copy, currentForm, targetForm);
     setFretboard(copy);
   }
 
@@ -55,8 +49,14 @@ function App() {
     setFretboard(createFretboard(tuning));
   }
 
+  const toggleTuningModal = () => {
+    setShowTuningModal(!showTuningModal);
+  }
+
   return (
     <div className="App">
+      <h1>Key Frame Guitar</h1>
+      <h5>I built this app to help students of the guitar focus on navigating a specific chord change. I hope that you find it useful. - Leslie</h5>
       <Fretboard
         fretboard={fretboard}
         accidental={accidental}
@@ -65,8 +65,7 @@ function App() {
         both={both}
         toggleFret={toggleFret}
       />
-      <div className='formsContainer'>
-        <button className='acc-button' onClick={switchAccidental}>♭<br/>♯<br/>✶</button>
+      <div className='forms-container'>
         <InputForm
           accidental={accidental}
           form={currentForm}
@@ -79,16 +78,28 @@ function App() {
           setForm={setTarget}
           cssAppend={'target'}
         />
-        <TuningForm
-          accidental={accidental}
-          setFretboard={setFretboard}
-          fretboard={fretboard}
-          currentForm={currentForm}
-          targetForm={targetForm}
-          setTuning={setTuning}
-        />
-        <button onClick={reset}>RESET</button>
+        <div className='tools-container'>
+          <StringQtySelect
+            accidental={accidental}
+            setFretboard={setFretboard}
+            fretboard={fretboard}
+            currentForm={currentForm}
+            targetForm={targetForm}
+            setTuning={setTuning}
+          />
+          <br/>
+          <button className='acc-button button' onClick={switchAccidental}>{'♭ ♯ ✶'}</button>
+          <br/>
+          <button className='show-tuning-button' onClick={toggleTuningModal}>{'⑂'}</button>
+          <br/>
+          <button onClick={reset} className='reset-button button'>RESET</button>
+        </div>
       </div>
+      <TuningModal
+        handleClose={toggleTuningModal}
+        show={showTuningModal}
+        tuning={tuning}
+      />
     </div>
   );
 }

@@ -2,3 +2,24 @@
   justify-items: center;
   font-family: 'Source Code Pro';
 }
+
+h1, h5 {
+  text-align: center;
+}
+
+button {
+  width: 100%;
+  text-align: center;
+  margin: .5rem 0 .5rem 0;
+}
+
+.reset-button:hover {
+  animation: reset .5s infinite;
+}
+
+
+@keyframes reset {
+  0% {background-color: white;}
+  50% {background-color: red; color: white}
+  100% {background-color: white;}
+}

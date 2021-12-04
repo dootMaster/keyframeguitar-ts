@@ -2,13 +2,7 @@ import { flats, sharps, both } from './helpers/notes'
 import { useEffect, useState } from 'react';
 import '../../CSS/InputForm.css';
 import Checkbox from './Checkbox'
-
-type FormType = {
-  accidental: string,
-  form: boolean[],
-  setForm: Function,
-  cssAppend: string,
-}
+import { FormType } from './FormTypes/FormTypes';
 
 const Form = (props:FormType) => {
 

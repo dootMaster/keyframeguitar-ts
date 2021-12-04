@@ -1,14 +1,4 @@
-type FretProps = {
-  display: string,
-  dictIndex: number,
-  toggleFret: Function,
-  accidental: string,
-  i: number,
-  j: number,
-  flat: {[key: number]: string},
-  sharp: {[key: number]: string},
-  both: {[key: number]: string},
-}
+import { FretProps } from "./FretboardTypes/FretboardTypes"
 
 export default function Fret(props: FretProps) {
   return <td className={props.display + ` fret`} onClick={() => props.toggleFret(props.i, props.j)}>

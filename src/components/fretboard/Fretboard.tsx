@@ -1,19 +1,6 @@
 import String from './GtrString'
 import '../../CSS/Fretboard.css';
-
-interface GtrStringProps {
-  display: string
-  dictIndex: number
-}
-
-interface FretboardProps {
-  fretboard: GtrStringProps[][],
-  toggleFret: Function,
-  accidental: string,
-  flat: {[key: number]: string},
-  sharp: {[key: number]: string},
-  both: {[key: number]: string},
-}
+import { FretboardProps } from './FretboardTypes/FretboardTypes';
 
 const Fretboard = (props: FretboardProps) => (
   <table className='fretboard'>
