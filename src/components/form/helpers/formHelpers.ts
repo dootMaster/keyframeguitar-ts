@@ -4,8 +4,7 @@ type GtrString = {
 }
 
 const updateFretboardViaForm = (fretboard:Array<GtrString[]>, currentForm:boolean[], targetForm:boolean[]) => {
-  let copy = fretboard;
-  let newFretboard = copy.forEach((gtrString) => {
+  fretboard.forEach((gtrString) => {
     gtrString.forEach((fret) => {
       let note = fret.dictIndex;
       if(currentForm[note] && targetForm[note]) fret.display = 'common';
@@ -14,7 +13,6 @@ const updateFretboardViaForm = (fretboard:Array<GtrString[]>, currentForm:boolea
       else fret.display = 'neutral';
     })
   })
-  return newFretboard
 }
 
 export { updateFretboardViaForm};
