@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import '../../CSS/InputForm.css';
 import Checkbox from './Checkbox'
 import { FormType } from './FormTypes/FormTypes';
+import { updateFretboardViaForm } from './helpers/formHelpers';
 
 const Form = (props:FormType) => {
 
@@ -21,6 +22,10 @@ const Form = (props:FormType) => {
   const handleChange = (position:number) => {
     const updatedNotesState = props.form.map((item, index) => index === position ? !item : item);
     props.setForm(updatedNotesState);
+
+
+    updateFretboardViaForm(props.fretboard, props.currentForm, props.targetForm);
+    props.setFretboard(props.fretboard);
   }
 
   return (

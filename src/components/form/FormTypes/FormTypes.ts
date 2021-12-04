@@ -8,6 +8,10 @@ type FormType = {
   form: boolean[],
   setForm: Function,
   cssAppend: string,
+  fretboard: Array<FretType>[],
+  currentForm: boolean[],
+  targetForm: boolean[],
+  setFretboard: Function,
 }
 
 type StringQtyTypes = {

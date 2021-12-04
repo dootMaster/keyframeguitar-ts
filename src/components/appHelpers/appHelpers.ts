@@ -3,17 +3,7 @@ type GtrString = {
   dictIndex: number
 }
 
-const updateFretboardViaForm = (fretboard:Array<GtrString[]>, currentForm:boolean[], targetForm:boolean[]) => {
-  fretboard.forEach((gtrString, i) => {
-    gtrString.forEach((fret, j) => {
-      let note = fret.dictIndex;
-      if(currentForm[note] && targetForm[note]) fret.display = 'common';
-      else if(currentForm[note] && !targetForm[note]) fret.display = 'current';
-      else if(!currentForm[note] && targetForm[note]) fret.display = 'target';
-      else fret.display = 'neutral';
-    })
-  })
-}
+
 
 const updateFretboardViaToggle = (fretboard:Array<GtrString[]>, string:number, fret:number) => {
   switch(fretboard[string][fret].display) {
@@ -32,4 +22,4 @@ const updateFretboardViaToggle = (fretboard:Array<GtrString[]>, string:number, f
   }
 }
 
-export { updateFretboardViaForm, updateFretboardViaToggle };
+export { updateFretboardViaToggle };

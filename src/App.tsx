@@ -1,10 +1,10 @@
 import './CSS/App.css';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import InputForm from './components/form/InputForm'
 import Fretboard from './components/fretboard/Fretboard';
 import createFretboard from './components/fretboard/helpers/createFretboard';
 import { flat, sharp, both } from './components/fretboard/helpers/stringDict';
-import { updateFretboardViaToggle, updateFretboardViaForm } from './components/appHelpers/appHelpers';
+import { updateFretboardViaToggle } from './components/appHelpers/appHelpers';
 import { GtrString } from './components/AppTypes';
 import StringQtySelect from './components/form/StringQtySelect';
 import TuningModal from './components/TuningModal/TuningModal';
@@ -16,12 +16,6 @@ function App() {
   const [currentForm, setCurrent] = useState<boolean[]>(new Array(12).fill(false));
   const [targetForm, setTarget] = useState<boolean[]>(new Array(12).fill(false));
   const [showTuningModal, setShowTuningModal] = useState<boolean>(false);
-
-  useEffect(() => {
-      let copy = [...fretboard];
-      updateFretboardViaForm(copy, currentForm, targetForm);
-      setFretboard(copy);
-  }, [currentForm, targetForm])
 
   const toggleFret = (string:number, fret:number) => {
     let copy = [...fretboard];
@@ -71,12 +65,20 @@ function App() {
           form={currentForm}
           setForm={setCurrent}
           cssAppend={'current'}
+          fretboard={fretboard}
+          currentForm={currentForm}
+          targetForm={targetForm}
+          setFretboard={setFretboard}
         />
         <InputForm
           accidental={accidental}
           form={targetForm}
           setForm={setTarget}
           cssAppend={'target'}
+          fretboard={fretboard}
+          currentForm={currentForm}
+          targetForm={targetForm}
+          setFretboard={setFretboard}
         />
         <div className='tools-container'>
           <StringQtySelect

@@ -1,5 +1,5 @@
 import { returnsCommonTuningForStringQty } from './helpers/defaultTunings';
-import { updateFretboardViaForm } from '../appHelpers/appHelpers';
+import { updateFretboardViaForm } from './helpers/formHelpers';
 import createFretboard from '../fretboard/helpers/createFretboard';
 import '../../CSS/StringQtySelect.css';
 import { StringQtyTypes } from './FormTypes/FormTypes';
