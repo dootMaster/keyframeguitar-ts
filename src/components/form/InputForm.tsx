@@ -23,9 +23,9 @@ const Form = (props:FormType) => {
     const updatedNotesState = props.form.map((item, index) => index === position ? !item : item);
     props.setForm(updatedNotesState);
 
-
-    updateFretboardViaForm(props.fretboard, props.currentForm, props.targetForm);
-    props.setFretboard(props.fretboard);
+    let copy = [...props.fretboard]
+    updateFretboardViaForm(copy, props.currentForm, props.targetForm);
+    props.setFretboard(copy);
   }
 
   return (
