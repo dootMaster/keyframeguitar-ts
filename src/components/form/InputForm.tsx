@@ -1,35 +1,48 @@
 import { flats, sharps, both } from './helpers/notes'
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import '../../CSS/InputForm.css';
 import Checkbox from './Checkbox'
 import { FormType } from './FormTypes/FormTypes';
 import { updateFretboardViaForm } from './helpers/formHelpers';
 
-const Form = (props:FormType) => {
+const Form = ({ fretboard, appAccidental, form, setForm, setFretboard, currentForm, targetForm, cssAppend }:FormType) => {
 
   const [accidental, setAccidental] = useState(flats);
+
+  // ----
+  let otherForm:boolean[];
+  cssAppend === 'current' ? otherForm = targetForm : otherForm = currentForm;
+  // ----
 
   useEffect(() => {
     handleAccidental();
   })
 
   const handleAccidental = () => {
-    if(props.accidental === 'b') setAccidental(flats);
-    else if(props.accidental === '#') setAccidental(sharps);
-    else setAccidental(both);
+    switch (appAccidental) {
+      case 'b':
+        setAccidental(flats);
+        break;
+      case '#':
+        setAccidental(sharps);
+        break;
+      default:
+        setAccidental(both);
+    }
   }
 
-  const handleChange = (position:number) => {
-    const updatedNotesState = props.form.map((item, index) => index === position ? !item : item);
-    props.setForm(updatedNotesState);
+  const handleChange = useCallback((position:number) => {
+    const updatedNotesState = form.map((item, index) => index === position ? !item : item);
+    setForm(updatedNotesState);
 
-    let copy = [...props.fretboard]
-    updateFretboardViaForm(copy, props.currentForm, props.targetForm);
-    props.setFretboard(copy);
-  }
+
+    let copy = [...fretboard]
+    updateFretboardViaForm(copy, otherForm, updatedNotesState, cssAppend);
+    setFretboard(copy);
+  }, [cssAppend, form, fretboard, setForm, setFretboard, otherForm])
 
   return (
-    <form className={'input-form-' + props.cssAppend}>
+    <form className={'input-form-' + cssAppend}>
     {accidental.map((note, i) =>
         (
           <div key={i} className='checkbox-bg'>
@@ -37,10 +50,10 @@ const Form = (props:FormType) => {
               i={i}
               note={note}
               handleChange={handleChange}
-              cssAppend={props.cssAppend}
-              checked={props.form[i]}
+              cssAppend={cssAppend}
+              checked={form[i]}
             />
-            <label htmlFor={note + props.cssAppend} className='checkbox-label'>{note}</label><br/>
+            <label htmlFor={note + cssAppend} className='checkbox-label'>{note}</label><br/>
           </div>
         )
       )

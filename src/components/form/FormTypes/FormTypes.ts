@@ -4,7 +4,7 @@ type FretType = {
 }
 
 type FormType = {
-  accidental: string,
+  appAccidental: string,
   form: boolean[],
   setForm: Function,
   cssAppend: string,

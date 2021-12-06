@@ -61,7 +61,7 @@ function App() {
       />
       <div className='forms-container'>
         <InputForm
-          accidental={accidental}
+          appAccidental={accidental}
           form={currentForm}
           setForm={setCurrent}
           cssAppend={'current'}
@@ -71,7 +71,7 @@ function App() {
           setFretboard={setFretboard}
         />
         <InputForm
-          accidental={accidental}
+          appAccidental={accidental}
           form={targetForm}
           setForm={setTarget}
           cssAppend={'target'}

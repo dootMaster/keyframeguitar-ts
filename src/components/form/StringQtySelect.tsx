@@ -5,16 +5,16 @@ import '../../CSS/StringQtySelect.css';
 import { StringQtyTypes } from './FormTypes/FormTypes';
 
 
-const StringQtySelect = (props:StringQtyTypes) => {
+const StringQtySelect = ({ setTuning, setFretboard, currentForm, targetForm }:StringQtyTypes) => {
 
   let standardTuning = [4, 11, 7, 2, 9, 4]
 
   const changeStringAmount = (event:React.ChangeEvent<HTMLSelectElement>) => {
     let newTuning = returnsCommonTuningForStringQty(event.currentTarget.value) || standardTuning;
-    props.setTuning(newTuning);
+    setTuning(newTuning);
     let newFretboard = createFretboard(newTuning);
-    updateFretboardViaForm(newFretboard, props.currentForm, props.targetForm)
-    props.setFretboard(newFretboard);
+    updateFretboardViaForm(newFretboard, currentForm, targetForm, 'target')
+    setFretboard(newFretboard);
   }
 
   return (
