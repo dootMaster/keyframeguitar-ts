@@ -13,7 +13,7 @@ const StringQtySelect = ({ setTuning, setFretboard, currentForm, targetForm }:St
     let newTuning = returnsCommonTuningForStringQty(event.currentTarget.value) || standardTuning;
     setTuning(newTuning);
     let newFretboard = createFretboard(newTuning);
-    updateFretboardViaForm(newFretboard, currentForm, targetForm, 'target')
+    updateFretboardViaForm(newFretboard, targetForm, currentForm, 'current')
     setFretboard(newFretboard);
   }
 

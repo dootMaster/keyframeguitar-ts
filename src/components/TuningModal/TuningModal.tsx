@@ -7,7 +7,7 @@ const TuningModal = ({ handleClose, show, tuning }:TuningModalProps) => {
   return (
     <div className={showHideClassName}>
       <section className="tuning-modal-main">
-        {tuning}
+        {'Alternate tunings feature is under construction.'}
         <button onClick={() => handleClose()}>
           {'X'}
         </button>

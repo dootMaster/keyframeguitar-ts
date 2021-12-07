@@ -1,4 +1,4 @@
-import { flats, sharps, both } from './helpers/notes'
+import { flats, sharps, both } from './helpers/notes' // consolidate checkbox data
 import { useEffect, useState, useCallback } from 'react';
 import '../../CSS/InputForm.css';
 import Checkbox from './Checkbox'
@@ -9,11 +9,12 @@ const Form = ({ fretboard, appAccidental, form, setForm, setFretboard, currentFo
 
   const [accidental, setAccidental] = useState(flats);
 
-  // ----
+  // ---- this doesn't need to be evaluated each re-render, but how can we avoid?
   let otherForm:boolean[];
   cssAppend === 'current' ? otherForm = targetForm : otherForm = currentForm;
   // ----
 
+  // is this misusing useEffect? this also doesn't need to be watched every render.
   useEffect(() => {
     handleAccidental();
   })
