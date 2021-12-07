@@ -12,7 +12,7 @@ import TuningModal from './components/TuningModal/TuningModal';
 function App() {
   const [tuning, setTuning] = useState<number[]>([4, 11, 7, 2, 9, 4]);
   const [fretboard, setFretboard] = useState<GtrString[][]>(createFretboard([4, 11, 7, 2, 9, 4]));
-  const [accidental, setAccidental] = useState<string>('b');
+  const [globalAccidental, setGlobalAccidental] = useState<string>('b');
   const [currentForm, setCurrent] = useState<boolean[]>(new Array(12).fill(false));
   const [targetForm, setTarget] = useState<boolean[]>(new Array(12).fill(false));
   const [showTuningModal, setShowTuningModal] = useState<boolean>(false);
@@ -24,15 +24,15 @@ function App() {
   }
 
   const switchAccidental = () => {
-    switch(accidental) {
+    switch(globalAccidental) {
       case 'b':
-        setAccidental('#');
+        setGlobalAccidental('#');
         break;
       case '#':
-        setAccidental('*');
+        setGlobalAccidental('*');
         break;
       case '*':
-        setAccidental('b');
+        setGlobalAccidental('b');
     }
   }
 
@@ -53,7 +53,7 @@ function App() {
       <h5>I built this app to help students of the guitar focus on navigating a specific chord change. I hope that you find it useful. - Leslie</h5>
       <Fretboard
         fretboard={fretboard}
-        accidental={accidental}
+        globalAccidental={globalAccidental}
         flat={flat}
         sharp={sharp}
         both={both}
@@ -61,7 +61,7 @@ function App() {
       />
       <div className='forms-container'>
         <InputForm
-          appAccidental={accidental}
+          globalAccidental={globalAccidental}
           form={currentForm}
           setForm={setCurrent}
           cssAppend={'current'}
@@ -71,7 +71,7 @@ function App() {
           setFretboard={setFretboard}
         />
         <InputForm
-          appAccidental={accidental}
+          globalAccidental={globalAccidental}
           form={targetForm}
           setForm={setTarget}
           cssAppend={'target'}
@@ -82,7 +82,6 @@ function App() {
         />
         <div className='tools-container'>
           <StringQtySelect
-            accidental={accidental}
             setFretboard={setFretboard}
             fretboard={fretboard}
             currentForm={currentForm}
@@ -99,8 +98,13 @@ function App() {
       </div>
       <TuningModal
         handleClose={toggleTuningModal}
+        setTuning={setTuning}
+        setFretboard={setFretboard}
         show={showTuningModal}
         tuning={tuning}
+        globalAccidental={globalAccidental}
+        currentForm={currentForm}
+        targetForm={targetForm}
       />
     </div>
   );

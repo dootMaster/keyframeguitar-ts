@@ -5,9 +5,9 @@ import Checkbox from './Checkbox'
 import { FormType } from './FormTypes/FormTypes';
 import { updateFretboardViaForm } from './helpers/formHelpers';
 
-const Form = ({ fretboard, appAccidental, form, setForm, setFretboard, currentForm, targetForm, cssAppend }:FormType) => {
+const Form = ({ fretboard, globalAccidental, form, setForm, setFretboard, currentForm, targetForm, cssAppend }:FormType) => {
 
-  const [accidental, setAccidental] = useState(flats);
+  const [noteLabels, setNoteLabels] = useState(flats);
 
   // ---- this doesn't need to be evaluated each re-render, but how can we avoid?
   let otherForm:boolean[];
@@ -20,15 +20,15 @@ const Form = ({ fretboard, appAccidental, form, setForm, setFretboard, currentFo
   })
 
   const handleAccidental = () => {
-    switch (appAccidental) {
+    switch (globalAccidental) {
       case 'b':
-        setAccidental(flats);
+        setNoteLabels(flats);
         break;
       case '#':
-        setAccidental(sharps);
+        setNoteLabels(sharps);
         break;
       default:
-        setAccidental(both);
+        setNoteLabels(both);
     }
   }
 
@@ -44,7 +44,7 @@ const Form = ({ fretboard, appAccidental, form, setForm, setFretboard, currentFo
 
   return (
     <form className={'input-form-' + cssAppend}>
-    {accidental.map((note, i) =>
+    {noteLabels.map((note, i) =>
         (
           <div key={i} className='checkbox-bg'>
             <Checkbox

@@ -1,7 +1,7 @@
 import { FretProps } from "./FretboardTypes/FretboardTypes"
 
-export default function Fret(props: FretProps) {
-  return <td className={props.display + ` fret`} onClick={() => props.toggleFret(props.i, props.j)}>
-  {props.accidental === 'b' ? props.flat[props.dictIndex] : props.accidental === '#' ? props.sharp[props.dictIndex] : props.both[props.dictIndex]}
+export default function Fret({ globalAccidental, flat, sharp, both, display, toggleFret, i , j, dictIndex }: FretProps) {
+  return <td className={display + ` fret`} onClick={() => toggleFret(i, j)}>
+  {globalAccidental === 'b' ? flat[dictIndex] : globalAccidental === '#' ? sharp[dictIndex] : both[dictIndex]}
   </td>
 }

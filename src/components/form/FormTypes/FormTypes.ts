@@ -4,7 +4,7 @@ type FretType = {
 }
 
 type FormType = {
-  appAccidental: string,
+  globalAccidental: string,
   form: boolean[],
   setForm: Function,
   cssAppend: string,
@@ -15,7 +15,6 @@ type FormType = {
 }
 
 type StringQtyTypes = {
-  accidental: string,
   setFretboard: Function,
   fretboard: Array<FretType>[],
   currentForm: boolean[],

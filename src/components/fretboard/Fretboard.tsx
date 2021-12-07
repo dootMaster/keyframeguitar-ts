@@ -11,7 +11,7 @@ const Fretboard = (props: FretboardProps) => (
             gtrString={gtrString}
             i={i}
             toggleFret={props.toggleFret}
-            accidental={props.accidental}
+            globalAccidental={props.globalAccidental}
             flat={props.flat}
             sharp={props.sharp}
             both={props.both}
