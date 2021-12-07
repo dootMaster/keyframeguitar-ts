@@ -82,6 +82,7 @@ function App() {
         />
         <div className='tools-container'>
           <StringQtySelect
+             tuning={tuning}
             setFretboard={setFretboard}
             fretboard={fretboard}
             currentForm={currentForm}

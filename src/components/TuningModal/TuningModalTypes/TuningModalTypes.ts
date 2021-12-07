@@ -14,5 +14,6 @@ type SelectNoteProps = {
   labels: string[],
   position: number,
   handleTuningChange: Function,
+  key: string,
 }
 export type { TuningModalProps, SelectNoteProps }

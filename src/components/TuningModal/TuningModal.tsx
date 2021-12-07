@@ -31,25 +31,23 @@ const TuningModal = ({ handleClose, show, tuning, globalAccidental, setTuning, s
   const handleTuningChange = (event:React.ChangeEvent<HTMLSelectElement>, position:number) => {
     let copy = [...tuning];
     copy[position] = parseInt(event.target.value);
-    console.log(copy, 'change index: ' + position);
     setTuning(copy);
     let newFretboard = createFretboard(copy);
     updateFretboardViaForm(newFretboard, targetForm, currentForm, 'current');
     setFretboard(newFretboard);
   }
 
-  let copy = [...tuning].reverse();
-
   return (
     <div className={showHideClassName}>
       <section className="tuning-modal-main">
-        {copy.map((note, i) => {
+        {tuning.map((note, i) => {
           return (
             <SelectNote
               currentNote={note}
               labels={accidentalLabels}
-              position={tuning.length - i - 1}
+              position={i}
               handleTuningChange={handleTuningChange}
+              key={`${i}`}
             />
           )
         })}

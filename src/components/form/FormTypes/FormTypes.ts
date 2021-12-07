@@ -15,6 +15,7 @@ type FormType = {
 }
 
 type StringQtyTypes = {
+  tuning: number[],
   setFretboard: Function,
   fretboard: Array<FretType>[],
   currentForm: boolean[],
