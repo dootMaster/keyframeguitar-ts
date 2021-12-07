@@ -1,19 +1,5 @@
 import Fret from './Fret'
-
-type FretProps = {
-  display: string
-  dictIndex: number
-}
-
-type StringProps = {
-  gtrString: FretProps[]
-  toggleFret: Function
-  accidental: string
-  flat: {[key: number]: string},
-  sharp: {[key: number]: string},
-  both: {[key: number]: string},
-  i: number
-}
+import { StringProps } from './FretboardTypes/FretboardTypes';
 
 const GtrString = (props: StringProps) => (
   <tr className='string'>

@@ -1,18 +1,6 @@
 import String from './GtrString'
-
-interface GtrStringProps {
-  display: string
-  dictIndex: number
-}
-
-interface FretboardProps {
-  fretboard: GtrStringProps[][],
-  toggleFret: Function,
-  accidental: string,
-  flat: {[key: number]: string},
-  sharp: {[key: number]: string},
-  both: {[key: number]: string},
-}
+import '../../CSS/Fretboard.css';
+import { FretboardProps } from './FretboardTypes/FretboardTypes';
 
 const Fretboard = (props: FretboardProps) => (
   <table className='fretboard'>
@@ -23,7 +11,7 @@ const Fretboard = (props: FretboardProps) => (
             gtrString={gtrString}
             i={i}
             toggleFret={props.toggleFret}
-            accidental={props.accidental}
+            globalAccidental={props.globalAccidental}
             flat={props.flat}
             sharp={props.sharp}
             both={props.both}
@@ -32,6 +20,15 @@ const Fretboard = (props: FretboardProps) => (
         )
       )}
     </tbody>
+    <tfoot>
+      <tr className='fret-dots'>
+        {[0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0].map((fret, i) => {
+          if(fret) return <td key={i}>{'•'}</td>
+          if(i === 12) return <td key={i}>{'••'}</td>
+          else return <td key={i}></td>
+        })}
+      </tr>
+    </tfoot>
   </table>
 )
 

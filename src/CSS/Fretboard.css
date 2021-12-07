@@ -1,0 +1,58 @@
+.fretboard {
+  position: relative;
+  height: fit-content;
+  justify-content: center;
+  margin:auto;
+  margin-top: 10%;
+  font-size: 1.5rem;
+}
+
+.string {
+  margin-bottom: 0;
+}
+
+.fret, .fret-dots {
+  border: 1px solid black;
+  user-select: none;
+  padding: 0rem 1rem;
+  text-align: center;
+  border-radius: 5px;
+  width: max-content;
+  transition: background-color 0.5s ease, width 0.5s ease-in-out;
+}
+
+.fret:hover {
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(0.95);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.neutral {
+  margin: 1rem;
+  background-color: white;
+}
+
+.current {
+  margin: 1rem;
+  background-color: plum;
+}
+
+.target {
+  margin: 1rem;
+  background-color: salmon;
+}
+
+.common {
+  margin: 1rem;
+  background-color: orange;
+}

@@ -45,4 +45,4 @@ export const both:dict = {
   11: 'B',
 }
 
-//4, 9, 2, 7, 11, 4 std tuning
+//[4, 11, 7, 2, 9, 4]
