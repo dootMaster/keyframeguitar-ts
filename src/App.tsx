@@ -65,7 +65,6 @@ function App() {
   }
 
   const deleteData = (name:string) => {
-    // localStorage.clear();
     localStorage.removeItem(name);
     setSaveFileList(Object.keys(localStorage).filter(item => item !== 'loglevel'));
   }
@@ -156,6 +155,9 @@ function App() {
         show={showSaveModal}
         saveFileList={saveFileList}
       />
+      <footer>
+        <p>P.S. I'm looking for entry level web development work. Here's my <a href='https://https://dootmaster.github.io/portfolio/'>portfolio</a>.</p>
+      </footer>
     </div>
   );
 }
