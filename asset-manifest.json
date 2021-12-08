@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/keyframeguitar-ts/static/css/main.cfb26cf9.chunk.css",
-    "main.js": "/keyframeguitar-ts/static/js/main.1f4f22da.chunk.js",
-    "main.js.map": "/keyframeguitar-ts/static/js/main.1f4f22da.chunk.js.map",
+    "main.js": "/keyframeguitar-ts/static/js/main.88c3f1a2.chunk.js",
+    "main.js.map": "/keyframeguitar-ts/static/js/main.88c3f1a2.chunk.js.map",
     "runtime-main.js": "/keyframeguitar-ts/static/js/runtime-main.c3916a50.js",
     "runtime-main.js.map": "/keyframeguitar-ts/static/js/runtime-main.c3916a50.js.map",
     "static/js/2.612995c2.chunk.js": "/keyframeguitar-ts/static/js/2.612995c2.chunk.js",
@@ -15,6 +15,6 @@
     "static/js/runtime-main.c3916a50.js",
     "static/js/2.612995c2.chunk.js",
     "static/css/main.cfb26cf9.chunk.css",
-    "static/js/main.1f4f22da.chunk.js"
+    "static/js/main.88c3f1a2.chunk.js"
   ]
 }
