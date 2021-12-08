@@ -3,7 +3,7 @@
   font-family: 'Source Code Pro';
 }
 
-h1, h5 {
+h3, h5 {
   text-align: center;
 }
 
@@ -22,4 +22,9 @@ button {
   0% {background-color: white;}
   50% {background-color: red; color: white}
   100% {background-color: white;}
+}
+
+.vl {
+  border-right: 1px solid black;
+  margin-left: 3rem;
 }

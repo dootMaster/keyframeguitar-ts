@@ -8,6 +8,7 @@ import { updateFretboardViaToggle } from './components/appHelpers/appHelpers';
 import { GtrString } from './components/AppTypes';
 import StringQtySelect from './components/form/StringQtySelect';
 import TuningModal from './components/TuningModal/TuningModal';
+import SaveModal from './components/SaveModal/SaveModal';
 
 function App() {
   const [tuning, setTuning] = useState<number[]>([4, 11, 7, 2, 9, 4]);
@@ -16,6 +17,8 @@ function App() {
   const [currentForm, setCurrent] = useState<boolean[]>(new Array(12).fill(false));
   const [targetForm, setTarget] = useState<boolean[]>(new Array(12).fill(false));
   const [showTuningModal, setShowTuningModal] = useState<boolean>(false);
+  const [showSaveModal, setShowSaveModal] = useState<boolean>(false);
+  const [saveFileList, setSaveFileList] = useState<string[]>(Object.keys(localStorage).filter(item => item !== 'loglevel'));
 
   const toggleFret = (string:number, fret:number) => {
     let copy = [...fretboard];
@@ -36,6 +39,37 @@ function App() {
     }
   }
 
+  const save = (name:string) => {
+    if (name.length > 32 || name.length <= 0 || Object.keys(localStorage).includes('name')) {
+      alert('1-32 char, or name already exists');
+    } else {
+      let saveObject = {
+        fretboard: fretboard,
+        tuning: tuning,
+        currentForm: currentForm,
+        targetForm: targetForm,
+      };
+      let saveData = JSON.stringify(saveObject)
+      localStorage.setItem(name, saveData);
+      setSaveFileList(Object.keys(localStorage).filter(item => item !== 'loglevel'));
+    }
+  }
+
+  const load = (name:string) => {
+    let loadData = JSON.parse(localStorage.getItem(name) || '');
+    let { fretboard, tuning, currentForm, targetForm } = loadData;
+    setFretboard(fretboard);
+    setTuning(tuning);
+    setCurrent(currentForm);
+    setTarget(targetForm);
+  }
+
+  const deleteData = (name:string) => {
+    // localStorage.clear();
+    localStorage.removeItem(name);
+    setSaveFileList(Object.keys(localStorage).filter(item => item !== 'loglevel'));
+  }
+
   const reset = () => {
     let resetArray = new Array(12).fill(false);
     setCurrent(resetArray);
@@ -47,9 +81,13 @@ function App() {
     setShowTuningModal(!showTuningModal);
   }
 
+  const toggleSaveModal = () => {
+    setShowSaveModal(!showSaveModal);
+  }
+
   return (
     <div className="App">
-      <h1>Key Frame Guitar</h1>
+      <h3>Key Frame Guitar</h3>
       <h5>I built this app to help students of the guitar focus on navigating a specific chord change. I hope that you find it useful. - Leslie</h5>
       <Fretboard
         fretboard={fretboard}
@@ -70,6 +108,7 @@ function App() {
           targetForm={targetForm}
           setFretboard={setFretboard}
         />
+        <div className="vl"></div>
         <InputForm
           globalAccidental={globalAccidental}
           form={targetForm}
@@ -92,6 +131,8 @@ function App() {
           <br/>
           <button className='acc-button button' onClick={switchAccidental}>{'♭ ♯ ✶'}</button>
           <br/>
+          <button className='show-save-modal-button' onClick={toggleSaveModal}>{'🖫'}</button>
+          <br/>
           <button className='show-tuning-button' onClick={toggleTuningModal}>{'⑂'}</button>
           <br/>
           <button onClick={reset} className='reset-button button'>RESET</button>
@@ -106,6 +147,14 @@ function App() {
         globalAccidental={globalAccidental}
         currentForm={currentForm}
         targetForm={targetForm}
+      />
+      <SaveModal
+        handleClose={toggleSaveModal}
+        save={save}
+        load={load}
+        deleteData={deleteData}
+        show={showSaveModal}
+        saveFileList={saveFileList}
       />
     </div>
   );
