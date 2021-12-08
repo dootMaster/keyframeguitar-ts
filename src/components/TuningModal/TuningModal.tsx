@@ -9,7 +9,7 @@ import { updateFretboardViaForm } from '../form/helpers/formHelpers';
 const TuningModal = ({ handleClose, show, tuning, globalAccidental, setTuning, setFretboard, currentForm, targetForm }:TuningModalProps) => {
   const showHideClassName = show ? "tuning-modal display-block" : "tuning-modal display-none";
 
-  const [accidentalLabels, setAccidentalLabels] = useState(flats);
+  const [accidentalLabels, setAccidentalLabels] = useState<string[]>(flats);
 
   useEffect(() => {
     handleAccidental();
@@ -51,10 +51,7 @@ const TuningModal = ({ handleClose, show, tuning, globalAccidental, setTuning, s
             />
           )
         })}
-
-        <button onClick={() => handleClose()}>
-          {'X'}
-        </button>
+        <button onClick={() => handleClose()}>{'X'}</button>
       </section>
     </div>
   );
