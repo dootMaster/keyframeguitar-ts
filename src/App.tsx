@@ -156,7 +156,7 @@ function App() {
         saveFileList={saveFileList}
       />
       <footer>
-        <p>P.S. I'm looking for entry level web development work. Here's my <a href="https://dootmaster.github.io/portfolio/">portfolio</a>.</p>
+        <p>P.S. I'm looking for entry level web development work. Here's my <a href="dootmaster.github.io/portfolio/">portfolio</a>.</p>
       </footer>
     </div>
   );
