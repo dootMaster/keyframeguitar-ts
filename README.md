@@ -1,4 +1,4 @@
-# Getting Started with Create React App
+# Key Frame Guitar
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
