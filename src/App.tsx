@@ -1,5 +1,5 @@
 import './CSS/App.css';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import ChordSelector from './components/form/ChordSelector'
 import Fretboard from './components/fretboard/Fretboard';
 import createFretboard from './components/fretboard/helpers/createFretboard';
@@ -12,6 +12,13 @@ import Progression from './components/Progression/Progression';
 import { ProgressionChord } from './components/Progression/Progression';
 
 const SAVE_PREFIX = 'kfg:';
+
+function getInitialTheme(): 'light' | 'dark' {
+  const saved = localStorage.getItem('kfg:theme');
+  if (saved === 'light' || saved === 'dark') return saved;
+  if (window.matchMedia('(prefers-color-scheme: dark)').matches) return 'dark';
+  return 'light';
+}
 
 function getSaveNames(): string[] {
   return Object.keys(localStorage)
@@ -32,7 +39,14 @@ function App() {
 
   const [progression, setProgression] = useState<ProgressionChord[]>([]);
   const [windowIndex, setWindowIndex] = useState(0);
+  const [theme, setTheme] = useState<'light' | 'dark'>(getInitialTheme);
+  const [scrollResetKey, setScrollResetKey] = useState(0);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
+  useEffect(() => {
+    document.body.classList.toggle('dark', theme === 'dark');
+    localStorage.setItem('kfg:theme', theme);
+  }, [theme]);
 
   const colorPair = progression.length >= 2 ? windowIndex % 3 : 0;
 
@@ -182,13 +196,19 @@ function App() {
   }
 
   return (
-    <div className="App" data-color-pair={colorPair}>
+    <div className="App" data-color-pair={colorPair} data-theme={theme}>
       <header className="header">
+        <button className="theme-toggle" onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
+          {theme === 'dark' ? 'Light mode' : 'Dark mode'}
+        </button>
         <h3>Key Frame Guitar</h3>
         <p className="subtitle">Most guitar tools try to do everything. This one does one thing: help you focus on navigating a single chord change. — Leslie</p>
       </header>
       <div className="main">
-        <aside className="sidebar">
+        <button className="sidebar-toggle" onClick={() => setSidebarOpen(!sidebarOpen)}>
+          {sidebarOpen ? 'Hide chords' : 'Show chords'}
+        </button>
+        <aside className={'sidebar' + (sidebarOpen ? ' sidebar-open' : '')}>
           <ChordSelector
             fromForm={fromForm}
             toForm={toForm}
@@ -207,6 +227,7 @@ function App() {
             toggleFret={toggleFret}
             showAllNotes={showAllNotes}
             peekForm={peekForm}
+            scrollResetKey={scrollResetKey}
           />
           <Progression
             progression={progression}
@@ -255,6 +276,7 @@ function App() {
             </span>
             <button className='toolbar-btn' onClick={() => setShowTuningModal(true)}>Tuning</button>
             <button className='toolbar-btn' onClick={() => setShowSaveModal(true)}>Save</button>
+            <button className='toolbar-btn' onClick={() => setScrollResetKey(k => k + 1)}>Center</button>
             <button className='toolbar-btn' onClick={() => window.print()}>Print</button>
             <button className='toolbar-btn reset-button' onClick={reset}>RESET</button>
           </div>

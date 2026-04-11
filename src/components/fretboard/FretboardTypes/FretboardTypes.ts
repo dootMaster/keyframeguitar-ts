@@ -29,6 +29,7 @@ type FretboardProps = {
   flat: {[key: number]: string},
   showAllNotes: boolean,
   peekForm: boolean[] | null,
+  scrollResetKey: number,
 }
 
 export type {

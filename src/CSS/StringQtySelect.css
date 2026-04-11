@@ -14,8 +14,9 @@
   padding: 0.4rem 0.4rem;
   font-family: 'Outfit', sans-serif;
   font-size: 0.85rem;
-  border: 1px solid rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--border);
   border-radius: 5px;
-  background-color: white;
+  background-color: var(--bg-surface);
+  color: var(--text);
   cursor: pointer;
 }

@@ -39,12 +39,12 @@ const Fretboard = (props: FretboardProps) => {
     return (el.scrollWidth / TOTAL_COLS) * OCTAVE_COLS;
   }, []);
 
-  // Start scrolled 2 octaves in (so there's buffer to scroll left)
+  // Start scrolled 2 octaves in (so there's buffer to scroll left), also reset on scrollResetKey change
   useEffect(() => {
     const el = scrollRef.current;
     if (!el) return;
     el.scrollLeft = getOctaveShift() * 2;
-  }, [getOctaveShift]);
+  }, [getOctaveShift, props.scrollResetKey]);
 
   // Infinite loop: jump by one octave when near edges
   const handleScroll = useCallback(() => {

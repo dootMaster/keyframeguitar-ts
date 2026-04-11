@@ -3,8 +3,8 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem 0.75rem;
-  background: rgba(0, 0, 0, 0.02);
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-faint);
   border-radius: 6px;
   min-height: 2.5rem;
   flex-wrap: wrap;
@@ -23,9 +23,10 @@
   height: 2rem;
   font-size: 1.1rem;
   font-family: 'Outfit', sans-serif;
-  border: 1px solid rgba(0, 0, 0, 0.15);
+  border: 1px solid var(--border-light);
   border-radius: 4px;
-  background: white;
+  background: var(--bg-surface);
+  color: var(--text);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -35,7 +36,7 @@
 }
 
 .progression-nav:hover:not(:disabled) {
-  background: rgba(0, 0, 0, 0.05);
+  background: var(--bg-hover);
 }
 
 .progression-nav:disabled {
@@ -59,9 +60,10 @@
   font-size: 0.8rem;
   font-family: 'Outfit', sans-serif;
   font-weight: 500;
-  border: 1px solid rgba(0, 0, 0, 0.12);
+  border: 1px solid var(--border-light);
   border-radius: 3px;
-  background: white;
+  background: var(--bg-surface);
+  color: var(--text);
   transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
 }
 
@@ -74,13 +76,13 @@
   border: none;
   font-size: 0.85rem;
   cursor: pointer;
-  color: rgba(0, 0, 0, 0.25);
+  color: var(--text-faint);
   padding: 0;
   line-height: 1;
 }
 
 .pill-remove:hover {
-  color: rgba(0, 0, 0, 0.7);
+  color: var(--text);
 }
 
 .pill-from {
@@ -112,13 +114,13 @@
 }
 
 .pill-peek {
-  background-color: color-mix(in srgb, var(--color-peek) 20%, white);
+  background-color: color-mix(in srgb, var(--color-peek) 20%, var(--bg-surface));
   border-color: var(--color-peek);
   color: var(--color-peek);
 }
 
 .pill-peek .pill-remove {
-  color: color-mix(in srgb, var(--color-peek) 40%, white);
+  color: color-mix(in srgb, var(--color-peek) 40%, var(--bg-surface));
 }
 
 .pill-peek .pill-remove:hover {
@@ -131,12 +133,12 @@
 
 .progression-placeholder {
   font-size: 0.7rem;
-  color: rgba(0, 0, 0, 0.25);
+  color: var(--text-faint);
 }
 
 .progression-hint {
   font-size: 0.65rem;
-  color: rgba(0, 0, 0, 0.35);
+  color: var(--text-muted);
   font-style: italic;
 }
 
@@ -151,9 +153,10 @@
   padding: 0.2rem 0.3rem;
   font-size: 0.7rem;
   font-family: 'Outfit', sans-serif;
-  border: 1px solid rgba(0, 0, 0, 0.15);
+  border: 1px solid var(--border-light);
   border-radius: 3px;
-  background: white;
+  background: var(--bg-surface);
+  color: var(--text);
   cursor: pointer;
 }
 
@@ -165,11 +168,11 @@
   padding: 0.2rem 0.5rem;
   font-size: 0.65rem;
   font-family: 'Outfit', sans-serif;
-  border: 1px solid rgba(0, 0, 0, 0.12);
+  border: 1px solid var(--border-light);
   border-radius: 3px;
-  background: white;
+  background: var(--bg-surface);
   cursor: pointer;
-  color: rgba(0, 0, 0, 0.35);
+  color: var(--text-muted);
   transition: background-color 0.15s ease, color 0.15s ease;
 }
 

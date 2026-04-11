@@ -7,7 +7,7 @@
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: thin;
-  scrollbar-color: rgba(0, 0, 0, 0.15) transparent;
+  scrollbar-color: var(--text-faint) transparent;
 }
 
 .fretboard-scroll::-webkit-scrollbar {
@@ -15,7 +15,7 @@
 }
 
 .fretboard-scroll::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.15);
+  background: var(--text-faint);
   border-radius: 4px;
 }
 
@@ -37,12 +37,12 @@
   height: 2.5rem;
   position: relative;
   border: none;
-  border-right: 1px solid rgba(0, 0, 0, 0.06);
+  border-right: 1px solid var(--border-faint);
   background: linear-gradient(
     to bottom,
     transparent calc(50% - 0.5px),
-    rgba(0, 0, 0, 0.18) calc(50% - 0.5px),
-    rgba(0, 0, 0, 0.18) calc(50% + 0.5px),
+    var(--string-line) calc(50% - 0.5px),
+    var(--string-line) calc(50% + 0.5px),
     transparent calc(50% + 0.5px)
   );
 }
@@ -77,8 +77,10 @@
 }
 
 /* ── Hover ── */
-.fret:hover {
-  animation: pulse 1s infinite;
+@media (hover: hover) {
+  .fret:hover {
+    animation: pulse 1s infinite;
+  }
 }
 
 @keyframes pulse {
@@ -90,7 +92,7 @@
 /* ── Nut & octave lines ── */
 .fret:first-child,
 .fret.octave-marker {
-  border-right: 2.5px solid rgba(0, 0, 0, 0.25);
+  border-right: 2.5px solid var(--nut);
 }
 
 /* ── Dots row ── */
@@ -98,9 +100,9 @@
   padding: 0.3rem 0;
   text-align: center;
   font-size: 1.3rem;
-  color: rgba(0, 0, 0, 0.35);
+  color: var(--text-muted);
   height: 1.4rem;
-  border-right: 1px solid rgba(0, 0, 0, 0.06);
+  border-right: 1px solid var(--border-faint);
 }
 
 .fret-dots td:first-child {
@@ -117,14 +119,14 @@
 }
 
 .ghost-note {
-  color: rgba(0, 0, 0, 0.15);
+  color: var(--text-ghost);
 }
 
 /* From */
 .from::before {
   transform: translate(-50%, -50%) scale(1);
   opacity: 1;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 8px var(--shadow);
 }
 .from::after {
   transform: translate(-50%, -50%) scale(0);
@@ -139,7 +141,7 @@
 .to::after {
   transform: translate(-50%, -50%) scale(1);
   opacity: 1;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 8px var(--shadow);
 }
 .to::before {
   transform: translate(-50%, -50%) scale(0);
@@ -186,13 +188,13 @@
 .peek-shared.from::before,
 .peek-shared.to::after,
 .peek-shared.common::after {
-  box-shadow: 0 0 0 3.5px var(--color-peek), 0 0 8px var(--color-peek), 0 2px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 0 0 3.5px var(--color-peek), 0 0 8px var(--color-peek), 0 2px 8px var(--shadow);
 }
 
 /* ── Hint ── */
 .fretboard-hint {
   text-align: center;
   font-size: 0.65rem;
-  color: rgba(0, 0, 0, 0.25);
+  color: var(--text-faint);
   margin-top: 0.3rem;
 }

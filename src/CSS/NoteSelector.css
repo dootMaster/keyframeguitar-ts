@@ -18,16 +18,17 @@
   font-size: 0.9rem;
   font-family: 'Outfit', sans-serif;
   font-weight: 600;
-  border: 1px solid rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border);
   border-radius: 5px;
+  color: var(--text);
   cursor: pointer;
   transition: background-color 0.3s ease;
   user-select: none;
 }
 
 .note-btn.neutral {
-  background-color: white;
-  border-color: rgba(0, 0, 0, 0.2);
+  background-color: var(--bg-surface);
+  border-color: var(--border);
 }
 
 .note-btn.from {
