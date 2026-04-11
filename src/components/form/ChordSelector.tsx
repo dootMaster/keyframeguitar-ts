@@ -83,6 +83,7 @@ export default function ChordSelector({
 
   return (
     <div className="chord-selector">
+      <span className="step-label">1. Root</span>
       <div className="chord-roots">
         {flats.map((note, i) => (
           <button
@@ -94,6 +95,7 @@ export default function ChordSelector({
           </button>
         ))}
       </div>
+      <span className="step-label">2. Category</span>
       <div className="chord-tabs">
         {tabs.map((t) => (
           <button
@@ -105,6 +107,7 @@ export default function ChordSelector({
           </button>
         ))}
       </div>
+      <span className="step-label">3. Quality</span>
       <div className="chord-tab-content">
         {sections.filter(s => s.label === tabToSection[activeTab]).map((section) => (
           <div key={section.label} className="chord-section">
@@ -171,6 +174,7 @@ export default function ChordSelector({
       <div className="chord-hint">
         <span className="hint-shift">shift-click: add to changes</span>
       </div>
+      <span className="step-label">4. Add</span>
       <button
         className="add-to-song-btn"
         onClick={addLastToSong}

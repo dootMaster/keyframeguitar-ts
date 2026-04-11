@@ -4,6 +4,15 @@
   gap: 0.75rem;
 }
 
+.step-label {
+  font-size: 0.6rem;
+  color: rgba(0, 0, 0, 0.2);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin-bottom: -0.5rem;
+}
+
 .chord-roots {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
