@@ -16,7 +16,6 @@ const SAVE_PREFIX = 'kfg:';
 function getInitialTheme(): 'light' | 'dark' {
   const saved = localStorage.getItem('kfg:theme');
   if (saved === 'light' || saved === 'dark') return saved;
-  if (window.matchMedia('(prefers-color-scheme: dark)').matches) return 'dark';
   return 'light';
 }
 
@@ -204,9 +203,6 @@ function App() {
         </div>
       </div>
       <header className="header">
-        <button className="theme-toggle" onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
-          {theme === 'dark' ? 'Light mode' : 'Dark mode'}
-        </button>
         <h3>Key Frame Guitar</h3>
         <p className="subtitle">Most guitar tools try to do everything. This one does one thing: help you focus on navigating a single chord change. — Leslie</p>
       </header>
@@ -306,6 +302,9 @@ function App() {
         show={showSaveModal}
         saveFileList={saveFileList}
       />
+      <button className="theme-toggle" onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
+        {theme === 'dark' ? 'Light mode' : 'Dark mode'}
+      </button>
     </div>
   );
 }

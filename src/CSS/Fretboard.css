@@ -1,6 +1,8 @@
 .fretboard-container {
   position: relative;
   width: 100%;
+  box-sizing: border-box;
+  margin: 0 auto;
 }
 
 .fretboard-scroll {
@@ -8,6 +10,8 @@
   -webkit-overflow-scrolling: touch;
   scrollbar-width: thin;
   scrollbar-color: var(--text-faint) transparent;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .fretboard-scroll::-webkit-scrollbar {
@@ -201,6 +205,21 @@
 
 /* Landscape mobile — compact fretboard */
 @media (max-height: 500px) {
+  .fretboard-container {
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .fretboard-scroll {
+    max-width: 100%;
+    scrollbar-width: none;
+  }
+
+  .fretboard-scroll::-webkit-scrollbar {
+    display: none;
+  }
+
   .fret {
     height: 1.6rem;
   }
@@ -223,5 +242,18 @@
 
   .fretboard-hint {
     display: none;
+  }
+}
+
+/* Portrait mobile — ensure fretboard fits */
+@media (max-width: 768px) {
+  .fretboard-container {
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .fretboard-scroll {
+    max-width: 100%;
   }
 }

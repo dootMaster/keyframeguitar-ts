@@ -185,32 +185,34 @@
 /* Landscape mobile — compact progression */
 @media (max-height: 500px) {
   .progression {
-    padding: 0.25rem 0.5rem;
-    min-height: 1.6rem;
+    padding: 0.3rem 0.5rem;
+    min-height: 1.8rem;
     gap: 0.3rem;
   }
 
   .progression-nav {
-    width: 1.4rem;
-    height: 1.4rem;
-    font-size: 0.8rem;
+    width: 1.8rem;
+    height: 1.8rem;
+    font-size: 0.9rem;
+    border-radius: 5px;
   }
 
   .progression-pill {
-    padding: 0.15rem 0.35rem;
-    font-size: 0.65rem;
+    padding: 0.2rem 0.45rem;
+    font-size: 0.75rem;
   }
 
   .pill-remove {
-    font-size: 0.65rem;
+    font-size: 0.75rem;
   }
 
   .progression-placeholder {
-    font-size: 0.6rem;
+    font-size: 0.7rem;
   }
 
   .progression-clear-btn {
-    padding: 0.15rem 0.35rem;
-    font-size: 0.55rem;
+    padding: 0.2rem 0.45rem;
+    font-size: 0.65rem;
+    border-radius: 4px;
   }
 }
