@@ -12,6 +12,7 @@ import SaveModal from './components/SaveModal/SaveModal';
 import Progression from './components/Progression/Progression';
 import { ProgressionChord } from './components/Progression/Progression';
 import Notes from './components/Notes/Notes';
+import PresetSelector from './components/PresetSelector/PresetSelector';
 import OptionsModal, { ColorConfig, DEFAULT_COLORS, COLORBLIND_COLORS } from './components/OptionsModal/OptionsModal';
 
 const SAVE_PREFIX = 'kfg:';
@@ -81,7 +82,7 @@ function App() {
     return { from: rotated[0], to: rotated[1], peek: rotated[2], preview: colors.preview };
   }, [colors, colorPair]);
 
-  const peekForm: boolean[] | null = showPeek && progression.length >= 2 && windowIndex + 2 < progression.length
+  const peekForm: boolean[] | null = showPeek && !previewForm && progression.length >= 2 && windowIndex + 2 < progression.length
     ? progression[windowIndex + 2].form
     : null;
 
@@ -137,6 +138,20 @@ function App() {
   const clearProgression = () => {
     setProgression([]);
     setWindowIndex(0);
+  };
+
+  const loadPreset = (chords: ProgressionChord[]) => {
+    if (notes.length > 0) {
+      if (!window.confirm('You have unsaved notes. Load anyway?')) return;
+    }
+    setProgression(chords);
+    setPreviewForm(null);
+    setNotes([]);
+    if (chords.length >= 2) {
+      applyWindowDirect(0, chords);
+    } else {
+      setWindowIndex(0);
+    }
   };
 
   const navigateProgression = (index: number) => {
@@ -265,6 +280,12 @@ function App() {
           {sidebarOpen ? 'Hide chords' : 'Show chords'}
         </button>
         <aside className={'sidebar' + (sidebarOpen ? ' sidebar-open' : '')}>
+          <PresetSelector
+            onLoadPreset={loadPreset}
+            saveFileList={saveFileList}
+            onLoadSave={load}
+            onDeleteSave={deleteData}
+          />
           <ChordSelector
             onAddToProgression={addToProgression}
             lastProgressionChord={progression.length > 0 ? progression[progression.length - 1].name : null}

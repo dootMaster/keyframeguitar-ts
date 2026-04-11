@@ -53,6 +53,13 @@ export default function ChordSelector({
       return;
     }
 
+    if (selected === name) {
+      onPreview(null);
+      setLastQuality(null);
+      setSelected(null);
+      return;
+    }
+
     onPreview(form);
     setLastQuality({ name, intervals, rootOverride });
     setSelected(name);
@@ -110,7 +117,7 @@ export default function ChordSelector({
                   onClick={(e) => handleQualityClick(q.name, q.intervals, e)}
                   onContextMenu={(e) => e.preventDefault()}
                 >
-                  {q.name}
+                  {q.name}{selected === q.name && <span className="quality-dismiss">&times;</span>}
                 </button>
               ))}
             </div>
@@ -133,7 +140,7 @@ export default function ChordSelector({
                       title={sc.degree}
                     >
                       <span className="scale-degree">{sc.degree}</span>
-                      {' '}{name}
+                      {' '}{name}{selected === sc.quality && <span className="quality-dismiss">&times;</span>}
                     </button>
                   );
                 })}
@@ -153,7 +160,7 @@ export default function ChordSelector({
                       onClick={(e) => handleQualityClick(m.name, m.intervals, e)}
                       onContextMenu={(e) => e.preventDefault()}
                     >
-                      {m.name}
+                      {m.name}{selected === m.name && <span className="quality-dismiss">&times;</span>}
                     </button>
                   ))}
                 </div>
@@ -171,7 +178,11 @@ export default function ChordSelector({
         onClick={addLastToSong}
         disabled={!canAdd}
       >
-        {lastChord ? `+ Add ${lastChord.name} to changes` : '+ Add to changes'}
+        {lastChord
+          ? lastChord.name === lastProgressionChord
+            ? `${lastChord.name} is already the last chord`
+            : `+ Add ${lastChord.name} to changes`
+          : '+ Add to changes'}
       </button>
     </div>
   );
