@@ -93,11 +93,18 @@ body.dark {
   position: relative;
 }
 
-.theme-toggle {
+.bottom-bar {
   position: absolute;
   bottom: 1rem;
   left: 50%;
   transform: translateX(-50%);
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.theme-toggle,
+.about-link {
   background: none;
   border: 1px solid var(--border-light);
   border-radius: 4px;
@@ -109,9 +116,35 @@ body.dark {
   transition: color 0.15s ease, border-color 0.15s ease;
 }
 
-.theme-toggle:hover {
+.theme-toggle:hover,
+.about-link:hover {
   color: var(--text);
   border-color: var(--border);
+}
+
+.about-modal {
+  background: var(--bg-surface);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 1.5rem 2rem;
+  width: 360px;
+  max-width: calc(100vw - 2rem);
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.about-modal p {
+  margin: 0 0 0.75rem;
+}
+
+.about-modal p:last-child {
+  margin-bottom: 0;
+}
+
+.about-sign {
+  color: var(--text-muted);
+  font-style: italic;
 }
 
 .header h3 {
@@ -236,6 +269,39 @@ body.dark {
 
 .toolbar-tip-wrap:hover .toolbar-tip {
   display: block;
+}
+
+/* ── Chord tones display ── */
+.chord-tones {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  flex-wrap: wrap;
+}
+
+.chord-tones-from {
+  color: var(--color-from);
+  font-weight: 500;
+}
+
+.chord-tones-to {
+  color: var(--color-to);
+  font-weight: 500;
+}
+
+.chord-tones-arrow {
+  color: var(--text-faint);
+}
+
+.tone-common {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+  font-weight: 600;
 }
 
 /* Legend — hidden on screen, shown in print */
@@ -398,7 +464,8 @@ body.dark {
     border-radius: 8px;
   }
 
-  .theme-toggle {
+  .theme-toggle,
+  .about-link {
     font-size: 0.75rem;
     padding: 0.35rem 0.6rem;
     border-radius: 6px;
@@ -420,12 +487,8 @@ body.dark {
     display: none;
   }
 
-  .theme-toggle {
-    position: absolute;
+  .bottom-bar {
     bottom: env(safe-area-inset-bottom, 0.5rem);
-    left: 50%;
-    transform: translateX(-50%);
-    margin: 0;
     margin-bottom: 0.5rem;
   }
 
@@ -501,7 +564,7 @@ body.dark {
   .header,
   .sidebar,
   .toolbar,
-  .theme-toggle,
+  .bottom-bar,
   .sidebar-toggle {
     display: none !important;
   }

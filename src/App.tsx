@@ -5,11 +5,13 @@ import Fretboard from './components/fretboard/Fretboard';
 import createFretboard from './components/fretboard/helpers/createFretboard';
 import { updateFretboardViaForm } from './components/form/helpers/formHelpers';
 import { flat } from './components/fretboard/helpers/stringDict';
+import { flats } from './components/form/helpers/notes';
 import { GtrString } from './components/AppTypes';
 import TuningModal from './components/TuningModal/TuningModal';
 import SaveModal from './components/SaveModal/SaveModal';
 import Progression from './components/Progression/Progression';
 import { ProgressionChord } from './components/Progression/Progression';
+import Notes from './components/Notes/Notes';
 
 const SAVE_PREFIX = 'kfg:';
 
@@ -41,6 +43,8 @@ function App() {
   const [theme, setTheme] = useState<'light' | 'dark'>(getInitialTheme);
   const [scrollResetKey, setScrollResetKey] = useState(0);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [showAbout, setShowAbout] = useState(false);
+  const [notes, setNotes] = useState<string[]>([]);
 
   useEffect(() => {
     document.body.classList.toggle('dark', theme === 'dark');
@@ -134,7 +138,7 @@ function App() {
     if (name.length > 32 || name.length <= 0 || getSaveNames().includes(name)) {
       alert('1-32 char, or name already exists');
     } else {
-      let saveObject = { fretboard, tuning, progression };
+      let saveObject = { fretboard, tuning, progression, notes };
       localStorage.setItem(SAVE_PREFIX + name, JSON.stringify(saveObject));
       setSaveFileList(getSaveNames());
     }
@@ -153,11 +157,15 @@ function App() {
   }
 
   const load = (name:string) => {
+    if (notes.length > 0) {
+      if (!window.confirm('You have unsaved notes. Load anyway?')) return;
+    }
     try {
       let loadData = JSON.parse(localStorage.getItem(SAVE_PREFIX + name) || '');
-      let { fretboard: loadedFretboard, tuning: loadedTuning, progression: loadedProg } = loadData;
+      let { fretboard: loadedFretboard, tuning: loadedTuning, progression: loadedProg, notes: loadedNotes } = loadData;
       setFretboard(loadedFretboard);
       setTuning(loadedTuning);
+      setNotes(loadedNotes || []);
       let { from, to } = deriveFormsFromFretboard(loadedFretboard);
       setFrom(from);
       setTo(to);
@@ -186,6 +194,17 @@ function App() {
   const tuningLabel = useMemo(() => {
     return [...tuning].reverse().map(n => flat[n]).join(' ');
   }, [tuning]);
+
+  const commonTones: boolean[] = progression.length >= 2
+    ? progression[windowIndex].form.map((on, i) => on && progression[windowIndex + 1].form[i])
+    : new Array(12).fill(false);
+
+  const formToNotes = (form: boolean[]): { name: string; common: boolean }[] => {
+    return form.map((on, i) => on ? { name: flats[i], common: commonTones[i] } : null).filter(Boolean) as { name: string; common: boolean }[];
+  };
+
+  const fromNotes = progression.length >= 2 ? formToNotes(progression[windowIndex].form) : null;
+  const toNotes = progression.length >= 2 ? formToNotes(progression[windowIndex + 1].form) : null;
 
   const reset = () => {
     let resetArray = new Array(12).fill(false);
@@ -239,6 +258,27 @@ function App() {
             onClear={clearProgression}
             showPeek={showPeek}
           />
+          {(fromNotes || toNotes) && (
+            <div className="chord-tones">
+              {fromNotes && (
+                <span className="chord-tones-from">
+                  {fromChordName}:{' '}
+                  {fromNotes.map((n, i) => (
+                    <span key={i} className={n.common ? 'tone-common' : ''}>{n.name}{i < fromNotes.length - 1 ? '  ' : ''}</span>
+                  ))}
+                </span>
+              )}
+              {fromNotes && toNotes && <span className="chord-tones-arrow">&rarr;</span>}
+              {toNotes && (
+                <span className="chord-tones-to">
+                  {toChordName}:{' '}
+                  {toNotes.map((n, i) => (
+                    <span key={i} className={n.common ? 'tone-common' : ''}>{n.name}{i < toNotes.length - 1 ? '  ' : ''}</span>
+                  ))}
+                </span>
+              )}
+            </div>
+          )}
           <div className="print-legend">
             <div className="legend-title">Key Frame Guitar</div>
             <div className="legend-tuning">Tuning: {tuningLabel}</div>
@@ -282,6 +322,11 @@ function App() {
             <button className='toolbar-btn' onClick={() => window.print()}>Print</button>
             <button className='toolbar-btn reset-button' onClick={reset}>RESET</button>
           </div>
+          <Notes
+            notes={notes}
+            onAdd={(note) => setNotes([...notes, note])}
+            onRemove={(i) => setNotes(notes.filter((_, idx) => idx !== i))}
+          />
         </div>
       </div>
       <TuningModal
@@ -302,9 +347,21 @@ function App() {
         show={showSaveModal}
         saveFileList={saveFileList}
       />
-      <button className="theme-toggle" onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
-        {theme === 'dark' ? 'Light mode' : 'Dark mode'}
-      </button>
+      <div className="bottom-bar">
+        <button className="theme-toggle" onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
+          {theme === 'dark' ? 'Light mode' : 'Dark mode'}
+        </button>
+        <button className="about-link" onClick={() => setShowAbout(true)}>About</button>
+      </div>
+      {showAbout && (
+        <div className="save-overlay" onClick={() => setShowAbout(false)}>
+          <div className="about-modal" onClick={(e) => e.stopPropagation()}>
+            <p>I taught guitar for 7 years. Every tool I found online was either paywalled, cluttered with features, or full of ads. My students just needed something simple to see how two chords connect. So I made this.</p>
+            <p>I hope this makes your journey of exploring this ridiculous instrument a little easier.</p>
+            <p className="about-sign">— Leslie</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
