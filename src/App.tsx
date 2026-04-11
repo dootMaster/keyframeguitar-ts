@@ -95,6 +95,8 @@ function App() {
     setPreviewForm(null);
     if (snapshot.progression.length >= 2) {
       applyWindowDirect(snapshot.windowIndex, snapshot.progression);
+    } else if (snapshot.progression.length === 1) {
+      applySingleChord(snapshot.progression[0]);
     } else {
       setWindowIndex(0);
     }
@@ -177,7 +179,19 @@ function App() {
     if (newProg.length >= 2) {
       const idx = newProg.length === 2 ? 0 : windowIndex;
       applyWindowDirect(idx, newProg);
+    } else if (newProg.length === 1) {
+      applySingleChord(newProg[0]);
     }
+  };
+
+  const applySingleChord = (chord: ProgressionChord, tuningOverride?: number[]) => {
+    const emptyForm = new Array(12).fill(false);
+    setFrom(chord.form);
+    setTo(emptyForm);
+    let fb = createFretboard(tuningOverride || tuning);
+    updateFretboardViaForm(fb, emptyForm, chord.form, 'from');
+    setFretboard(fb);
+    setWindowIndex(0);
   };
 
   const applyWindowDirect = (index: number, prog: ProgressionChord[], tuningOverride?: number[]) => {
@@ -200,6 +214,8 @@ function App() {
     setProgression(chords);
     if (chords.length >= 2) {
       applyWindowDirect(0, chords);
+    } else if (chords.length === 1) {
+      applySingleChord(chords[0]);
     }
     const t = params.get('t');
     if (t) setActiveName(decodeURIComponent(t));
@@ -223,7 +239,11 @@ function App() {
     setProgression(newProg);
     setSoloIndex(null);
     if (newProg.length < 2) {
-      setWindowIndex(0);
+      if (newProg.length === 1) {
+        applySingleChord(newProg[0]);
+      } else {
+        setWindowIndex(0);
+      }
       return;
     }
     let newIndex = windowIndex;
@@ -256,6 +276,8 @@ function App() {
     if (sharps !== undefined) setUseSharps(sharps);
     if (chords.length >= 2) {
       applyWindowDirect(0, chords);
+    } else if (chords.length === 1) {
+      applySingleChord(chords[0]);
     } else {
       setWindowIndex(0);
     }
@@ -342,7 +364,7 @@ function App() {
     setSaveFileList(getSaveNames());
   }
 
-  const fromChordName = progression.length >= 2 ? renotate(progression[windowIndex].name, noteNames) : null;
+  const fromChordName = progression.length >= 1 ? renotate(progression[windowIndex].name, noteNames) : null;
   const toChordName = progression.length >= 2 ? renotate(progression[(windowIndex + 1) % progression.length].name, noteNames) : null;
   const peekChordName = peekForm ? renotate(progression[(windowIndex + 2) % progression.length].name, noteNames) : null;
 
@@ -358,7 +380,7 @@ function App() {
     return form.map((on, i) => on ? { name: noteNames[i], common: commonTones[i] } : null).filter(Boolean) as { name: string; common: boolean }[];
   };
 
-  const fromNotes = progression.length >= 2 ? formToNotes(progression[windowIndex].form) : null;
+  const fromNotes = progression.length >= 1 ? formToNotes(progression[windowIndex].form) : null;
   const toNotes = progression.length >= 2 ? formToNotes(progression[(windowIndex + 1) % progression.length].form) : null;
 
   const reset = () => {
