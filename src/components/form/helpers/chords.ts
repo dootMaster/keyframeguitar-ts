@@ -166,3 +166,35 @@ export function parseChordName(name: string): { name: string; form: boolean[] } 
   if (!intervals) return null;
   return { name, form: chordToForm(rootIdx, intervals) };
 }
+
+export function parseChordInfo(name: string): { root: number; intervals: number[] } | null {
+  const spaceIdx = name.indexOf(' ');
+  if (spaceIdx === -1) return null;
+  const rootStr = name.slice(0, spaceIdx);
+  const qualStr = name.slice(spaceIdx + 1);
+  const root = noteIndex[rootStr];
+  if (root === undefined) return null;
+  const intervals = qualityMap[qualStr];
+  if (!intervals) return null;
+  return { root, intervals };
+}
+
+const DEGREE_LABELS = ['R', 'b2', '2', 'b3', '3', '4', 'b5', '5', 'b6', '6', 'b7', '7'];
+
+export function chordDegreeMap(root: number, intervals: number[]): (string | null)[] {
+  const map: (string | null)[] = new Array(12).fill(null);
+  for (const interval of intervals) {
+    map[(root + interval) % 12] = DEGREE_LABELS[interval % 12];
+  }
+  return map;
+}
+
+export function guideToneMask(root: number, intervals: number[]): boolean[] {
+  const mask = new Array(12).fill(false);
+  for (const interval of intervals) {
+    if (interval === 3 || interval === 4 || interval === 10 || interval === 11) {
+      mask[(root + interval) % 12] = true;
+    }
+  }
+  return mask;
+}

@@ -289,6 +289,22 @@
   box-shadow: 0 2px 8px var(--shadow);
 }
 
+.solo-active .common.guide-dimmed::after {
+  opacity: 0.15;
+  filter: blur(1px);
+}
+
+/* Guide tones: dim non-3/7 chord tones */
+.from.guide-dimmed::before,
+.to.guide-dimmed::after,
+.common.guide-dimmed::before {
+  opacity: 0.15;
+  filter: blur(1px);
+}
+.guide-dimmed .fret-label {
+  opacity: 0.15;
+}
+
 /* ── Hint ── */
 .fretboard-hint {
   text-align: center;

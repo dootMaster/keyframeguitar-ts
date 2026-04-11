@@ -15,7 +15,8 @@ import Notes from './components/Notes/Notes';
 import PresetSelector from './components/PresetSelector/PresetSelector';
 import OptionsModal, { ColorConfig, DEFAULT_COLORS, COLORBLIND_COLORS } from './components/OptionsModal/OptionsModal';
 import GuideModal from './components/GuideModal/GuideModal';
-import { parseChordName } from './components/form/helpers/chords';
+import { parseChordName, parseChordInfo, chordDegreeMap, guideToneMask } from './components/form/helpers/chords';
+import { NoteDisplayMode } from './components/fretboard/FretboardTypes/FretboardTypes';
 import FocusTrap from 'focus-trap-react';
 
 const SAVE_PREFIX = 'kfg:';
@@ -57,7 +58,8 @@ function App() {
   const [toForm, setTo] = useState<boolean[]>(new Array(12).fill(false));
   const [showTuningModal, setShowTuningModal] = useState<boolean>(false);
   const [showSaveModal, setShowSaveModal] = useState<boolean>(false);
-  const [showAllNotes, setShowAllNotes] = useState<boolean>(false);
+  const [noteDisplayMode, setNoteDisplayMode] = useState<NoteDisplayMode>('off');
+  const [showGuideTones, setShowGuideTones] = useState<boolean>(false);
   const [showPeek, setShowPeek] = useState<boolean>(false);
   const [saveFileList, setSaveFileList] = useState<string[]>(getSaveNames());
 
@@ -376,12 +378,25 @@ function App() {
     ? progression[windowIndex].form.map((on, i) => on && progression[(windowIndex + 1) % progression.length].form[i])
     : new Array(12).fill(false);
 
-  const formToNotes = (form: boolean[]): { name: string; common: boolean }[] => {
-    return form.map((on, i) => on ? { name: noteNames[i], common: commonTones[i] } : null).filter(Boolean) as { name: string; common: boolean }[];
+  const emptyDegrees = new Array(12).fill(null) as (string | null)[];
+  const emptyGuide = new Array(12).fill(false);
+  const fromInfo = progression.length >= 1 ? parseChordInfo(progression[windowIndex].name) : null;
+  const toInfo = progression.length >= 2 ? parseChordInfo(progression[(windowIndex + 1) % progression.length].name) : null;
+  const fromDegrees = fromInfo ? chordDegreeMap(fromInfo.root, fromInfo.intervals) : emptyDegrees;
+  const toDegrees = toInfo ? chordDegreeMap(toInfo.root, toInfo.intervals) : emptyDegrees;
+  const fromGuide = fromInfo ? guideToneMask(fromInfo.root, fromInfo.intervals) : emptyGuide;
+  const toGuide = toInfo ? guideToneMask(toInfo.root, toInfo.intervals) : emptyGuide;
+
+  const cycleNoteDisplay = () => {
+    setNoteDisplayMode(m => m === 'off' ? 'notes' : m === 'notes' ? 'degrees' : m === 'degrees' ? 'both' : 'off');
   };
 
-  const fromNotes = progression.length >= 1 ? formToNotes(progression[windowIndex].form) : null;
-  const toNotes = progression.length >= 2 ? formToNotes(progression[(windowIndex + 1) % progression.length].form) : null;
+  const formToNotes = (form: boolean[], degrees: (string | null)[], guide: boolean[]): { name: string; common: boolean; degree: string | null; isGuide: boolean }[] => {
+    return form.map((on, i) => on ? { name: noteNames[i], common: commonTones[i], degree: degrees[i], isGuide: guide[i] } : null).filter(Boolean) as { name: string; common: boolean; degree: string | null; isGuide: boolean }[];
+  };
+
+  const fromNotes = progression.length >= 1 ? formToNotes(progression[windowIndex].form, fromDegrees, fromGuide) : null;
+  const toNotes = progression.length >= 2 ? formToNotes(progression[(windowIndex + 1) % progression.length].form, toDegrees, toGuide) : null;
 
   const reset = () => {
     let resetArray = new Array(12).fill(false);
@@ -435,10 +450,16 @@ function App() {
             fretboard={fretboard}
             flat={useSharps ? sharp : flat}
             toggleFret={toggleFret}
-            showAllNotes={showAllNotes}
+            noteDisplayMode={noteDisplayMode}
             peekForm={peekForm}
             previewForm={previewForm}
             scrollResetKey={scrollResetKey}
+            fromDegrees={fromDegrees}
+            toDegrees={toDegrees}
+            fromGuide={fromGuide}
+            toGuide={toGuide}
+            showGuideTones={showGuideTones}
+            soloActive={soloIndex !== null}
           />
           <Progression
             progression={progression}
@@ -454,26 +475,32 @@ function App() {
           {soloIndex !== null && progression.length >= 2 ? (
             <div className="chord-tones">
               <span className={soloIndex === windowIndex ? 'chord-tones-from' : 'chord-tones-to'}>
-                {formToNotes(progression[soloIndex].form).map((n, i, arr) => (
-                  <><span key={i}>{n.name}</span>{i < arr.length - 1 ? ' \u00B7 ' : ''}</>
-                ))}
+                {formToNotes(progression[soloIndex].form, soloIndex === windowIndex ? fromDegrees : toDegrees, soloIndex === windowIndex ? fromGuide : toGuide).map((n, i, arr) => {
+                  const label = (noteDisplayMode === 'degrees' || noteDisplayMode === 'both') && n.degree ? n.degree : n.name;
+                  const dimmed = showGuideTones && !n.isGuide;
+                  return <><span key={i} className={dimmed ? 'tone-dimmed' : ''}>{label}</span>{i < arr.length - 1 ? ' \u00B7 ' : ''}</>;
+                })}
               </span>
             </div>
           ) : (fromNotes || toNotes) && (
             <div className="chord-tones">
               {fromNotes && (
                 <span className="chord-tones-from">
-                  {fromNotes.map((n, i) => (
-                    <><span key={i} className={n.common ? 'tone-common' : ''}>{n.name}</span>{i < fromNotes.length - 1 ? ' \u00B7 ' : ''}</>
-                  ))}
+                  {fromNotes.map((n, i) => {
+                    const label = (noteDisplayMode === 'degrees' || noteDisplayMode === 'both') && n.degree ? n.degree : n.name;
+                    const dimmed = showGuideTones && !n.isGuide;
+                    return <><span key={i} className={n.common ? 'tone-common' : dimmed ? 'tone-dimmed' : ''}>{label}</span>{i < fromNotes.length - 1 ? ' \u00B7 ' : ''}</>;
+                  })}
                 </span>
               )}
               {fromNotes && toNotes && <span className="chord-tones-arrow">&rarr;</span>}
               {toNotes && (
                 <span className="chord-tones-to">
-                  {toNotes.map((n, i) => (
-                    <><span key={i} className={n.common ? 'tone-common' : ''}>{n.name}</span>{i < toNotes.length - 1 ? ' \u00B7 ' : ''}</>
-                  ))}
+                  {toNotes.map((n, i) => {
+                    const label = (noteDisplayMode === 'degrees' || noteDisplayMode === 'both') && n.degree ? n.degree : n.name;
+                    const dimmed = showGuideTones && !n.isGuide;
+                    return <><span key={i} className={n.common ? 'tone-common' : dimmed ? 'tone-dimmed' : ''}>{label}</span>{i < toNotes.length - 1 ? ' \u00B7 ' : ''}</>;
+                  })}
                 </span>
               )}
             </div>
@@ -510,7 +537,10 @@ function App() {
             </div>
           </div>
           <div className="toolbar">
-            <button className={'toolbar-btn' + (showAllNotes ? ' active' : '')} onClick={() => setShowAllNotes(!showAllNotes)}>Note names</button>
+            <button className={'toolbar-btn' + (noteDisplayMode !== 'off' ? ' active' : '')} onClick={cycleNoteDisplay}>
+              {noteDisplayMode === 'off' ? 'Notes' : noteDisplayMode === 'notes' ? 'Notes' : noteDisplayMode === 'degrees' ? 'Deg' : 'Deg+Notes'}<span className="cycle-icon"> ⟳</span>
+            </button>
+            <button className={'toolbar-btn' + (showGuideTones ? ' active' : '')} onClick={() => setShowGuideTones(!showGuideTones)}>3/7</button>
             <span className="toolbar-tip-wrap">
               <button className={'toolbar-btn' + (showPeek ? ' active peek-btn-active' : '')} onClick={() => setShowPeek(!showPeek)}>Peek</button>
               <button className="toolbar-info-btn" aria-label="What is Peek">?</button>

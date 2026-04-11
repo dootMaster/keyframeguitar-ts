@@ -107,9 +107,15 @@ const Fretboard = (props: FretboardProps) => {
                   i={i}
                   toggleFret={wrappedToggleFret}
                   flat={props.flat}
-                  showAllNotes={props.showAllNotes}
+                  noteDisplayMode={props.noteDisplayMode}
                   peekForm={props.peekForm}
                   previewForm={props.previewForm}
+                  fromDegrees={props.fromDegrees}
+                  toDegrees={props.toDegrees}
+                  fromGuide={props.fromGuide}
+                  toGuide={props.toGuide}
+                  showGuideTones={props.showGuideTones}
+                  soloActive={props.soloActive}
                   key={i}
                 />
               )

@@ -261,6 +261,11 @@ body.dark {
   border-color: red;
 }
 
+.cycle-icon {
+  font-size: 0.9rem;
+  opacity: 0.5;
+}
+
 .toolbar-tip-wrap {
   position: relative;
   display: flex;
@@ -364,6 +369,10 @@ body.dark {
   height: 3px;
   border-radius: 50%;
   background: currentColor;
+}
+
+.tone-dimmed {
+  opacity: 0.2;
 }
 
 /* Legend — hidden on screen, shown in print */
