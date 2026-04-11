@@ -169,14 +169,14 @@ export default function ChordSelector({
         })}
       </div>
       <div className="chord-hint">
-        <span className="hint-shift">shift-click: add to song</span>
+        <span className="hint-shift">shift-click: add to changes</span>
       </div>
       <button
         className="add-to-song-btn"
         onClick={addLastToSong}
         disabled={!canAdd}
       >
-        {lastChord ? `+ Add ${lastChord.name} to song` : '+ Add to song'}
+        {lastChord ? `+ Add ${lastChord.name} to changes` : '+ Add to changes'}
       </button>
     </div>
   );
