@@ -197,6 +197,12 @@ function App() {
 
   return (
     <div className="App" data-color-pair={colorPair} data-theme={theme}>
+      <div className="rotate-overlay">
+        <div className="rotate-message">
+          <div className="rotate-icon">&#8635;</div>
+          <p>Rotate your device to landscape</p>
+        </div>
+      </div>
       <header className="header">
         <button className="theme-toggle" onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
           {theme === 'dark' ? 'Light mode' : 'Dark mode'}

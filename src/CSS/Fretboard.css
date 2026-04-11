@@ -198,3 +198,30 @@
   color: var(--text-faint);
   margin-top: 0.3rem;
 }
+
+/* Landscape mobile — compact fretboard */
+@media (max-height: 500px) {
+  .fret {
+    height: 1.6rem;
+  }
+
+  .fret::before,
+  .fret::after {
+    width: 1.3rem;
+    height: 1.3rem;
+  }
+
+  .fret-label {
+    font-size: 0.55rem;
+  }
+
+  .fret-dots td {
+    font-size: 0.8rem;
+    height: 0.8rem;
+    padding: 0.1rem 0;
+  }
+
+  .fretboard-hint {
+    display: none;
+  }
+}
