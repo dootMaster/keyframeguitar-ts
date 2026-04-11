@@ -66,8 +66,8 @@
   border-radius: 3px;
   background: var(--bg-surface);
   color: var(--text);
-  transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
-  animation: pill-in 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease, opacity 0.25s ease;
+  animation: pill-in 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
 }
 
 @keyframes pill-in {
@@ -125,6 +125,10 @@
 
 .pill-to .pill-remove:hover {
   color: white;
+}
+
+.pill-to-faded {
+  opacity: 0.35;
 }
 
 .pill-peek {

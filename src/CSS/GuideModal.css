@@ -1,0 +1,74 @@
+.guide-modal {
+  background: var(--bg-surface);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 1.5rem 2rem;
+  width: 620px;
+  max-width: calc(100vw - 2rem);
+  max-height: 80vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  font-family: 'Outfit', sans-serif;
+  scrollbar-width: thin;
+  scrollbar-color: var(--text-faint) transparent;
+}
+
+.guide-modal::-webkit-scrollbar {
+  width: 4px;
+}
+
+.guide-modal::-webkit-scrollbar-thumb {
+  background: var(--text-faint);
+  border-radius: 4px;
+}
+
+.guide-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.guide-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.guide-heading {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.guide-section p {
+  margin: 0;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: var(--text);
+}
+
+.guide-section p strong {
+  color: var(--text);
+  font-weight: 700;
+}
+
+.guide-close-btn {
+  padding: 0.4rem 1rem;
+  font-size: 0.8rem;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 500;
+  border: 1px solid var(--border-light);
+  border-radius: 4px;
+  background: var(--bg-surface);
+  color: var(--text);
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+  align-self: flex-end;
+  margin-top: 0.25rem;
+}
+
+.guide-close-btn:hover {
+  background: var(--bg-hover);
+}

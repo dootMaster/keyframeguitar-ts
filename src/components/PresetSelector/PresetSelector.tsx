@@ -9,13 +9,15 @@ type Props = {
   saveFileList: string[];
   onLoadSave: (name: string) => void;
   onDeleteSave: (name: string) => void;
+  activeName: string | null;
+  setActiveName: (name: string | null) => void;
 };
 
 function getInitialView(): 'songs' | 'saves' {
   return localStorage.getItem('kfg:presetView') === 'saves' ? 'saves' : 'songs';
 }
 
-export default function PresetSelector({ onLoadPreset, saveFileList, onLoadSave, onDeleteSave }: Props) {
+export default function PresetSelector({ onLoadPreset, saveFileList, onLoadSave, onDeleteSave, activeName, setActiveName }: Props) {
   const [open, setOpen] = useState(false);
   const [view, setView] = useState<'songs' | 'saves'>(getInitialView);
   const [keyOverride, setKeyOverride] = useState<number | null>(null);
@@ -42,7 +44,7 @@ export default function PresetSelector({ onLoadPreset, saveFileList, onLoadSave,
   return (
     <div className="preset-selector">
       <button className="preset-toggle" onClick={() => setOpen(!open)}>
-        <span>Presets</span>
+        <span>{activeName ? activeName : 'Presets'}</span>
         <span className="preset-chevron">{open ? '\u25BE' : '\u25B8'}</span>
       </button>
       {open && (
@@ -76,7 +78,7 @@ export default function PresetSelector({ onLoadPreset, saveFileList, onLoadSave,
               <div className="preset-group">
                 <span className="preset-group-label">Foundations</span>
                 {foundational.map((p, i) => (
-                  <button key={i} className="preset-btn" onClick={() => onLoadPreset(buildProgression(p))}>
+                  <button key={i} className="preset-btn" onClick={() => { onLoadPreset(buildProgression(p)); setActiveName(p.name); setOpen(false); }}>
                     <span className="preset-name">{p.name}</span>
                     <span className="preset-key-badge">
                       {flats[keyOverride !== null ? keyOverride : p.defaultKey]}
@@ -87,7 +89,7 @@ export default function PresetSelector({ onLoadPreset, saveFileList, onLoadSave,
               <div className="preset-group">
                 <span className="preset-group-label">Songs</span>
                 {songs.map((p, i) => (
-                  <button key={i} className="preset-btn" onClick={() => onLoadPreset(buildProgression(p))}>
+                  <button key={i} className="preset-btn" onClick={() => { onLoadPreset(buildProgression(p)); setActiveName(p.name); setOpen(false); }}>
                     <span className="preset-name">
                       {p.name}
                       {p.artist && <span className="preset-artist"> &mdash; {p.artist}</span>}
@@ -108,7 +110,7 @@ export default function PresetSelector({ onLoadPreset, saveFileList, onLoadSave,
               )}
               {saveFileList.map((name, i) => (
                 <div key={i} className="preset-save-item">
-                  <button className="preset-save-btn" onClick={() => onLoadSave(name)}>
+                  <button className="preset-save-btn" onClick={() => { onLoadSave(name); setActiveName(name); setOpen(false); }}>
                     {name}
                   </button>
                   <button className="preset-save-delete" onClick={() => onDeleteSave(name)}>

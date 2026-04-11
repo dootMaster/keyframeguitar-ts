@@ -170,8 +170,9 @@
 }
 
 .add-to-song-btn:disabled {
-  opacity: 0.35;
+  opacity: 0.5;
   cursor: default;
+  border-style: dashed;
 }
 
 .scale-chord-btn {

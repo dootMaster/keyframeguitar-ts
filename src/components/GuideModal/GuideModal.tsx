@@ -1,0 +1,84 @@
+import { useEffect } from 'react';
+import '../../CSS/GuideModal.css';
+
+type GuideModalProps = {
+  show: boolean;
+  handleClose: () => void;
+};
+
+export default function GuideModal({ show, handleClose }: GuideModalProps) {
+  useEffect(() => {
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') handleClose();
+    };
+    if (show) window.addEventListener('keydown', handleEsc);
+    return () => window.removeEventListener('keydown', handleEsc);
+  }, [show, handleClose]);
+
+  if (!show) return null;
+
+  return (
+    <div className="save-overlay" onClick={handleClose}>
+      <div className="guide-modal" role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
+        <h4 className="guide-title">Usage Guide</h4>
+
+        <div className="guide-section">
+          <span className="guide-heading">The Idea</span>
+          <p>The fretboard shows two chords at a time. The first color is the chord you're <strong>coming from</strong>, the second is the chord you're <strong>going to</strong>. Notes that appear in both chords are split between the two colors. The tones listed below the fretboard show what's in each chord, with small dots marking the shared tones.</p>
+        </div>
+
+        <div className="guide-section">
+          <span className="guide-heading">Building a Progression</span>
+          <p>Select a root note and chord quality from the sidebar to preview it on the fretboard. Click <strong>Add</strong> to add it to your progression. You need at least two chords to see keyframes.</p>
+        </div>
+
+        <div className="guide-section">
+          <span className="guide-heading">Navigating</span>
+          <p>Use the <strong>&lsaquo;</strong> / <strong>&rsaquo;</strong> arrows, left/right arrow keys, or click any pill in the progression bar to jump to a pair. The last chord wraps back to the first, so you can practice the full loop.</p>
+        </div>
+
+        <div className="guide-section">
+          <span className="guide-heading">Solo</span>
+          <p>Click the first colored pill in the current pair to solo that chord, isolating it on the fretboard. Click it again to return to the pair view.</p>
+        </div>
+
+        <div className="guide-section">
+          <span className="guide-heading">Peek</span>
+          <p>Toggle <strong>Peek</strong> in the toolbar to faintly show the next chord after the current pair so you can plan ahead. Requires 3+ chords.</p>
+        </div>
+
+        <div className="guide-section">
+          <span className="guide-heading">Preview</span>
+          <p>Selecting a chord quality previews it on the fretboard before adding. Click the same quality again to dismiss the preview.</p>
+        </div>
+
+        <div className="guide-section">
+          <span className="guide-heading">Presets &amp; Transposition</span>
+          <p>Open <strong>Presets</strong> in the sidebar to load foundational progressions or songs. Use the <strong>Key</strong> dropdown to transpose any preset to a different key.</p>
+        </div>
+
+        <div className="guide-section">
+          <span className="guide-heading">Sharing</span>
+          <p>Click <strong>Share</strong> in the toolbar to copy a link to your current progression. Anyone who opens it will see the same chords loaded up.</p>
+        </div>
+
+        <div className="guide-section">
+          <span className="guide-heading">Saving</span>
+          <p>Click <strong>Save</strong> to store your progression, fretboard state, and notes locally. Load them from the <strong>My Saves</strong> tab in Presets.</p>
+        </div>
+
+        <div className="guide-section">
+          <span className="guide-heading">Keyboard Shortcuts</span>
+          <p><strong>Left/Right arrows</strong> navigate the progression. <strong>Ctrl+Z</strong> (or <strong>Cmd+Z</strong>) undoes changes to the progression like adding, removing, clearing, or loading a preset.</p>
+        </div>
+
+        <div className="guide-section">
+          <span className="guide-heading">Other Tools</span>
+          <p><strong>Note names</strong> reveals all notes on the fretboard. <strong>Tuning</strong> changes to alternate tunings. <strong>Options</strong> customizes colors. <strong>Center</strong> resets the fretboard scroll position back to the nut. <strong>Print</strong> generates a printable view.</p>
+        </div>
+
+        <button className="guide-close-btn" onClick={handleClose}>Got it</button>
+      </div>
+    </div>
+  );
+}

@@ -22,7 +22,7 @@ const SaveModal = ({save, load, deleteData, handleClose, show, saveFileList}:Sav
 
   return (
     <div className="save-overlay" onClick={() => handleClose()}>
-      <div className="save-modal" onClick={(e) => e.stopPropagation()}>
+      <div className="save-modal" role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
         <h4 className="save-modal-title">Saved Configurations</h4>
 
         {saveFileList.length === 0 ? (

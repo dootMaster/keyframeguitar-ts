@@ -107,7 +107,7 @@ const TuningModal = ({ handleClose, show, tuning, fretboard, setTuning, setFretb
 
   return (
     <div className="tuning-overlay" onClick={() => handleClose()}>
-      <div className="tuning-modal" onClick={(e) => e.stopPropagation()}>
+      <div className="tuning-modal" role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
         <h4 className="tuning-title">Tuning</h4>
 
         <div className="tuning-string-count">

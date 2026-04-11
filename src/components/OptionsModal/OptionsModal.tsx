@@ -66,7 +66,7 @@ export default function OptionsModal({
 
   return (
     <div className="save-overlay" onClick={handleClose}>
-      <div className="options-modal" onClick={(e) => e.stopPropagation()}>
+      <div className="options-modal" role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
         <h4 className="options-title">Options</h4>
 
         <div className="options-section">

@@ -96,7 +96,6 @@
   font-size: 0.85rem;
   background: var(--bg-surface);
   color: var(--text);
-  outline: none;
 }
 
 .save-input:focus {

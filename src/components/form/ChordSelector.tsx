@@ -182,7 +182,7 @@ export default function ChordSelector({
           ? lastChord.name === lastProgressionChord
             ? `${lastChord.name} is already the last chord`
             : `+ Add ${lastChord.name} to changes`
-          : '+ Add to changes'}
+          : 'Select a root and quality first'}
       </button>
     </div>
   );

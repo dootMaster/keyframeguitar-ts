@@ -1,5 +1,5 @@
 import './CSS/App.css';
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import ChordSelector from './components/form/ChordSelector'
 import Fretboard from './components/fretboard/Fretboard';
 import createFretboard from './components/fretboard/helpers/createFretboard';
@@ -14,6 +14,8 @@ import { ProgressionChord } from './components/Progression/Progression';
 import Notes from './components/Notes/Notes';
 import PresetSelector from './components/PresetSelector/PresetSelector';
 import OptionsModal, { ColorConfig, DEFAULT_COLORS, COLORBLIND_COLORS } from './components/OptionsModal/OptionsModal';
+import GuideModal from './components/GuideModal/GuideModal';
+import { parseChordName } from './components/form/helpers/chords';
 
 const SAVE_PREFIX = 'kfg:';
 
@@ -38,7 +40,13 @@ function getInitialColorblind(): boolean {
 function getSaveNames(): string[] {
   return Object.keys(localStorage)
     .filter(k => k.startsWith(SAVE_PREFIX))
-    .map(k => k.slice(SAVE_PREFIX.length));
+    .map(k => k.slice(SAVE_PREFIX.length))
+    .filter(name => {
+      try {
+        const val = JSON.parse(localStorage.getItem(SAVE_PREFIX + name) || '');
+        return val && typeof val === 'object' && 'progression' in val;
+      } catch { return false; }
+    });
 }
 
 function App() {
@@ -63,6 +71,31 @@ function App() {
   const [showOptionsModal, setShowOptionsModal] = useState(false);
   const [colors, setColors] = useState<ColorConfig>(getInitialColors);
   const [colorblind, setColorblind] = useState(getInitialColorblind);
+  const [soloIndex, setSoloIndex] = useState<number | null>(null);
+  const [showGuide, setShowGuide] = useState(false);
+  const [activeName, setActiveName] = useState<string | null>(null);
+  const [shareCopied, setShareCopied] = useState(false);
+  const shareTimer = useRef<ReturnType<typeof setTimeout>>();
+
+  type UndoSnapshot = { progression: ProgressionChord[]; windowIndex: number; activeName: string | null };
+  const undoStack = useRef<UndoSnapshot[]>([]);
+  const pushUndo = () => {
+    undoStack.current.push({ progression, windowIndex, activeName });
+    if (undoStack.current.length > 20) undoStack.current.shift();
+  };
+  const undo = () => {
+    const snapshot = undoStack.current.pop();
+    if (!snapshot) return;
+    setProgression(snapshot.progression);
+    setActiveName(snapshot.activeName);
+    setSoloIndex(null);
+    setPreviewForm(null);
+    if (snapshot.progression.length >= 2) {
+      applyWindowDirect(snapshot.windowIndex, snapshot.progression);
+    } else {
+      setWindowIndex(0);
+    }
+  };
 
   useEffect(() => {
     localStorage.setItem('kfg:colors', JSON.stringify(colors));
@@ -74,6 +107,26 @@ function App() {
     localStorage.setItem('kfg:theme', theme);
   }, [theme]);
 
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'z') {
+        e.preventDefault();
+        undo();
+        return;
+      }
+      if (progression.length < 2) return;
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        navigateProgression(windowIndex - 1);
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        navigateProgression(windowIndex + 1);
+      }
+    };
+    window.addEventListener('keydown', handleKey);
+    return () => window.removeEventListener('keydown', handleKey);
+  }, [progression, windowIndex]);
+
   const colorPair = progression.length >= 2 ? windowIndex % 3 : 0;
 
   const rotatedColors = useMemo(() => {
@@ -82,13 +135,13 @@ function App() {
     return { from: rotated[0], to: rotated[1], peek: rotated[2], preview: colors.preview };
   }, [colors, colorPair]);
 
-  const peekForm: boolean[] | null = showPeek && !previewForm && progression.length >= 2 && windowIndex + 2 < progression.length
-    ? progression[windowIndex + 2].form
+  const peekForm: boolean[] | null = showPeek && !previewForm && soloIndex === null && progression.length >= 3
+    ? progression[(windowIndex + 2) % progression.length].form
     : null;
 
   const applyWindow = (index: number) => {
     const fromChord = progression[index].form;
-    const toChord = progression[index + 1].form;
+    const toChord = progression[(index + 1) % progression.length].form;
     setFrom(fromChord);
     setTo(toChord);
     let fb = createFretboard(tuning);
@@ -97,10 +150,16 @@ function App() {
     setWindowIndex(index);
   };
 
+  const toggleSolo = (index: number) => {
+    setSoloIndex(soloIndex === index ? null : index);
+  };
+
   const addToProgression = (chord: ProgressionChord) => {
+    pushUndo();
     const newProg = [...progression, chord];
     setProgression(newProg);
     setPreviewForm(null);
+    setSoloIndex(null);
     if (newProg.length >= 2) {
       const idx = newProg.length === 2 ? 0 : windowIndex;
       applyWindowDirect(idx, newProg);
@@ -109,7 +168,7 @@ function App() {
 
   const applyWindowDirect = (index: number, prog: ProgressionChord[], tuningOverride?: number[]) => {
     const fromChord = prog[index].form;
-    const toChord = prog[index + 1].form;
+    const toChord = prog[(index + 1) % prog.length].form;
     setFrom(fromChord);
     setTo(toChord);
     let fb = createFretboard(tuningOverride || tuning);
@@ -118,9 +177,37 @@ function App() {
     setWindowIndex(index);
   };
 
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const p = params.get('p');
+    if (!p) return;
+    const chords = p.split(',').map(s => parseChordName(decodeURIComponent(s.trim()))).filter(Boolean) as ProgressionChord[];
+    if (chords.length === 0) return;
+    setProgression(chords);
+    if (chords.length >= 2) {
+      applyWindowDirect(0, chords);
+    }
+    const t = params.get('t');
+    if (t) setActiveName(decodeURIComponent(t));
+    window.history.replaceState({}, '', window.location.pathname);
+  }, []);
+
+  const shareProgression = () => {
+    if (progression.length === 0) return;
+    const param = progression.map(c => encodeURIComponent(c.name)).join(',');
+    let url = window.location.origin + window.location.pathname + '?p=' + param;
+    if (activeName) url += '&t=' + encodeURIComponent(activeName);
+    navigator.clipboard.writeText(url);
+    setShareCopied(true);
+    clearTimeout(shareTimer.current);
+    shareTimer.current = setTimeout(() => setShareCopied(false), 1500);
+  };
+
   const removeFromProgression = (index: number) => {
+    pushUndo();
     const newProg = progression.filter((_, i) => i !== index);
     setProgression(newProg);
+    setSoloIndex(null);
     if (newProg.length < 2) {
       setWindowIndex(0);
       return;
@@ -129,24 +216,29 @@ function App() {
     if (index <= windowIndex) {
       newIndex = Math.max(0, windowIndex - 1);
     }
-    if (newIndex > newProg.length - 2) {
-      newIndex = newProg.length - 2;
+    if (newIndex > newProg.length - 1) {
+      newIndex = newProg.length - 1;
     }
     applyWindowDirect(newIndex, newProg);
   };
 
   const clearProgression = () => {
+    pushUndo();
     setProgression([]);
     setWindowIndex(0);
+    setSoloIndex(null);
+    setActiveName(null);
   };
 
   const loadPreset = (chords: ProgressionChord[]) => {
     if (notes.length > 0) {
       if (!window.confirm('You have unsaved notes. Load anyway?')) return;
     }
+    pushUndo();
     setProgression(chords);
     setPreviewForm(null);
     setNotes([]);
+    setSoloIndex(null);
     if (chords.length >= 2) {
       applyWindowDirect(0, chords);
     } else {
@@ -155,8 +247,10 @@ function App() {
   };
 
   const navigateProgression = (index: number) => {
-    if (index < 0 || index > progression.length - 2) return;
-    applyWindow(index);
+    if (progression.length < 2) return;
+    const wrapped = ((index % progression.length) + progression.length) % progression.length;
+    setSoloIndex(null);
+    applyWindow(wrapped);
   };
 
   const toggleFret = (string:number, fret:number, isRight:boolean) => {
@@ -233,15 +327,15 @@ function App() {
   }
 
   const fromChordName = progression.length >= 2 ? progression[windowIndex].name : null;
-  const toChordName = progression.length >= 2 ? progression[windowIndex + 1].name : null;
-  const peekChordName = peekForm && windowIndex + 2 < progression.length ? progression[windowIndex + 2].name : null;
+  const toChordName = progression.length >= 2 ? progression[(windowIndex + 1) % progression.length].name : null;
+  const peekChordName = peekForm ? progression[(windowIndex + 2) % progression.length].name : null;
 
   const tuningLabel = useMemo(() => {
     return [...tuning].reverse().map(n => flat[n]).join(' ');
   }, [tuning]);
 
-  const commonTones: boolean[] = progression.length >= 2
-    ? progression[windowIndex].form.map((on, i) => on && progression[windowIndex + 1].form[i])
+  const commonTones: boolean[] = progression.length >= 2 && soloIndex === null
+    ? progression[windowIndex].form.map((on, i) => on && progression[(windowIndex + 1) % progression.length].form[i])
     : new Array(12).fill(false);
 
   const formToNotes = (form: boolean[]): { name: string; common: boolean }[] => {
@@ -249,7 +343,7 @@ function App() {
   };
 
   const fromNotes = progression.length >= 2 ? formToNotes(progression[windowIndex].form) : null;
-  const toNotes = progression.length >= 2 ? formToNotes(progression[windowIndex + 1].form) : null;
+  const toNotes = progression.length >= 2 ? formToNotes(progression[(windowIndex + 1) % progression.length].form) : null;
 
   const reset = () => {
     let resetArray = new Array(12).fill(false);
@@ -272,7 +366,7 @@ function App() {
         </div>
       </div>
       <header className="header">
-        <h3>Key Frame Guitar</h3>
+        <h3>Keyframe Guitar</h3>
         <p className="subtitle">A simple tool for visualizing one chord change at a time.</p>
       </header>
       <div className="main">
@@ -285,6 +379,8 @@ function App() {
             saveFileList={saveFileList}
             onLoadSave={load}
             onDeleteSave={deleteData}
+            activeName={activeName}
+            setActiveName={setActiveName}
           />
           <ChordSelector
             onAddToProgression={addToProgression}
@@ -292,7 +388,7 @@ function App() {
             onPreview={setPreviewForm}
           />
         </aside>
-        <div className="center">
+        <div className={'center' + (soloIndex !== null ? ' solo-active' : '') + (previewForm ? ' preview-active' : '')}>
           <Fretboard
             fretboard={fretboard}
             flat={flat}
@@ -309,30 +405,39 @@ function App() {
             onNavigate={navigateProgression}
             onClear={clearProgression}
             showPeek={showPeek}
+            soloIndex={soloIndex}
+            onSolo={toggleSolo}
           />
-          {(fromNotes || toNotes) && (
+          {soloIndex !== null && progression.length >= 2 ? (
+            <div className="chord-tones">
+              <span className={soloIndex === windowIndex ? 'chord-tones-from' : 'chord-tones-to'}>
+                {formToNotes(progression[soloIndex].form).map((n, i, arr) => (
+                  <><span key={i}>{n.name}</span>{i < arr.length - 1 ? ' \u00B7 ' : ''}</>
+                ))}
+              </span>
+            </div>
+          ) : (fromNotes || toNotes) && (
             <div className="chord-tones">
               {fromNotes && (
                 <span className="chord-tones-from">
-                  {fromChordName}:{' '}
                   {fromNotes.map((n, i) => (
-                    <span key={i} className={n.common ? 'tone-common' : ''}>{n.name}{i < fromNotes.length - 1 ? '  ' : ''}</span>
+                    <><span key={i} className={n.common ? 'tone-common' : ''}>{n.name}</span>{i < fromNotes.length - 1 ? ' \u00B7 ' : ''}</>
                   ))}
                 </span>
               )}
               {fromNotes && toNotes && <span className="chord-tones-arrow">&rarr;</span>}
               {toNotes && (
                 <span className="chord-tones-to">
-                  {toChordName}:{' '}
                   {toNotes.map((n, i) => (
-                    <span key={i} className={n.common ? 'tone-common' : ''}>{n.name}{i < toNotes.length - 1 ? '  ' : ''}</span>
+                    <><span key={i} className={n.common ? 'tone-common' : ''}>{n.name}</span>{i < toNotes.length - 1 ? ' \u00B7 ' : ''}</>
                   ))}
                 </span>
               )}
             </div>
           )}
           <div className="print-legend">
-            <div className="legend-title">Key Frame Guitar</div>
+            <div className="legend-title">Keyframe Guitar</div>
+            {activeName && <div className="legend-active-name">{activeName}</div>}
             <div className="legend-tuning">Tuning: {tuningLabel}</div>
             <div className="legend-items">
               {fromChordName && (
@@ -363,15 +468,16 @@ function App() {
           </div>
           <div className="toolbar">
             <button className={'toolbar-btn' + (showAllNotes ? ' active' : '')} onClick={() => setShowAllNotes(!showAllNotes)}>Note names</button>
-            <button className={'toolbar-btn' + (showPeek ? ' active peek-btn-active' : '')} onClick={() => setShowPeek(!showPeek)}>Peek</button>
             <span className="toolbar-tip-wrap">
-              <button className="toolbar-info-btn">?</button>
-              <span className="toolbar-tip">When enabled, the next chord after the current pair is faintly shown on the fretboard so you can plan ahead. Requires 3 or more chords in changes.</span>
+              <button className={'toolbar-btn' + (showPeek ? ' active peek-btn-active' : '')} onClick={() => setShowPeek(!showPeek)}>Peek</button>
+              <button className="toolbar-info-btn" aria-label="What is Peek">?</button>
+              <span className="toolbar-tip">Peek faintly shows the next chord after the current pair so you can plan ahead. Requires 3+ chords.</span>
             </span>
             <button className='toolbar-btn' onClick={() => setShowTuningModal(true)}>Tuning</button>
             <button className='toolbar-btn' onClick={() => setShowSaveModal(true)}>Save</button>
             <button className='toolbar-btn' onClick={() => setShowOptionsModal(true)}>Options</button>
             <button className='toolbar-btn' onClick={() => setScrollResetKey(k => k + 1)}>Center</button>
+            <button className={'toolbar-btn' + (shareCopied ? ' share-copied' : '')} onClick={shareProgression} disabled={progression.length === 0}>{shareCopied ? 'Copied!' : 'Share'}</button>
             <button className='toolbar-btn' onClick={() => window.print()}>Print</button>
             <button className='toolbar-btn reset-button' onClick={reset}>RESET</button>
           </div>
@@ -408,18 +514,26 @@ function App() {
         colorblind={colorblind}
         setColorblind={setColorblind}
       />
+      <GuideModal
+        show={showGuide}
+        handleClose={() => setShowGuide(false)}
+      />
       <div className="bottom-bar">
         <button className="theme-toggle" onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
           {theme === 'dark' ? 'Light mode' : 'Dark mode'}
         </button>
+        <button className="about-link" onClick={() => setShowGuide(true)}>Guide</button>
         <button className="about-link" onClick={() => setShowAbout(true)}>About</button>
+        <a className="tip-link" href="https://venmo.com/u/Leslie-Ngo-1" target="_blank" rel="noopener noreferrer">Tip jar</a>
       </div>
       {showAbout && (
         <div className="save-overlay" onClick={() => setShowAbout(false)}>
-          <div className="about-modal" onClick={(e) => e.stopPropagation()}>
+          <div className="about-modal" role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
             <p>I taught guitar for 7 years. Every tool I found online was either paywalled, cluttered with features, or full of ads. My students just needed something simple to see how two chords connect. So I made this.</p>
+            <p>I also tried to teach myself how to animate once. I have a huge appreciation for animators now. But that experience is how I came up with the idea for this tool. Keyframes.</p>
             <p>I hope this makes your journey of exploring this ridiculous instrument a little easier.</p>
             <p className="about-sign">— Leslie</p>
+            <a className="about-tip" href="https://venmo.com/u/Leslie-Ngo-1" target="_blank" rel="noopener noreferrer">Buy me a coffee</a>
           </div>
         </div>
       )}

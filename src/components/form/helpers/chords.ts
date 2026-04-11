@@ -143,3 +143,26 @@ export function chordToForm(root: number, intervals: number[]): boolean[] {
   });
   return form;
 }
+
+const qualityMap: Record<string, number[]> = {};
+sections.forEach(s => s.items.forEach(q => { qualityMap[q.name] = q.intervals; }));
+scaleSections.forEach(s => {
+  s.chords.forEach(c => { if (!qualityMap[c.quality]) qualityMap[c.quality] = c.chordIntervals; });
+  s.modes.forEach(m => { if (!qualityMap[m.name]) qualityMap[m.name] = m.intervals; });
+});
+
+const noteIndex: Record<string, number> = {};
+['C','Db','D','Eb','E','F','Gb','G','Ab','A','Bb','B'].forEach((n, i) => { noteIndex[n] = i; });
+['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'].forEach((n, i) => { if (!(n in noteIndex)) noteIndex[n] = i; });
+
+export function parseChordName(name: string): { name: string; form: boolean[] } | null {
+  const spaceIdx = name.indexOf(' ');
+  if (spaceIdx === -1) return null;
+  const rootStr = name.slice(0, spaceIdx);
+  const qualStr = name.slice(spaceIdx + 1);
+  const rootIdx = noteIndex[rootStr];
+  if (rootIdx === undefined) return null;
+  const intervals = qualityMap[qualStr];
+  if (!intervals) return null;
+  return { name, form: chordToForm(rootIdx, intervals) };
+}

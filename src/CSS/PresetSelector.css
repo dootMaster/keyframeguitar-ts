@@ -1,6 +1,5 @@
 .preset-selector {
-  display: flex;
-  flex-direction: column;
+  position: relative;
 }
 
 .preset-toggle {
@@ -30,15 +29,23 @@
 }
 
 .preset-body {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 10;
   padding: 0.5rem 0.6rem;
   border: 1px solid var(--border-faint);
   border-top: none;
   border-radius: 0 0 5px 5px;
-  background: var(--bg-subtle);
+  background: var(--bg-surface);
+  box-shadow: 0 4px 12px var(--shadow);
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
   animation: preset-open 0.2s ease both;
+  max-height: 70vh;
+  overflow-y: auto;
 }
 
 @keyframes preset-open {
@@ -104,7 +111,6 @@
   background: var(--bg-surface);
   color: var(--text);
   cursor: pointer;
-  outline: none;
 }
 
 /* ── Preset groups ── */

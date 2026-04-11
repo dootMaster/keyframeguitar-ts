@@ -9,13 +9,14 @@ type ProgressionProps = {
   onNavigate: (index: number) => void;
   onClear: () => void;
   showPeek: boolean;
+  soloIndex: number | null;
+  onSolo: (index: number) => void;
 };
 
 export default function Progression({
-  progression, windowIndex, onRemove, onNavigate, onClear, showPeek
+  progression, windowIndex, onRemove, onNavigate, onClear, showPeek, soloIndex, onSolo
 }: ProgressionProps) {
-  const canPrev = windowIndex > 0;
-  const canNext = windowIndex < progression.length - 2;
+  const canNav = progression.length >= 2;
 
   if (progression.length === 0) {
     return (
@@ -24,6 +25,10 @@ export default function Progression({
       </div>
     );
   }
+
+  const fromIdx = windowIndex;
+  const toIdx = (windowIndex + 1) % progression.length;
+  const peekIdx = (windowIndex + 2) % progression.length;
 
   return (
     <div className="progression">
@@ -34,7 +39,8 @@ export default function Progression({
         <button
           className="progression-nav"
           onClick={() => onNavigate(windowIndex - 1)}
-          disabled={!canPrev}
+          disabled={!canNav}
+          aria-label="Previous pair"
         >
           &lsaquo;
         </button>
@@ -42,22 +48,26 @@ export default function Progression({
           {progression.map((chord, i) => {
             let pillClass = 'progression-pill';
             if (progression.length >= 2) {
-              if (i === windowIndex) pillClass += ' pill-from';
-              else if (i === windowIndex + 1) pillClass += ' pill-to';
-              else if (showPeek && i === windowIndex + 2) pillClass += ' pill-peek';
+              if (i === fromIdx) pillClass += ' pill-from';
+              else if (i === toIdx) pillClass += soloIndex !== null ? ' pill-to pill-to-faded' : ' pill-to';
+              else if (showPeek && soloIndex === null && i === peekIdx) pillClass += ' pill-peek';
             }
             return (
               <div key={i} className={pillClass}>
                 <span
                   className="pill-label"
+                  title={progression.length >= 2 && i === fromIdx ? (soloIndex !== null ? 'Click to unsolo' : 'Click to solo') : undefined}
                   onClick={() => {
-                    if (i < progression.length - 1) onNavigate(i);
-                    else if (i > 0) onNavigate(i - 1);
+                    if (progression.length >= 2 && i === fromIdx) {
+                      onSolo(i);
+                    } else {
+                      onNavigate(i);
+                    }
                   }}
                 >
                   {chord.name}
                 </span>
-                <button className="pill-remove" onClick={() => onRemove(i)}>&times;</button>
+                <button className="pill-remove" onClick={() => onRemove(i)} aria-label="Remove">&times;</button>
               </div>
             );
           })}
@@ -65,7 +75,8 @@ export default function Progression({
         <button
           className="progression-nav"
           onClick={() => onNavigate(windowIndex + 1)}
-          disabled={!canNext}
+          disabled={!canNav}
+          aria-label="Next pair"
         >
           &rsaquo;
         </button>
