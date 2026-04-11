@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import FocusTrap from 'focus-trap-react';
 import SelectNote from './SelectNote';
 import '../../CSS/TuningModal.css';
 import { TuningModalProps } from './TuningModalTypes/TuningModalTypes';
@@ -106,8 +107,9 @@ const TuningModal = ({ handleClose, show, tuning, fretboard, setTuning, setFretb
   const stringLabels = ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th', '9th'];
 
   return (
-    <div className="tuning-overlay" onClick={() => handleClose()}>
-      <div className="tuning-modal" role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
+    <FocusTrap focusTrapOptions={{ clickOutsideDeactivates: true }}>
+      <div className="tuning-overlay" onClick={() => handleClose()}>
+        <div className="tuning-modal" role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
         <h4 className="tuning-title">Tuning</h4>
 
         <div className="tuning-string-count">
@@ -152,8 +154,9 @@ const TuningModal = ({ handleClose, show, tuning, fretboard, setTuning, setFretb
             </div>
           ))}
         </div>
+        </div>
       </div>
-    </div>
+    </FocusTrap>
   );
 };
 

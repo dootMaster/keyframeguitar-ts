@@ -9,6 +9,7 @@ export type Preset = {
   artist?: string;
   category: 'foundational' | 'song';
   defaultKey: number;    // root note index 0-11
+  sharps?: boolean;      // display with sharps (for sharp keys like G, D, A, E)
   chords: PresetChord[];
 };
 
@@ -68,6 +69,7 @@ export const presets: Preset[] = [
     name: 'Blues (I7 \u2013 IV7 \u2013 V7)',
     category: 'foundational',
     defaultKey: 9,
+    sharps: true,
     chords: [
       { interval: 0, quality: '7', intervals: DOM7 },
       { interval: 5, quality: '7', intervals: DOM7 },
@@ -93,6 +95,7 @@ export const presets: Preset[] = [
     name: 'i \u2013 VII \u2013 VI',
     category: 'foundational',
     defaultKey: 9,
+    sharps: true,
     chords: [
       { interval: 0, quality: 'Min', intervals: MIN },
       { interval: 10, quality: 'Maj', intervals: MAJ },
@@ -118,6 +121,7 @@ export const presets: Preset[] = [
     artist: 'Ben E. King',
     category: 'song',
     defaultKey: 9,
+    sharps: true,
     chords: [
       { interval: 0, quality: 'Maj', intervals: MAJ },
       { interval: 9, quality: 'Min', intervals: MIN },
@@ -156,6 +160,7 @@ export const presets: Preset[] = [
     artist: 'Radiohead',
     category: 'song',
     defaultKey: 7,
+    sharps: true,
     chords: [
       { interval: 0, quality: 'Maj', intervals: MAJ },
       { interval: 4, quality: 'Maj', intervals: MAJ },

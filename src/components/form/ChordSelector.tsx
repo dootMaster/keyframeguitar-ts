@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { flats } from './helpers/notes';
+import { flats, renotate } from './helpers/notes';
 import { sections, scaleSections, chordToForm } from './helpers/chords';
 import '../../CSS/ChordSelector.css';
 
@@ -7,6 +7,9 @@ type ChordSelectorProps = {
   onAddToProgression: (chord: { name: string; form: boolean[] }) => void;
   lastProgressionChord: string | null;
   onPreview: (form: boolean[] | null) => void;
+  noteNames: string[];
+  useSharps: boolean;
+  setUseSharps: (v: boolean) => void;
 };
 
 const tabs = [
@@ -34,7 +37,7 @@ const tabToSection: Record<TabKey, string> = {
 };
 
 export default function ChordSelector({
-  onAddToProgression, lastProgressionChord, onPreview
+  onAddToProgression, lastProgressionChord, onPreview, noteNames, useSharps, setUseSharps
 }: ChordSelectorProps) {
   const [root, setRoot] = useState(0);
   const [lastQuality, setLastQuality] = useState<{ name: string; intervals: number[]; rootOverride?: number } | null>(null);
@@ -81,9 +84,18 @@ export default function ChordSelector({
 
   return (
     <div className="chord-selector">
-      <span className="step-label">1. Root</span>
+      <div className="root-header">
+        <span className="step-label">1. Root</span>
+        <button
+          className="sharp-flat-toggle"
+          onClick={() => setUseSharps(!useSharps)}
+        >
+          <span className={'sf-option' + (!useSharps ? ' sf-active' : '')}>b</span>
+          <span className={'sf-option' + (useSharps ? ' sf-active' : '')}>#</span>
+        </button>
+      </div>
       <div className="chord-roots">
-        {flats.map((note, i) => (
+        {noteNames.map((note, i) => (
           <button
             key={i}
             className={'chord-root-btn' + (root === i ? ' active' : '')}
@@ -130,7 +142,7 @@ export default function ChordSelector({
               <div className="chord-section-items">
                 {section.chords.map((sc) => {
                   const chordRoot = (root + sc.interval) % 12;
-                  const name = flats[chordRoot] + sc.quality;
+                  const name = noteNames[chordRoot] + sc.quality;
                   return (
                     <button
                       key={sc.degree}
@@ -180,8 +192,8 @@ export default function ChordSelector({
       >
         {lastChord
           ? lastChord.name === lastProgressionChord
-            ? `${lastChord.name} is already the last chord`
-            : `+ Add ${lastChord.name} to changes`
+            ? `${renotate(lastChord.name, noteNames)} is already the last chord`
+            : `+ Add ${renotate(lastChord.name, noteNames)} to changes`
           : 'Select a root and quality first'}
       </button>
     </div>

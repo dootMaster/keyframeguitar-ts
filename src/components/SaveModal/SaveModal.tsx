@@ -1,4 +1,5 @@
 import { ChangeEvent, useState, useEffect } from 'react';
+import FocusTrap from 'focus-trap-react';
 import SaveModalTypes from './SaveModalTypes/SaveModalTypes';
 import '../../CSS/SaveModal.css';
 
@@ -21,8 +22,9 @@ const SaveModal = ({save, load, deleteData, handleClose, show, saveFileList}:Sav
   };
 
   return (
-    <div className="save-overlay" onClick={() => handleClose()}>
-      <div className="save-modal" role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
+    <FocusTrap focusTrapOptions={{ clickOutsideDeactivates: true }}>
+      <div className="save-overlay" onClick={() => handleClose()}>
+        <div className="save-modal" role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
         <h4 className="save-modal-title">Saved Configurations</h4>
 
         {saveFileList.length === 0 ? (
@@ -49,8 +51,9 @@ const SaveModal = ({save, load, deleteData, handleClose, show, saveFileList}:Sav
           />
           <button className="save-btn" onClick={handleSave}>Save</button>
         </div>
+        </div>
       </div>
-    </div>
+    </FocusTrap>
   );
 }
 

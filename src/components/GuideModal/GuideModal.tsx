@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import FocusTrap from 'focus-trap-react';
 import '../../CSS/GuideModal.css';
 
 type GuideModalProps = {
@@ -18,9 +19,10 @@ export default function GuideModal({ show, handleClose }: GuideModalProps) {
   if (!show) return null;
 
   return (
-    <div className="save-overlay" onClick={handleClose}>
-      <div className="guide-modal" role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
-        <h4 className="guide-title">Usage Guide</h4>
+    <FocusTrap focusTrapOptions={{ clickOutsideDeactivates: true }}>
+      <div className="save-overlay" onClick={handleClose}>
+        <div className="guide-modal" role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
+          <h4 className="guide-title">Usage Guide</h4>
 
         <div className="guide-section">
           <span className="guide-heading">The Idea</span>
@@ -77,8 +79,9 @@ export default function GuideModal({ show, handleClose }: GuideModalProps) {
           <p><strong>Note names</strong> reveals all notes on the fretboard. <strong>Tuning</strong> changes to alternate tunings. <strong>Options</strong> customizes colors. <strong>Center</strong> resets the fretboard scroll position back to the nut. <strong>Print</strong> generates a printable view.</p>
         </div>
 
-        <button className="guide-close-btn" onClick={handleClose}>Got it</button>
+          <button className="guide-close-btn" onClick={handleClose}>Got it</button>
+        </div>
       </div>
-    </div>
+    </FocusTrap>
   );
 }

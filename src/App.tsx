@@ -4,8 +4,8 @@ import ChordSelector from './components/form/ChordSelector'
 import Fretboard from './components/fretboard/Fretboard';
 import createFretboard from './components/fretboard/helpers/createFretboard';
 import { updateFretboardViaForm } from './components/form/helpers/formHelpers';
-import { flat } from './components/fretboard/helpers/stringDict';
-import { flats } from './components/form/helpers/notes';
+import { flat, sharp } from './components/fretboard/helpers/stringDict';
+import { flats, sharps, renotate } from './components/form/helpers/notes';
 import { GtrString } from './components/AppTypes';
 import TuningModal from './components/TuningModal/TuningModal';
 import SaveModal from './components/SaveModal/SaveModal';
@@ -16,6 +16,7 @@ import PresetSelector from './components/PresetSelector/PresetSelector';
 import OptionsModal, { ColorConfig, DEFAULT_COLORS, COLORBLIND_COLORS } from './components/OptionsModal/OptionsModal';
 import GuideModal from './components/GuideModal/GuideModal';
 import { parseChordName } from './components/form/helpers/chords';
+import FocusTrap from 'focus-trap-react';
 
 const SAVE_PREFIX = 'kfg:';
 
@@ -73,6 +74,8 @@ function App() {
   const [colorblind, setColorblind] = useState(getInitialColorblind);
   const [soloIndex, setSoloIndex] = useState<number | null>(null);
   const [showGuide, setShowGuide] = useState(false);
+  const [useSharps, setUseSharps] = useState(() => localStorage.getItem('kfg:sharps') === 'true');
+  const noteNames = useSharps ? sharps : flats;
   const [activeName, setActiveName] = useState<string | null>(null);
   const [shareCopied, setShareCopied] = useState(false);
   const shareTimer = useRef<ReturnType<typeof setTimeout>>();
@@ -103,9 +106,14 @@ function App() {
   }, [colors, colorblind]);
 
   useEffect(() => {
+    localStorage.setItem('kfg:sharps', String(useSharps));
+  }, [useSharps]);
+
+  useEffect(() => {
     document.body.classList.toggle('dark', theme === 'dark');
     localStorage.setItem('kfg:theme', theme);
   }, [theme]);
+
 
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
@@ -134,6 +142,12 @@ function App() {
     const rotated = [...trio.slice(colorPair), ...trio.slice(0, colorPair)];
     return { from: rotated[0], to: rotated[1], peek: rotated[2], preview: colors.preview };
   }, [colors, colorPair]);
+
+  useEffect(() => {
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="#ffffff"/><circle cx="11" cy="16" r="6" fill="${rotatedColors.from}"/><circle cx="21" cy="16" r="6" fill="${rotatedColors.to}"/></svg>`;
+    const link = document.querySelector('link[rel="icon"]') as HTMLLinkElement;
+    if (link) link.href = 'data:image/svg+xml,' + encodeURIComponent(svg);
+  }, [rotatedColors.from, rotatedColors.to]);
 
   const peekForm: boolean[] | null = showPeek && !previewForm && soloIndex === null && progression.length >= 3
     ? progression[(windowIndex + 2) % progression.length].form
@@ -230,7 +244,7 @@ function App() {
     setActiveName(null);
   };
 
-  const loadPreset = (chords: ProgressionChord[]) => {
+  const loadPreset = (chords: ProgressionChord[], sharps?: boolean) => {
     if (notes.length > 0) {
       if (!window.confirm('You have unsaved notes. Load anyway?')) return;
     }
@@ -239,6 +253,7 @@ function App() {
     setPreviewForm(null);
     setNotes([]);
     setSoloIndex(null);
+    if (sharps !== undefined) setUseSharps(sharps);
     if (chords.length >= 2) {
       applyWindowDirect(0, chords);
     } else {
@@ -277,7 +292,7 @@ function App() {
     if (name.length > 32 || name.length <= 0 || getSaveNames().includes(name)) {
       alert('1-32 char, or name already exists');
     } else {
-      let saveObject = { fretboard, tuning, progression, notes };
+      let saveObject = { fretboard, tuning, progression, notes, useSharps };
       localStorage.setItem(SAVE_PREFIX + name, JSON.stringify(saveObject));
       setSaveFileList(getSaveNames());
     }
@@ -301,10 +316,11 @@ function App() {
     }
     try {
       let loadData = JSON.parse(localStorage.getItem(SAVE_PREFIX + name) || '');
-      let { fretboard: loadedFretboard, tuning: loadedTuning, progression: loadedProg, notes: loadedNotes } = loadData;
+      let { fretboard: loadedFretboard, tuning: loadedTuning, progression: loadedProg, notes: loadedNotes, useSharps: loadedSharps } = loadData;
       setFretboard(loadedFretboard);
       setTuning(loadedTuning);
       setNotes(loadedNotes || []);
+      if (loadedSharps !== undefined) setUseSharps(loadedSharps);
       let { from, to } = deriveFormsFromFretboard(loadedFretboard);
       setFrom(from);
       setTo(to);
@@ -326,20 +342,20 @@ function App() {
     setSaveFileList(getSaveNames());
   }
 
-  const fromChordName = progression.length >= 2 ? progression[windowIndex].name : null;
-  const toChordName = progression.length >= 2 ? progression[(windowIndex + 1) % progression.length].name : null;
-  const peekChordName = peekForm ? progression[(windowIndex + 2) % progression.length].name : null;
+  const fromChordName = progression.length >= 2 ? renotate(progression[windowIndex].name, noteNames) : null;
+  const toChordName = progression.length >= 2 ? renotate(progression[(windowIndex + 1) % progression.length].name, noteNames) : null;
+  const peekChordName = peekForm ? renotate(progression[(windowIndex + 2) % progression.length].name, noteNames) : null;
 
   const tuningLabel = useMemo(() => {
-    return [...tuning].reverse().map(n => flat[n]).join(' ');
-  }, [tuning]);
+    return [...tuning].reverse().map(n => (useSharps ? sharp : flat)[n]).join(' ');
+  }, [tuning, useSharps]);
 
   const commonTones: boolean[] = progression.length >= 2 && soloIndex === null
     ? progression[windowIndex].form.map((on, i) => on && progression[(windowIndex + 1) % progression.length].form[i])
     : new Array(12).fill(false);
 
   const formToNotes = (form: boolean[]): { name: string; common: boolean }[] => {
-    return form.map((on, i) => on ? { name: flats[i], common: commonTones[i] } : null).filter(Boolean) as { name: string; common: boolean }[];
+    return form.map((on, i) => on ? { name: noteNames[i], common: commonTones[i] } : null).filter(Boolean) as { name: string; common: boolean }[];
   };
 
   const fromNotes = progression.length >= 2 ? formToNotes(progression[windowIndex].form) : null;
@@ -381,17 +397,21 @@ function App() {
             onDeleteSave={deleteData}
             activeName={activeName}
             setActiveName={setActiveName}
+            noteNames={noteNames}
           />
           <ChordSelector
             onAddToProgression={addToProgression}
             lastProgressionChord={progression.length > 0 ? progression[progression.length - 1].name : null}
             onPreview={setPreviewForm}
+            noteNames={noteNames}
+            useSharps={useSharps}
+            setUseSharps={setUseSharps}
           />
         </aside>
         <div className={'center' + (soloIndex !== null ? ' solo-active' : '') + (previewForm ? ' preview-active' : '')}>
           <Fretboard
             fretboard={fretboard}
-            flat={flat}
+            flat={useSharps ? sharp : flat}
             toggleFret={toggleFret}
             showAllNotes={showAllNotes}
             peekForm={peekForm}
@@ -407,6 +427,7 @@ function App() {
             showPeek={showPeek}
             soloIndex={soloIndex}
             onSolo={toggleSolo}
+            noteNames={noteNames}
           />
           {soloIndex !== null && progression.length >= 2 ? (
             <div className="chord-tones">
@@ -527,15 +548,17 @@ function App() {
         <a className="tip-link" href="https://venmo.com/u/Leslie-Ngo-1" target="_blank" rel="noopener noreferrer">Tip jar</a>
       </div>
       {showAbout && (
-        <div className="save-overlay" onClick={() => setShowAbout(false)}>
-          <div className="about-modal" role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
-            <p>I taught guitar for 7 years. Every tool I found online was either paywalled, cluttered with features, or full of ads. My students just needed something simple to see how two chords connect. So I made this.</p>
-            <p>I also tried to teach myself how to animate once. I have a huge appreciation for animators now. But that experience is how I came up with the idea for this tool. Keyframes.</p>
-            <p>I hope this makes your journey of exploring this ridiculous instrument a little easier.</p>
-            <p className="about-sign">— Leslie</p>
-            <a className="about-tip" href="https://venmo.com/u/Leslie-Ngo-1" target="_blank" rel="noopener noreferrer">Buy me a coffee</a>
+        <FocusTrap focusTrapOptions={{ clickOutsideDeactivates: true }}>
+          <div className="save-overlay" onClick={() => setShowAbout(false)}>
+            <div className="about-modal" role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
+              <p>I taught guitar for 7 years. Every tool I found online was either paywalled, cluttered with features, or full of ads. My students just needed something simple to see how two chords connect. So I made this.</p>
+              <p>I also tried to teach myself how to animate once. I have a huge appreciation for animators now. But that experience is how I came up with the idea for this tool. Keyframes.</p>
+              <p>I hope this makes your journey of exploring this ridiculous instrument a little easier.</p>
+              <p className="about-sign">— Leslie</p>
+              <a className="about-tip" href="https://venmo.com/u/Leslie-Ngo-1" target="_blank" rel="noopener noreferrer">Buy me a coffee</a>
+            </div>
           </div>
-        </div>
+        </FocusTrap>
       )}
     </div>
   );

@@ -1,3 +1,4 @@
+import { renotate } from '../form/helpers/notes';
 import '../../CSS/Progression.css';
 
 export type ProgressionChord = { name: string; form: boolean[] };
@@ -11,10 +12,11 @@ type ProgressionProps = {
   showPeek: boolean;
   soloIndex: number | null;
   onSolo: (index: number) => void;
+  noteNames: string[];
 };
 
 export default function Progression({
-  progression, windowIndex, onRemove, onNavigate, onClear, showPeek, soloIndex, onSolo
+  progression, windowIndex, onRemove, onNavigate, onClear, showPeek, soloIndex, onSolo, noteNames
 }: ProgressionProps) {
   const canNav = progression.length >= 2;
 
@@ -65,7 +67,7 @@ export default function Progression({
                     }
                   }}
                 >
-                  {chord.name}
+                  {renotate(chord.name, noteNames)}
                 </span>
                 <button className="pill-remove" onClick={() => onRemove(i)} aria-label="Remove">&times;</button>
               </div>

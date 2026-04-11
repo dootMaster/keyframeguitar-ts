@@ -5,19 +5,20 @@ import { presets, Preset } from '../form/helpers/presets';
 import '../../CSS/PresetSelector.css';
 
 type Props = {
-  onLoadPreset: (chords: { name: string; form: boolean[] }[]) => void;
+  onLoadPreset: (chords: { name: string; form: boolean[] }[], sharps?: boolean) => void;
   saveFileList: string[];
   onLoadSave: (name: string) => void;
   onDeleteSave: (name: string) => void;
   activeName: string | null;
   setActiveName: (name: string | null) => void;
+  noteNames: string[];
 };
 
 function getInitialView(): 'songs' | 'saves' {
   return localStorage.getItem('kfg:presetView') === 'saves' ? 'saves' : 'songs';
 }
 
-export default function PresetSelector({ onLoadPreset, saveFileList, onLoadSave, onDeleteSave, activeName, setActiveName }: Props) {
+export default function PresetSelector({ onLoadPreset, saveFileList, onLoadSave, onDeleteSave, activeName, setActiveName, noteNames }: Props) {
   const [open, setOpen] = useState(false);
   const [view, setView] = useState<'songs' | 'saves'>(getInitialView);
   const [keyOverride, setKeyOverride] = useState<number | null>(null);
@@ -70,7 +71,7 @@ export default function PresetSelector({ onLoadPreset, saveFileList, onLoadSave,
                   onChange={(e) => setKeyOverride(e.target.value === '' ? null : Number(e.target.value))}
                 >
                   <option value="">Original</option>
-                  {flats.map((note, i) => (
+                  {noteNames.map((note, i) => (
                     <option key={i} value={i}>{note}</option>
                   ))}
                 </select>
@@ -78,10 +79,10 @@ export default function PresetSelector({ onLoadPreset, saveFileList, onLoadSave,
               <div className="preset-group">
                 <span className="preset-group-label">Foundations</span>
                 {foundational.map((p, i) => (
-                  <button key={i} className="preset-btn" onClick={() => { onLoadPreset(buildProgression(p)); setActiveName(p.name); setOpen(false); }}>
+                  <button key={i} className="preset-btn" onClick={() => { onLoadPreset(buildProgression(p), p.sharps); setActiveName(p.name); setOpen(false); }}>
                     <span className="preset-name">{p.name}</span>
                     <span className="preset-key-badge">
-                      {flats[keyOverride !== null ? keyOverride : p.defaultKey]}
+                      {noteNames[keyOverride !== null ? keyOverride : p.defaultKey]}
                     </span>
                   </button>
                 ))}
@@ -89,13 +90,13 @@ export default function PresetSelector({ onLoadPreset, saveFileList, onLoadSave,
               <div className="preset-group">
                 <span className="preset-group-label">Songs</span>
                 {songs.map((p, i) => (
-                  <button key={i} className="preset-btn" onClick={() => { onLoadPreset(buildProgression(p)); setActiveName(p.name); setOpen(false); }}>
+                  <button key={i} className="preset-btn" onClick={() => { onLoadPreset(buildProgression(p), p.sharps); setActiveName(p.name); setOpen(false); }}>
                     <span className="preset-name">
                       {p.name}
                       {p.artist && <span className="preset-artist"> &mdash; {p.artist}</span>}
                     </span>
                     <span className="preset-key-badge">
-                      {flats[keyOverride !== null ? keyOverride : p.defaultKey]}
+                      {noteNames[keyOverride !== null ? keyOverride : p.defaultKey]}
                     </span>
                   </button>
                 ))}

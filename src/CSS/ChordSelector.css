@@ -42,6 +42,37 @@
   border-color: var(--active-bg);
 }
 
+.root-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sharp-flat-toggle {
+  display: flex;
+  align-items: center;
+  padding: 0;
+  border: 1px solid var(--border-light);
+  border-radius: 10px;
+  background: var(--bg-surface);
+  cursor: pointer;
+  overflow: hidden;
+  font-family: 'Outfit', sans-serif;
+}
+
+.sf-option {
+  padding: 0.1rem 0.35rem;
+  font-size: 0.6rem;
+  font-weight: 600;
+  color: var(--text-faint);
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.sf-active {
+  background: var(--active-bg);
+  color: var(--active-text);
+}
+
 .chord-tabs {
   display: grid;
   grid-template-columns: repeat(4, 1fr);

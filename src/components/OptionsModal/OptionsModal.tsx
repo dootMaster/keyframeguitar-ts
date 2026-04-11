@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import FocusTrap from 'focus-trap-react';
 import '../../CSS/OptionsModal.css';
 
 export type ColorConfig = {
@@ -65,9 +66,10 @@ export default function OptionsModal({
   };
 
   return (
-    <div className="save-overlay" onClick={handleClose}>
-      <div className="options-modal" role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
-        <h4 className="options-title">Options</h4>
+    <FocusTrap focusTrapOptions={{ clickOutsideDeactivates: true }}>
+      <div className="save-overlay" onClick={handleClose}>
+        <div className="options-modal" role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
+          <h4 className="options-title">Options</h4>
 
         <div className="options-section">
           <label className="options-toggle-label">
@@ -118,8 +120,9 @@ export default function OptionsModal({
           </div>
         </div>
 
-        <button className="options-reset-btn" onClick={handleReset}>Reset to defaults</button>
+          <button className="options-reset-btn" onClick={handleReset}>Reset to defaults</button>
+        </div>
       </div>
-    </div>
+    </FocusTrap>
   );
 }
