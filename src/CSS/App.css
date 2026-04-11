@@ -420,10 +420,11 @@ body.dark {
 
   .theme-toggle {
     position: absolute;
-    bottom: 0.4rem;
+    bottom: env(safe-area-inset-bottom, 0.5rem);
     left: 50%;
     transform: translateX(-50%);
     margin: 0;
+    margin-bottom: 0.5rem;
   }
 
   .main {
