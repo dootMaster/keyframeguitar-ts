@@ -111,6 +111,20 @@
   color: white;
 }
 
+.pill-peek {
+  background-color: color-mix(in srgb, var(--color-peek) 20%, white);
+  border-color: var(--color-peek);
+  color: var(--color-peek);
+}
+
+.pill-peek .pill-remove {
+  color: color-mix(in srgb, var(--color-peek) 40%, white);
+}
+
+.pill-peek .pill-remove:hover {
+  color: var(--color-peek);
+}
+
 .progression-empty {
   justify-content: center;
 }

@@ -8,10 +8,11 @@ type ProgressionProps = {
   onRemove: (index: number) => void;
   onNavigate: (index: number) => void;
   onClear: () => void;
+  showPeek: boolean;
 };
 
 export default function Progression({
-  progression, windowIndex, onRemove, onNavigate, onClear
+  progression, windowIndex, onRemove, onNavigate, onClear, showPeek
 }: ProgressionProps) {
   const canPrev = windowIndex > 0;
   const canNext = windowIndex < progression.length - 2;
@@ -43,6 +44,7 @@ export default function Progression({
             if (progression.length >= 2) {
               if (i === windowIndex) pillClass += ' pill-from';
               else if (i === windowIndex + 1) pillClass += ' pill-to';
+              else if (showPeek && i === windowIndex + 2) pillClass += ' pill-peek';
             }
             return (
               <div key={i} className={pillClass}>

@@ -97,6 +97,12 @@ body {
   background-color: rgba(0, 0, 0, 0.1);
 }
 
+.toolbar-btn.peek-btn-active {
+  background-color: color-mix(in srgb, var(--color-peek) 20%, white);
+  border-color: var(--color-peek);
+  color: var(--color-peek);
+}
+
 .toolbar-btn.reset-button:hover {
   background-color: red;
   color: white;

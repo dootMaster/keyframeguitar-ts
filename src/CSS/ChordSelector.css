@@ -144,10 +144,16 @@
   color: rgba(0, 0, 0, 0.5);
 }
 
+.add-to-song-btn:not(:disabled) {
+  border-color: rgba(52, 211, 153, 0.4);
+  color: rgba(0, 0, 0, 0.6);
+  background: rgba(52, 211, 153, 0.06);
+}
+
 .add-to-song-btn:hover:not(:disabled) {
-  background: rgba(0, 0, 0, 0.04);
-  border-color: rgba(0, 0, 0, 0.3);
-  color: rgba(0, 0, 0, 0.7);
+  background: rgba(52, 211, 153, 0.12);
+  border-color: rgba(52, 211, 153, 0.5);
+  color: rgba(0, 0, 0, 0.8);
 }
 
 .add-to-song-btn:disabled {

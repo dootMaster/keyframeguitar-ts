@@ -20,103 +20,161 @@
 }
 
 .fretboard {
-  font-size: 1.5rem;
   table-layout: fixed;
   border-collapse: separate;
-  border-spacing: 3px;
+  border-spacing: 0;
 }
 
 .string {
   margin-bottom: 0;
 }
 
-.fret, .fret-dots {
-  border: 1px solid black;
+/* ── Fret cell ── */
+.fret {
   user-select: none;
-  padding: 0.25rem 0;
+  padding: 0;
   text-align: center;
-  border-radius: 5px;
-  overflow: hidden;
-  height: 2rem;
+  height: 2.5rem;
   position: relative;
-  background: white;
+  border: none;
+  border-right: 1px solid rgba(0, 0, 0, 0.06);
+  background: linear-gradient(
+    to bottom,
+    transparent calc(50% - 0.5px),
+    rgba(0, 0, 0, 0.18) calc(50% - 0.5px),
+    rgba(0, 0, 0, 0.18) calc(50% + 0.5px),
+    transparent calc(50% + 0.5px)
+  );
 }
 
+/* ── Note circles ── */
 .fret::before,
 .fret::after {
   content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  transition: clip-path 0.35s ease;
+  top: 50%;
+  left: 50%;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  transition: transform 0.3s ease, opacity 0.3s ease;
   z-index: 0;
+  opacity: 0;
 }
 
-.fret::before {
-  background: var(--color-from);
-  clip-path: polygon(0 0, 0 0, 0 100%, 0 100%);
-}
-
-.fret::after {
-  background: var(--color-to);
-  clip-path: polygon(100% 0, 100% 0, 100% 100%, 100% 100%);
-}
+.fret::before { background: var(--color-from); }
+.fret::after { background: var(--color-to); }
 
 .fret-label {
   position: relative;
   z-index: 1;
+  font-size: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
 }
 
+/* ── Hover ── */
 .fret:hover {
   animation: pulse 1s infinite;
 }
 
 @keyframes pulse {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(0.95);
-  }
-  100% {
-    transform: scale(1);
-  }
+  0% { transform: scale(1); }
+  50% { transform: scale(0.95); }
+  100% { transform: scale(1); }
 }
 
+/* ── Nut & octave lines ── */
 .fret:first-child,
 .fret.octave-marker {
-  border-right: 3.5px solid #1e1e1e;
+  border-right: 2.5px solid rgba(0, 0, 0, 0.25);
+}
+
+/* ── Dots row ── */
+.fret-dots td {
+  padding: 0.3rem 0;
+  text-align: center;
+  font-size: 1.3rem;
+  color: rgba(0, 0, 0, 0.35);
+  height: 1.4rem;
+  border-right: 1px solid rgba(0, 0, 0, 0.06);
 }
 
 .fret-dots td:first-child {
-  border-right: 3.5px solid transparent;
+  border-right: 2.5px solid transparent;
 }
 
-.neutral {
-  border-color: rgba(0, 0, 0, 0.2);
-}
+/* ── States ── */
 
-.neutral::before { clip-path: polygon(0 0, 0 0, 0 100%, 0 100%); }
-.neutral::after { clip-path: polygon(100% 0, 100% 0, 100% 100%, 100% 100%); }
+/* Neutral */
+.neutral::before,
+.neutral::after {
+  transform: translate(-50%, -50%) scale(0);
+  opacity: 0;
+}
 
 .ghost-note {
   color: rgba(0, 0, 0, 0.15);
 }
 
-.from::before { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
-.from::after { clip-path: polygon(100% 0, 100% 0, 100% 100%, 100% 100%); }
+/* From */
+.from::before {
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 1;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+.from::after {
+  transform: translate(-50%, -50%) scale(0);
+  opacity: 0;
+}
+.from .fret-label {
+  color: white;
+  font-weight: 600;
+}
 
-.to::before { clip-path: polygon(0 0, 0 0, 0 100%, 0 100%); }
-.to::after { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
+/* To */
+.to::after {
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 1;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+.to::before {
+  transform: translate(-50%, -50%) scale(0);
+  opacity: 0;
+}
+.to .fret-label {
+  color: white;
+  font-weight: 600;
+}
 
-.common::before { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
-.common::after { clip-path: polygon(100% 0, 100% 100%, 0 100%, 0 100%); }
+/* Common (diagonal split circle) */
+.common::before {
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 1;
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+}
+.common::after {
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 1;
+  clip-path: polygon(100% 0, 100% 100%, 0 100%);
+}
+.common .fret-label {
+  color: white;
+  font-weight: 600;
+}
 
-.peek {
-  border-color: var(--color-peek);
-  background: color-mix(in srgb, var(--color-peek) 15%, white);
+/* Peek */
+.peek::before {
+  transform: translate(-50%, -50%) scale(0.8);
+  opacity: 0.25;
+  background: var(--color-peek);
+}
+.peek::after {
+  transform: translate(-50%, -50%) scale(0);
+  opacity: 0;
 }
 
 .peek-note {
@@ -124,6 +182,7 @@
   font-weight: 500;
 }
 
+/* ── Hint ── */
 .fretboard-hint {
   text-align: center;
   font-size: 0.65rem;

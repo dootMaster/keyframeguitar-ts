@@ -214,6 +214,7 @@ function App() {
             onRemove={removeFromProgression}
             onNavigate={navigateProgression}
             onClear={clearProgression}
+            showPeek={showPeek}
           />
           <div className="print-legend">
             <div className="legend-title">Key Frame Guitar</div>
@@ -248,7 +249,7 @@ function App() {
           <div className="toolbar">
             <button className={'toolbar-btn' + (showAllNotes ? ' active' : '')} onClick={() => setShowAllNotes(!showAllNotes)}>Note names</button>
             <span className="toolbar-tip-wrap">
-              <button className={'toolbar-btn' + (showPeek ? ' active' : '')} onClick={() => setShowPeek(!showPeek)}>Peek</button>
+              <button className={'toolbar-btn' + (showPeek ? ' active peek-btn-active' : '')} onClick={() => setShowPeek(!showPeek)}>Peek</button>
               <span className="toolbar-tip">Faintly shows the next chord on the fretboard</span>
             </span>
             <button className='toolbar-btn' onClick={() => setShowTuningModal(true)}>Tuning</button>
