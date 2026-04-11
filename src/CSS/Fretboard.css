@@ -182,6 +182,13 @@
   font-weight: 500;
 }
 
+/* Shared: note is colored (from/to/common) AND in the peek chord — peek ring around circle */
+.peek-shared.from::before,
+.peek-shared.to::after,
+.peek-shared.common::after {
+  box-shadow: 0 0 0 3.5px var(--color-peek), 0 0 8px var(--color-peek), 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
 /* ── Hint ── */
 .fretboard-hint {
   text-align: center;
