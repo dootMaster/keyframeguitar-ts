@@ -2,15 +2,16 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import Fret from '../Fret';
 import { flat } from '../helpers/stringDict';
+import { FretProps } from '../FretboardTypes/FretboardTypes';
 
-const defaultProps = {
+const defaultProps: FretProps = {
   i: 0,
   j: 3,
   display: 'neutral',
   dictIndex: 3,
   toggleFret: () => {},
   flat,
-  noteDisplayMode: 'off' as const,
+  noteDisplayMode: 'off',
   peek: false,
   preview: false,
   degreeLabel: null,
@@ -18,7 +19,7 @@ const defaultProps = {
   showGuideTones: false,
 };
 
-function renderFret(overrides: Partial<typeof defaultProps> = {}) {
+function renderFret(overrides: Partial<FretProps> = {}) {
   const props = { ...defaultProps, ...overrides };
   return render(
     <table>

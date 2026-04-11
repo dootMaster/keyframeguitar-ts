@@ -31,7 +31,7 @@ export default function GuideModal({ show, handleClose }: GuideModalProps) {
 
         <div className="guide-section">
           <span className="guide-heading">Building a Progression</span>
-          <p>Select a root note and chord quality from the sidebar to preview it on the fretboard. Click <strong>Add</strong> to add it to your progression. You need at least two chords to see keyframes.</p>
+          <p>Select a root note and chord quality from the sidebar to preview it on the fretboard. Click <strong>Add</strong> to add it to your progression. Your first chord will display immediately; add a second to see keyframes. Use the <strong>b/#</strong> toggle above the root notes to switch between flat and sharp note names.</p>
         </div>
 
         <div className="guide-section">
@@ -75,8 +75,18 @@ export default function GuideModal({ show, handleClose }: GuideModalProps) {
         </div>
 
         <div className="guide-section">
+          <span className="guide-heading">Notes &amp; Degrees</span>
+          <p>Click <strong>Notes</strong> in the toolbar to cycle through display modes: note names on all frets, degree labels on chord tones (R, b3, 3, 5, b7, 7, etc.), both at once, or off. Degrees show each note's relationship to its chord root.</p>
+        </div>
+
+        <div className="guide-section">
+          <span className="guide-heading">3/7 Guide Tones</span>
+          <p>Toggle <strong>3/7</strong> to dim everything except the 3rds and 7ths of each chord. These are the guide tones that define chord quality and show you the smoothest voice leading between changes. Works great with degree labels on.</p>
+        </div>
+
+        <div className="guide-section">
           <span className="guide-heading">Other Tools</span>
-          <p><strong>Note names</strong> reveals all notes on the fretboard. <strong>Tuning</strong> changes to alternate tunings. <strong>Options</strong> customizes colors. <strong>Center</strong> resets the fretboard scroll position back to the nut. <strong>Print</strong> generates a printable view.</p>
+          <p><strong>Tuning</strong> changes to alternate tunings. <strong>Options</strong> customizes colors. <strong>Center</strong> resets the fretboard scroll position back to the nut. <strong>Print</strong> generates a printable view.</p>
         </div>
 
           <button className="guide-close-btn" onClick={handleClose}>Got it</button>
