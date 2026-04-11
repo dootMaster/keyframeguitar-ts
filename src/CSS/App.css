@@ -210,10 +210,10 @@ body {
 
 @media print {
   .App {
-    height: auto;
+    height: 100vh;
     overflow: visible;
     padding: 0;
-    justify-content: flex-start;
+    justify-content: center;
   }
 
   .header,
