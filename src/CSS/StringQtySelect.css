@@ -1,18 +1,21 @@
 .string-qty-container {
   display: flex;
-  flex-direction: column;
-  margin: 0;
-  text-align: center;
-  padding-top: 1rem;
-  margin-bottom: -.7rem;
+  align-items: center;
+  gap: 0.3rem;
 }
 
 .string-qty-label {
   user-select: none;
+  font-size: 0.85rem;
 }
 
 .string-qty-select {
-  position: relative;
-  height: fit-content;
-  width: 100%;
+  height: 100%;
+  padding: 0.4rem 0.4rem;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.85rem;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  background-color: white;
+  cursor: pointer;
 }

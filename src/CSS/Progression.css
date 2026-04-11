@@ -1,0 +1,166 @@
+.progression {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: rgba(0, 0, 0, 0.02);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 6px;
+  min-height: 2.5rem;
+  flex-wrap: wrap;
+}
+
+.progression-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.progression-nav {
+  width: 2rem;
+  height: 2rem;
+  font-size: 1.1rem;
+  font-family: 'Outfit', sans-serif;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+  background: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.15s ease;
+  flex-shrink: 0;
+}
+
+.progression-nav:hover:not(:disabled) {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.progression-nav:disabled {
+  opacity: 0.25;
+  cursor: default;
+}
+
+.progression-pills {
+  display: flex;
+  gap: 0.2rem;
+  flex-wrap: wrap;
+  align-items: center;
+  min-height: 1.6rem;
+}
+
+.progression-pill {
+  display: flex;
+  align-items: center;
+  gap: 0.15rem;
+  padding: 0.25rem 0.55rem;
+  font-size: 0.8rem;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 500;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 3px;
+  background: white;
+  transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+}
+
+.pill-label {
+  cursor: pointer;
+}
+
+.pill-remove {
+  background: none;
+  border: none;
+  font-size: 0.85rem;
+  cursor: pointer;
+  color: rgba(0, 0, 0, 0.25);
+  padding: 0;
+  line-height: 1;
+}
+
+.pill-remove:hover {
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.pill-from {
+  background-color: var(--color-from);
+  border-color: var(--color-from);
+  color: white;
+}
+
+.pill-from .pill-remove {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.pill-from .pill-remove:hover {
+  color: white;
+}
+
+.pill-to {
+  background-color: var(--color-to);
+  border-color: var(--color-to);
+  color: white;
+}
+
+.pill-to .pill-remove {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.pill-to .pill-remove:hover {
+  color: white;
+}
+
+.progression-empty {
+  justify-content: center;
+}
+
+.progression-placeholder {
+  font-size: 0.7rem;
+  color: rgba(0, 0, 0, 0.25);
+}
+
+.progression-hint {
+  font-size: 0.65rem;
+  color: rgba(0, 0, 0, 0.35);
+  font-style: italic;
+}
+
+.progression-adder {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-left: auto;
+}
+
+.progression-select {
+  padding: 0.2rem 0.3rem;
+  font-size: 0.7rem;
+  font-family: 'Outfit', sans-serif;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 3px;
+  background: white;
+  cursor: pointer;
+}
+
+.progression-quality-select {
+  max-width: 110px;
+}
+
+.progression-clear-btn {
+  padding: 0.2rem 0.5rem;
+  font-size: 0.65rem;
+  font-family: 'Outfit', sans-serif;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 3px;
+  background: white;
+  cursor: pointer;
+  color: rgba(0, 0, 0, 0.35);
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.progression-clear-btn:hover {
+  background: red;
+  color: white;
+  border-color: red;
+}

@@ -1,30 +1,241 @@
+body {
+  margin: 0;
+}
+
 .App {
-  justify-items: center;
-  font-family: 'Source Code Pro';
+  box-sizing: border-box;
+  font-family: 'Outfit', sans-serif;
+  --color-from: #818CF8;
+  --color-to: #34D399;
+  --color-peek: #F59E0B;
+  padding: 1rem 1.5rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
 }
 
-h3, h5 {
+.App[data-color-pair="1"] {
+  --color-from: #34D399;
+  --color-to: #F59E0B;
+  --color-peek: #818CF8;
+}
+
+.App[data-color-pair="2"] {
+  --color-from: #F59E0B;
+  --color-to: #818CF8;
+  --color-peek: #34D399;
+}
+
+.header {
   text-align: center;
+  margin-bottom: 0.75rem;
 }
 
-button {
-  width: 100%;
-  text-align: center;
-  margin: .5rem 0 .5rem 0;
+.header h3 {
+  margin: 0;
+  font-weight: 600;
 }
 
-.reset-button:hover {
-  animation: reset .5s infinite;
+.subtitle {
+  max-width: 500px;
+  margin: 0.3rem auto 0;
+  color: rgba(0, 0, 0, 0.45);
+  font-size: 0.8rem;
 }
 
-
-@keyframes reset {
-  0% {background-color: white;}
-  50% {background-color: red; color: white}
-  100% {background-color: white;}
+.main {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  margin-top: 0.75rem;
 }
 
-.vl {
-  border-right: 1px solid black;
-  margin-left: 3rem;
+.sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 0.2rem;
+}
+
+.center {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.toolbar {
+  display: flex;
+  gap: 0.4rem;
+  justify-content: center;
+}
+
+.toolbar-btn {
+  background-color: white;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  padding: 0.35rem 0.8rem;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  white-space: nowrap;
+}
+
+.toolbar-btn:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.toolbar-btn.active {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.toolbar-btn.reset-button:hover {
+  background-color: red;
+  color: white;
+  border-color: red;
+}
+
+.toolbar-tip-wrap {
+  position: relative;
+}
+
+.toolbar-tip {
+  display: none;
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1e1e1e;
+  color: white;
+  font-size: 0.65rem;
+  padding: 0.3rem 0.5rem;
+  border-radius: 4px;
+  white-space: nowrap;
+  pointer-events: none;
+  margin-bottom: 0.3rem;
+}
+
+.toolbar-tip-wrap:hover .toolbar-tip {
+  display: block;
+}
+
+/* Legend — hidden on screen, shown in print */
+.print-legend {
+  display: none;
+}
+
+.legend-items {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+}
+
+.legend-swatch {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 3px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+}
+
+.legend-swatch-from { background: var(--color-from); }
+.legend-swatch-to { background: var(--color-to); }
+.legend-swatch-common {
+  background: linear-gradient(135deg, var(--color-from) 50%, var(--color-to) 50%);
+}
+.legend-swatch-peek {
+  background: var(--color-peek);
+  opacity: 0.35;
+}
+
+.legend-title {
+  font-weight: 600;
+  font-size: 1rem;
+  margin-bottom: 0.15rem;
+}
+
+.legend-tuning {
+  font-size: 0.75rem;
+  color: rgba(0, 0, 0, 0.45);
+  margin-bottom: 0.4rem;
+}
+
+@media print {
+  .App {
+    height: auto;
+    overflow: visible;
+    padding: 0;
+    justify-content: flex-start;
+  }
+
+  .header,
+  .sidebar,
+  .toolbar {
+    display: none !important;
+  }
+
+  .progression {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .progression-nav,
+  .progression-clear-btn,
+  .pill-remove,
+  .progression-hint {
+    display: none !important;
+  }
+
+  .progression-pill {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .pill-from, .pill-to {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .print-legend {
+    display: block;
+    margin-bottom: 0.75rem;
+  }
+
+  .main {
+    display: block;
+  }
+
+  .fretboard-scroll {
+    overflow: hidden !important;
+  }
+
+  .fret, .fret::before, .fret::after {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .fret:hover {
+    animation: none;
+  }
+
+  .fretboard-hint {
+    display: none;
+  }
 }

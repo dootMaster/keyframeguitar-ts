@@ -1,11 +1,29 @@
-.fretboard {
+.fretboard-container {
   position: relative;
-  height: fit-content;
-  justify-content: center;
-  margin:auto;
-  margin-top: 10%;
+  width: 100%;
+}
+
+.fretboard-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.15) transparent;
+}
+
+.fretboard-scroll::-webkit-scrollbar {
+  height: 4px;
+}
+
+.fretboard-scroll::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+}
+
+.fretboard {
   font-size: 1.5rem;
-  margin-bottom: 2rem;
+  table-layout: fixed;
+  border-collapse: separate;
+  border-spacing: 3px;
 }
 
 .string {
@@ -15,11 +33,40 @@
 .fret, .fret-dots {
   border: 1px solid black;
   user-select: none;
-  padding: 0rem 1rem;
+  padding: 0.25rem 0;
   text-align: center;
   border-radius: 5px;
-  width: max-content;
-  transition: background-color 0.5s ease, width 0.5s ease-in-out;
+  overflow: hidden;
+  height: 2rem;
+  position: relative;
+  background: white;
+}
+
+.fret::before,
+.fret::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transition: clip-path 0.35s ease;
+  z-index: 0;
+}
+
+.fret::before {
+  background: var(--color-from);
+  clip-path: polygon(0 0, 0 0, 0 100%, 0 100%);
+}
+
+.fret::after {
+  background: var(--color-to);
+  clip-path: polygon(100% 0, 100% 0, 100% 100%, 100% 100%);
+}
+
+.fret-label {
+  position: relative;
+  z-index: 1;
 }
 
 .fret:hover {
@@ -38,22 +85,48 @@
   }
 }
 
+.fret:first-child,
+.fret.octave-marker {
+  border-right: 3.5px solid #1e1e1e;
+}
+
+.fret-dots td:first-child {
+  border-right: 3.5px solid transparent;
+}
+
 .neutral {
-  margin: 1rem;
-  background-color: white;
+  border-color: rgba(0, 0, 0, 0.2);
 }
 
-.current {
-  margin: 1rem;
-  background-color: plum;
+.neutral::before { clip-path: polygon(0 0, 0 0, 0 100%, 0 100%); }
+.neutral::after { clip-path: polygon(100% 0, 100% 0, 100% 100%, 100% 100%); }
+
+.ghost-note {
+  color: rgba(0, 0, 0, 0.15);
 }
 
-.target {
-  margin: 1rem;
-  background-color: salmon;
+.from::before { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
+.from::after { clip-path: polygon(100% 0, 100% 0, 100% 100%, 100% 100%); }
+
+.to::before { clip-path: polygon(0 0, 0 0, 0 100%, 0 100%); }
+.to::after { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
+
+.common::before { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
+.common::after { clip-path: polygon(100% 0, 100% 100%, 0 100%, 0 100%); }
+
+.peek {
+  border-color: var(--color-peek);
+  background: color-mix(in srgb, var(--color-peek) 15%, white);
 }
 
-.common {
-  margin: 1rem;
-  background-color: orange;
+.peek-note {
+  color: var(--color-peek);
+  font-weight: 500;
+}
+
+.fretboard-hint {
+  text-align: center;
+  font-size: 0.65rem;
+  color: rgba(0, 0, 0, 0.25);
+  margin-top: 0.3rem;
 }

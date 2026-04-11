@@ -1,0 +1,190 @@
+.chord-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.chord-roots {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0.25rem;
+}
+
+.chord-root-btn {
+  height: 2.2rem;
+  font-size: 0.8rem;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 500;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  background: white;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.chord-root-btn:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.chord-root-btn.active {
+  background: #1e1e1e;
+  color: white;
+  border-color: #1e1e1e;
+}
+
+.chord-tabs {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.25rem;
+}
+
+.chord-tab {
+  height: 2rem;
+  font-size: 0.7rem;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 500;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 4px;
+  background: white;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.chord-tab:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.chord-tab.active {
+  background: #1e1e1e;
+  color: white;
+  border-color: #1e1e1e;
+}
+
+.chord-tab-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.chord-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.chord-section-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.chord-quality-btn {
+  padding: 0.35rem 0.5rem;
+  font-size: 0.7rem;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 500;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 3px;
+  background: white;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.15s ease;
+  white-space: nowrap;
+}
+
+.chord-quality-btn:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+.chord-quality-btn.selected {
+  background: rgba(0, 0, 0, 0.08);
+  border-color: rgba(0, 0, 0, 0.35);
+}
+
+.chord-hint {
+  font-size: 0.65rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.hint-from {
+  color: var(--color-from);
+}
+
+.hint-to {
+  color: var(--color-to);
+}
+
+.hint-shift {
+  color: rgba(0, 0, 0, 0.35);
+}
+
+.add-to-song-btn {
+  width: 100%;
+  padding: 0.45rem;
+  font-size: 0.75rem;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 500;
+  border: 1px dashed rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  background: white;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.add-to-song-btn:hover:not(:disabled) {
+  background: rgba(0, 0, 0, 0.04);
+  border-color: rgba(0, 0, 0, 0.3);
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.add-to-song-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.scale-chord-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.scale-degree {
+  font-size: 0.55rem;
+  color: rgba(0, 0, 0, 0.4);
+  font-weight: 600;
+}
+
+.modes-toggle {
+  background: none;
+  border: none;
+  font-size: 0.6rem;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.35);
+  cursor: pointer;
+  padding: 0.15rem 0;
+  text-align: left;
+  transition: color 0.15s ease;
+}
+
+.modes-toggle:hover {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.modes-toggle.open {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.modes-items {
+  padding-left: 0.3rem;
+  border-left: 2px solid rgba(0, 0, 0, 0.08);
+}
+
+.mode-btn {
+  font-size: 0.6rem;
+  color: rgba(0, 0, 0, 0.55);
+}

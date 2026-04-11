@@ -3,10 +3,10 @@ type TuningModalProps = {
   setTuning: Function,
   show: boolean,
   tuning: number[],
-  globalAccidental: string,
+  fretboard: { display: string, dictIndex: number }[][],
   setFretboard: Function,
-  currentForm: boolean[],
-  targetForm: boolean[],
+  fromForm: boolean[],
+  toForm: boolean[],
 }
 
 type SelectNoteProps = {
@@ -14,6 +14,5 @@ type SelectNoteProps = {
   labels: string[],
   position: number,
   handleTuningChange: Function,
-  key: string,
 }
 export type { TuningModalProps, SelectNoteProps }

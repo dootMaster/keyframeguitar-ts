@@ -4,10 +4,9 @@ type FretProps = {
   display: string,
   dictIndex: number,
   toggleFret: Function,
-  globalAccidental: string,
   flat: {[key: number]: string},
-  sharp: {[key: number]: string},
-  both: {[key: number]: string},
+  showAllNotes: boolean,
+  peek: boolean,
 }
 
 type FretType = {
@@ -18,20 +17,18 @@ type FretType = {
 type StringProps = {
   gtrString: FretType[]
   toggleFret: Function
-  globalAccidental: string
   flat: {[key: number]: string},
-  sharp: {[key: number]: string},
-  both: {[key: number]: string},
+  showAllNotes: boolean,
+  peekForm: boolean[] | null,
   i: number
 }
 
 type FretboardProps = {
   fretboard: FretType[][],
   toggleFret: Function,
-  globalAccidental: string,
   flat: {[key: number]: string},
-  sharp: {[key: number]: string},
-  both: {[key: number]: string},
+  showAllNotes: boolean,
+  peekForm: boolean[] | null,
 }
 
 export type {

@@ -4,18 +4,18 @@ type GtrString = {
 }
 
 const updateFretboardViaForm = (fretboard:Array<GtrString[]>, otherForm:boolean[], updatedNotesState:boolean[], key:string) => {
-  let currentForm:boolean[] = updatedNotesState, targetForm:boolean[] = otherForm;
-  if (key === 'target') {
-    currentForm = otherForm;
-    targetForm = updatedNotesState;
+  let fromForm:boolean[] = updatedNotesState, toForm:boolean[] = otherForm;
+  if (key === 'to') {
+    fromForm = otherForm;
+    toForm = updatedNotesState;
   }
 
   fretboard.forEach((gtrString) => {
     gtrString.forEach((fret) => {
       let note = fret.dictIndex;
-      if (currentForm[note] && targetForm[note]) fret.display = 'common';
-      else if (currentForm[note] && !targetForm[note]) fret.display = 'current';
-      else if (!currentForm[note] && targetForm[note]) fret.display = 'target';
+      if (fromForm[note] && toForm[note]) fret.display = 'common';
+      else if (fromForm[note] && !toForm[note]) fret.display = 'from';
+      else if (!fromForm[note] && toForm[note]) fret.display = 'to';
       else fret.display = 'neutral';
     })
   })

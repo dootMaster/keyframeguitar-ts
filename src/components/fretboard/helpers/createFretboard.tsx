@@ -1,3 +1,5 @@
+export const FRETS_PER_OCTAVE = 12;
+
 export default function createFretboard(tuning: number[]) {
   return tuning.map(root => createString(root));
 }

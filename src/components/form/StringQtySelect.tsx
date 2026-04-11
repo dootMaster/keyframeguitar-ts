@@ -5,15 +5,36 @@ import '../../CSS/StringQtySelect.css';
 import { StringQtyTypes } from './FormTypes/FormTypes';
 
 
-const StringQtySelect = ({ setTuning, setFretboard, currentForm, targetForm, tuning }:StringQtyTypes) => {
+const StringQtySelect = ({ setTuning, setFretboard, fretboard, fromForm, toForm, tuning }:StringQtyTypes) => {
 
   let standardTuning = [4, 11, 7, 2, 9, 4]
 
   const changeStringAmount = (event:React.ChangeEvent<HTMLSelectElement>) => {
-    let newTuning = returnsCommonTuningForStringQty(event.currentTarget.value) || tuning || standardTuning;
+    let newCount = parseInt(event.currentTarget.value);
+    let defaultTuning = returnsCommonTuningForStringQty(event.currentTarget.value) || standardTuning;
+    let newTuning: number[];
+
+    if (newCount <= tuning.length) {
+      // Removing strings: keep the top ones (highest pitch)
+      newTuning = tuning.slice(0, newCount);
+    } else {
+      // Adding strings: keep current tuning, append new strings from standard
+      newTuning = [...tuning, ...defaultTuning.slice(tuning.length)];
+    }
+
     setTuning(newTuning);
-    let newFretboard = createFretboard(newTuning);
-    updateFretboardViaForm(newFretboard, targetForm, currentForm, 'current')
+
+    let newFretboard = newTuning.map((note, i) => {
+      // If this string existed before with the same tuning, keep its state
+      if (i < tuning.length && tuning[i] === note) {
+        return fretboard[i];
+      }
+      // Otherwise create a fresh string and apply form state
+      let freshString = createFretboard([note])[0];
+      updateFretboardViaForm([freshString], toForm, fromForm, 'from');
+      return freshString;
+    });
+
     setFretboard(newFretboard);
   }
 

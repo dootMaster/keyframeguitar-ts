@@ -10,6 +10,7 @@ const GtrString = (props: StringProps) => (
         {...fret}
         j={j}
         key={j}
+        peek={props.peekForm ? props.peekForm[fret.dictIndex] : false}
       />
     )
   )}

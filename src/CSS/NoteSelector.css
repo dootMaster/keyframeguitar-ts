@@ -1,0 +1,61 @@
+.note-selector-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.note-selector {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.4rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.note-btn {
+  width: 3.2rem;
+  height: 2.4rem;
+  font-size: 0.9rem;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  user-select: none;
+}
+
+.note-btn.neutral {
+  background-color: white;
+  border-color: rgba(0, 0, 0, 0.2);
+}
+
+.note-btn.from {
+  background-color: #818CF8;
+  border-color: #818CF8;
+}
+
+.note-btn.to {
+  background-color: #34D399;
+  border-color: #34D399;
+}
+
+.note-btn.common {
+  background: linear-gradient(135deg, #818CF8 50%, #34D399 50%);
+  border-color: #818CF8;
+}
+
+.note-selector-hint {
+  width: 100%;
+  text-align: center;
+  font-size: 0.7rem;
+  margin-top: 0.3rem;
+}
+
+.hint-from {
+  color: #818CF8;
+}
+
+.hint-to {
+  color: #34D399;
+}
