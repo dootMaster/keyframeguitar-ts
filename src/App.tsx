@@ -204,7 +204,7 @@ function App() {
       </div>
       <header className="header">
         <h3>Key Frame Guitar</h3>
-        <p className="subtitle">Most guitar tools try to do everything. This one does one thing: help you focus on navigating a single chord change. — Leslie</p>
+        <p className="subtitle">A simple tool for visualizing one chord change at a time.</p>
       </header>
       <div className="main">
         <button className="sidebar-toggle" onClick={() => setSidebarOpen(!sidebarOpen)}>
