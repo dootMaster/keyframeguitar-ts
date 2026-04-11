@@ -1,18 +1,12 @@
 import { useState } from 'react';
 import { flats } from './helpers/notes';
-import { updateFretboardViaForm } from './helpers/formHelpers';
 import { sections, scaleSections, chordToForm } from './helpers/chords';
 import '../../CSS/ChordSelector.css';
 
 type ChordSelectorProps = {
-  fromForm: boolean[];
-  toForm: boolean[];
-  setFrom: (form: boolean[]) => void;
-  setTo: (form: boolean[]) => void;
-  fretboard: { display: string; dictIndex: number }[][];
-  setFretboard: (fb: { display: string; dictIndex: number }[][]) => void;
   onAddToProgression: (chord: { name: string; form: boolean[] }) => void;
   lastProgressionChord: string | null;
+  onPreview: (form: boolean[] | null) => void;
 };
 
 const tabs = [
@@ -40,7 +34,7 @@ const tabToSection: Record<TabKey, string> = {
 };
 
 export default function ChordSelector({
-  fromForm, toForm, setFrom, setTo, fretboard, setFretboard, onAddToProgression, lastProgressionChord
+  onAddToProgression, lastProgressionChord, onPreview
 }: ChordSelectorProps) {
   const [root, setRoot] = useState(0);
   const [lastQuality, setLastQuality] = useState<{ name: string; intervals: number[]; rootOverride?: number } | null>(null);
@@ -59,10 +53,7 @@ export default function ChordSelector({
       return;
     }
 
-    setFrom(form);
-    let copy = [...fretboard];
-    updateFretboardViaForm(copy, toForm, form, 'from');
-    setFretboard(copy);
+    onPreview(form);
     setLastQuality({ name, intervals, rootOverride });
     setSelected(name);
   };
@@ -89,7 +80,7 @@ export default function ChordSelector({
           <button
             key={i}
             className={'chord-root-btn' + (root === i ? ' active' : '')}
-            onClick={() => { setRoot(i); setLastQuality(null); setSelected(null); }}
+            onClick={() => { setRoot(i); setLastQuality(null); setSelected(null); onPreview(null); }}
           >
             {note}
           </button>
@@ -101,7 +92,7 @@ export default function ChordSelector({
           <button
             key={t.key}
             className={'chord-tab' + (activeTab === t.key ? ' active' : '')}
-            onClick={() => setActiveTab(t.key)}
+            onClick={() => { setActiveTab(t.key); setLastQuality(null); setSelected(null); onPreview(null); }}
           >
             {t.label}
           </button>

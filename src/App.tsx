@@ -12,6 +12,7 @@ import SaveModal from './components/SaveModal/SaveModal';
 import Progression from './components/Progression/Progression';
 import { ProgressionChord } from './components/Progression/Progression';
 import Notes from './components/Notes/Notes';
+import OptionsModal, { ColorConfig, DEFAULT_COLORS, COLORBLIND_COLORS } from './components/OptionsModal/OptionsModal';
 
 const SAVE_PREFIX = 'kfg:';
 
@@ -19,6 +20,18 @@ function getInitialTheme(): 'light' | 'dark' {
   const saved = localStorage.getItem('kfg:theme');
   if (saved === 'light' || saved === 'dark') return saved;
   return 'light';
+}
+
+function getInitialColors(): ColorConfig {
+  try {
+    const saved = localStorage.getItem('kfg:colors');
+    if (saved) return JSON.parse(saved);
+  } catch {}
+  return DEFAULT_COLORS;
+}
+
+function getInitialColorblind(): boolean {
+  return localStorage.getItem('kfg:colorblind') === 'true';
 }
 
 function getSaveNames(): string[] {
@@ -45,6 +58,15 @@ function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showAbout, setShowAbout] = useState(false);
   const [notes, setNotes] = useState<string[]>([]);
+  const [previewForm, setPreviewForm] = useState<boolean[] | null>(null);
+  const [showOptionsModal, setShowOptionsModal] = useState(false);
+  const [colors, setColors] = useState<ColorConfig>(getInitialColors);
+  const [colorblind, setColorblind] = useState(getInitialColorblind);
+
+  useEffect(() => {
+    localStorage.setItem('kfg:colors', JSON.stringify(colors));
+    localStorage.setItem('kfg:colorblind', String(colorblind));
+  }, [colors, colorblind]);
 
   useEffect(() => {
     document.body.classList.toggle('dark', theme === 'dark');
@@ -52,6 +74,12 @@ function App() {
   }, [theme]);
 
   const colorPair = progression.length >= 2 ? windowIndex % 3 : 0;
+
+  const rotatedColors = useMemo(() => {
+    const trio = [colors.from, colors.to, colors.peek];
+    const rotated = [...trio.slice(colorPair), ...trio.slice(0, colorPair)];
+    return { from: rotated[0], to: rotated[1], peek: rotated[2], preview: colors.preview };
+  }, [colors, colorPair]);
 
   const peekForm: boolean[] | null = showPeek && progression.length >= 2 && windowIndex + 2 < progression.length
     ? progression[windowIndex + 2].form
@@ -71,8 +99,10 @@ function App() {
   const addToProgression = (chord: ProgressionChord) => {
     const newProg = [...progression, chord];
     setProgression(newProg);
-    if (newProg.length === 2) {
-      applyWindowDirect(0, newProg);
+    setPreviewForm(null);
+    if (newProg.length >= 2) {
+      const idx = newProg.length === 2 ? 0 : windowIndex;
+      applyWindowDirect(idx, newProg);
     }
   };
 
@@ -214,7 +244,12 @@ function App() {
   }
 
   return (
-    <div className="App" data-color-pair={colorPair} data-theme={theme}>
+    <div className="App" data-theme={theme} style={{
+      '--color-from': rotatedColors.from,
+      '--color-to': rotatedColors.to,
+      '--color-peek': rotatedColors.peek,
+      '--color-preview': rotatedColors.preview,
+    } as React.CSSProperties}>
       <div className="rotate-overlay">
         <div className="rotate-message">
           <div className="rotate-icon">&#8635;</div>
@@ -231,14 +266,9 @@ function App() {
         </button>
         <aside className={'sidebar' + (sidebarOpen ? ' sidebar-open' : '')}>
           <ChordSelector
-            fromForm={fromForm}
-            toForm={toForm}
-            setFrom={setFrom}
-            setTo={setTo}
-            fretboard={fretboard}
-            setFretboard={setFretboard}
             onAddToProgression={addToProgression}
             lastProgressionChord={progression.length > 0 ? progression[progression.length - 1].name : null}
+            onPreview={setPreviewForm}
           />
         </aside>
         <div className="center">
@@ -248,6 +278,7 @@ function App() {
             toggleFret={toggleFret}
             showAllNotes={showAllNotes}
             peekForm={peekForm}
+            previewForm={previewForm}
             scrollResetKey={scrollResetKey}
           />
           <Progression
@@ -318,6 +349,7 @@ function App() {
             </span>
             <button className='toolbar-btn' onClick={() => setShowTuningModal(true)}>Tuning</button>
             <button className='toolbar-btn' onClick={() => setShowSaveModal(true)}>Save</button>
+            <button className='toolbar-btn' onClick={() => setShowOptionsModal(true)}>Options</button>
             <button className='toolbar-btn' onClick={() => setScrollResetKey(k => k + 1)}>Center</button>
             <button className='toolbar-btn' onClick={() => window.print()}>Print</button>
             <button className='toolbar-btn reset-button' onClick={reset}>RESET</button>
@@ -346,6 +378,14 @@ function App() {
         deleteData={deleteData}
         show={showSaveModal}
         saveFileList={saveFileList}
+      />
+      <OptionsModal
+        show={showOptionsModal}
+        handleClose={() => setShowOptionsModal(false)}
+        colors={colors}
+        setColors={setColors}
+        colorblind={colorblind}
+        setColorblind={setColorblind}
       />
       <div className="bottom-bar">
         <button className="theme-toggle" onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>

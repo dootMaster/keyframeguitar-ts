@@ -13,6 +13,7 @@
 .progression-bar {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 0.3rem;
   flex: 1;
   min-width: 0;
@@ -51,7 +52,6 @@
   align-items: center;
   justify-content: center;
   min-height: 1.6rem;
-  flex: 1;
 }
 
 .progression-pill {

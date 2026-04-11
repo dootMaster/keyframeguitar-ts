@@ -12,9 +12,10 @@ body.dark {
   font-family: 'Outfit', sans-serif;
 
   /* Accent colors */
-  --color-from: #818CF8;
-  --color-to: #34D399;
+  --color-from: #6366F1;
+  --color-to: #10B981;
   --color-peek: #F59E0B;
+  --color-preview: #94A3B8;
 
   /* Theme tokens */
   --bg: #ffffff;
@@ -73,18 +74,6 @@ body.dark {
   --tooltip-text: #1a1a1a;
   --active-bg: #e0e0e0;
   --active-text: #1a1a1a;
-}
-
-.App[data-color-pair="1"] {
-  --color-from: #34D399;
-  --color-to: #F59E0B;
-  --color-peek: #818CF8;
-}
-
-.App[data-color-pair="2"] {
-  --color-from: #F59E0B;
-  --color-to: #818CF8;
-  --color-peek: #34D399;
 }
 
 .header {

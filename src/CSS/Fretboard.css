@@ -156,16 +156,16 @@
   font-weight: 600;
 }
 
-/* Common (diagonal split circle) */
+/* Common (diagonal split circle via gradient — single element so bounce animation works) */
 .common::before {
   transform: translate(-50%, -50%) scale(1);
   opacity: 1;
-  clip-path: polygon(0 0, 100% 0, 0 100%);
+  background: linear-gradient(135deg, var(--color-from) 50%, var(--color-to) 50%);
+  box-shadow: 0 2px 8px var(--shadow);
 }
 .common::after {
-  transform: translate(-50%, -50%) scale(1);
-  opacity: 1;
-  clip-path: polygon(100% 0, 100% 100%, 0 100%);
+  transform: translate(-50%, -50%) scale(0);
+  opacity: 0;
 }
 .common .fret-label {
   color: white;
@@ -190,9 +190,29 @@
 
 /* Shared: note is colored (from/to/common) AND in the peek chord — peek ring around circle */
 .peek-shared.from::before,
-.peek-shared.to::after,
-.peek-shared.common::after {
+.peek-shared.to::after {
   box-shadow: 0 0 0 3.5px var(--color-peek), 0 0 8px var(--color-peek), 0 2px 8px var(--shadow);
+}
+
+/* Common + peek: ring around the gradient circle */
+.peek-shared.common::before {
+  box-shadow: 0 0 0 3.5px var(--color-peek), 0 0 8px var(--color-peek), 0 2px 8px var(--shadow);
+}
+
+/* Preview (selected chord before adding to progression) */
+.preview::before {
+  transform: translate(-50%, -50%) scale(0.8);
+  opacity: 0.3;
+  background: var(--color-preview);
+}
+.preview::after {
+  transform: translate(-50%, -50%) scale(0);
+  opacity: 0;
+}
+
+.preview-note {
+  color: var(--color-preview);
+  font-weight: 500;
 }
 
 /* ── Hint ── */

@@ -109,8 +109,9 @@
 }
 
 .chord-quality-btn.selected {
-  background: var(--bg-active);
-  border-color: var(--border);
+  background: color-mix(in srgb, var(--color-preview) 20%, var(--bg-surface));
+  border-color: var(--color-preview);
+  color: var(--color-preview);
 }
 
 .chord-hint {
@@ -134,28 +135,32 @@
 
 .add-to-song-btn {
   width: 100%;
-  padding: 0.45rem;
-  font-size: 0.75rem;
+  padding: 0.55rem;
+  font-size: 0.8rem;
   font-family: 'Outfit', sans-serif;
-  font-weight: 500;
-  border: 1px dashed var(--border);
-  border-radius: 4px;
+  font-weight: 600;
+  border: 2px solid var(--border-light);
+  border-radius: 6px;
   background: var(--bg-surface);
   cursor: pointer;
-  transition: background-color 0.15s ease, border-color 0.15s ease;
-  color: var(--text-secondary);
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.15s ease;
+  color: var(--text-muted);
 }
 
 .add-to-song-btn:not(:disabled) {
-  border-color: rgba(52, 211, 153, 0.4);
-  color: var(--text);
-  background: rgba(52, 211, 153, 0.06);
+  border-color: #10B981;
+  color: #10B981;
+  background: rgba(16, 185, 129, 0.08);
 }
 
 .add-to-song-btn:hover:not(:disabled) {
-  background: rgba(52, 211, 153, 0.12);
-  border-color: rgba(52, 211, 153, 0.5);
-  color: var(--text);
+  background: rgba(16, 185, 129, 0.18);
+  border-color: #10B981;
+  transform: scale(1.02);
+}
+
+.add-to-song-btn:active:not(:disabled) {
+  transform: scale(0.98);
 }
 
 .add-to-song-btn:disabled {

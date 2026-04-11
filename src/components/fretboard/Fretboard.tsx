@@ -109,6 +109,7 @@ const Fretboard = (props: FretboardProps) => {
                   flat={props.flat}
                   showAllNotes={props.showAllNotes}
                   peekForm={props.peekForm}
+                  previewForm={props.previewForm}
                   key={i}
                 />
               )

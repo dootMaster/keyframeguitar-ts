@@ -7,6 +7,7 @@ type FretProps = {
   flat: {[key: number]: string},
   showAllNotes: boolean,
   peek: boolean,
+  preview: boolean,
 }
 
 type FretType = {
@@ -20,6 +21,7 @@ type StringProps = {
   flat: {[key: number]: string},
   showAllNotes: boolean,
   peekForm: boolean[] | null,
+  previewForm: boolean[] | null,
   i: number
 }
 
@@ -29,6 +31,7 @@ type FretboardProps = {
   flat: {[key: number]: string},
   showAllNotes: boolean,
   peekForm: boolean[] | null,
+  previewForm: boolean[] | null,
   scrollResetKey: number,
 }
 
