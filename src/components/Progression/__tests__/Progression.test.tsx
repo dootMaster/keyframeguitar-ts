@@ -1,5 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import Progression from '../Progression';
 
 const noteNames = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'];
@@ -78,5 +79,79 @@ describe('Progression', () => {
       progression: [{ name: 'C maj', form: [] }],
     });
     expect(screen.getByText('Clear')).toBeInTheDocument();
+  });
+});
+
+describe('Progression — mobile buttons', () => {
+  it('renders "+" button when onSelectChords is provided (empty state)', () => {
+    renderProgression({ onSelectChords: noop });
+    expect(screen.getByRole('button', { name: 'Select chords' })).toBeInTheDocument();
+  });
+
+  it('does not render "+" button when onSelectChords is omitted', () => {
+    renderProgression();
+    expect(screen.queryByRole('button', { name: 'Select chords' })).toBeNull();
+  });
+
+  it('renders "+" button in non-empty progression too', () => {
+    renderProgression({
+      progression: [{ name: 'C maj', form: [] }],
+      onSelectChords: noop,
+    });
+    expect(screen.getByRole('button', { name: 'Select chords' })).toBeInTheDocument();
+  });
+
+  it('fires onSelectChords callback when "+" is clicked', async () => {
+    const user = userEvent.setup();
+    const onSelectChords = vi.fn();
+    renderProgression({ onSelectChords });
+    await user.click(screen.getByRole('button', { name: 'Select chords' }));
+    expect(onSelectChords).toHaveBeenCalledOnce();
+  });
+
+  it('renders undo button when onUndo is provided', () => {
+    renderProgression({
+      progression: [{ name: 'C maj', form: [] }],
+      onUndo: noop,
+      canUndo: true,
+    });
+    expect(screen.getByRole('button', { name: 'Undo' })).toBeInTheDocument();
+  });
+
+  it('does not render undo button when onUndo is omitted', () => {
+    renderProgression({
+      progression: [{ name: 'C maj', form: [] }],
+    });
+    expect(screen.queryByRole('button', { name: 'Undo' })).toBeNull();
+  });
+
+  it('undo button is disabled when canUndo is false', () => {
+    renderProgression({
+      progression: [{ name: 'C maj', form: [] }],
+      onUndo: noop,
+      canUndo: false,
+    });
+    expect(screen.getByRole('button', { name: 'Undo' })).toBeDisabled();
+  });
+
+  it('undo button is enabled when canUndo is true', () => {
+    renderProgression({
+      progression: [{ name: 'C maj', form: [] }],
+      onUndo: noop,
+      canUndo: true,
+    });
+    expect(screen.getByRole('button', { name: 'Undo' })).not.toBeDisabled();
+  });
+
+  it('fires onUndo callback when undo is clicked', async () => {
+    const user = userEvent.setup();
+    const onUndo = vi.fn();
+    renderProgression({
+      progression: [{ name: 'C maj', form: [] }],
+      onUndo,
+      canUndo: true,
+    });
+    await user.click(screen.getByRole('button', { name: 'Undo' }));
+    expect(onUndo).toHaveBeenCalledOnce();
   });
 });
