@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import ChordSelector from '../ChordSelector';
@@ -130,5 +130,53 @@ describe('ChordSelector — stepping mode', () => {
     const addBtn = document.querySelector('.add-to-song-btn');
     expect(addBtn).not.toBeNull();
     expect(addBtn).toBeDisabled();
+  });
+
+  it('add button enables after selecting root, category, and quality', async () => {
+    const user = userEvent.setup();
+    renderSelector({ stepping: true });
+
+    await user.click(screen.getByText('C'));
+    await user.click(screen.getByText('Triad'));
+
+    // "Maj" exists as both a category tab and a quality button — target the quality
+    const qualityBtn = document.querySelector('.chord-quality-btn')!;
+    expect(qualityBtn.textContent).toBe('Maj');
+    await user.click(qualityBtn);
+
+    const addBtn = document.querySelector('.add-to-song-btn');
+    expect(addBtn).not.toBeNull();
+    expect(addBtn).not.toBeDisabled();
+    expect(addBtn!.textContent).toContain('C Maj');
+  });
+
+  it('add button enables even when onPreview triggers parent re-render', async () => {
+    const user = userEvent.setup();
+    // Simulate the real app: onPreview causes a parent state change → re-render
+    function Wrapper() {
+      const [, setPreview] = useState<boolean[] | null>(null);
+      return (
+        <ChordSelector
+          onAddToProgression={noop}
+          lastProgressionChord={null}
+          onPreview={setPreview}
+          noteNames={noteNames}
+          useSharps={false}
+          setUseSharps={noop}
+          stepping
+        />
+      );
+    }
+    render(<Wrapper />);
+
+    await user.click(screen.getByText('C'));
+    await user.click(screen.getByText('Triad'));
+
+    const qualityBtn = document.querySelector('.chord-quality-btn')!;
+    await user.click(qualityBtn);
+
+    const addBtn = document.querySelector('.add-to-song-btn');
+    expect(addBtn).not.toBeNull();
+    expect(addBtn).not.toBeDisabled();
   });
 });

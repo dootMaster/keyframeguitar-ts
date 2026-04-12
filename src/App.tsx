@@ -465,7 +465,7 @@ function App() {
                 />
                 <div className="drawer-chord-selector">
                   <ChordSelector
-                    onAddToProgression={(chord) => { addToProgression(chord); setSidebarOpen(false); }}
+                    onAddToProgression={addToProgression}
                     lastProgressionChord={progression.length > 0 ? progression[progression.length - 1].name : null}
                     onPreview={setPreviewForm}
                     noteNames={noteNames}

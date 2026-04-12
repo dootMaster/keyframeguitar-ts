@@ -360,9 +360,9 @@
 }
 
 .chord-selector-stepping .chord-quality-btn {
-  padding: 0.5rem 0.7rem;
-  font-size: 0.8rem;
-  border-radius: 5px;
+  padding: 0.6rem 0.85rem;
+  font-size: 0.9rem;
+  border-radius: 6px;
 }
 
 .chord-selector-stepping .add-to-song-btn {
@@ -373,4 +373,35 @@
 
 .chord-selector-stepping .step-label {
   font-size: 0.55rem;
+}
+
+/* ── Added confirmation button ── */
+.add-to-song-btn.added-confirmation {
+  border-color: var(--color-from);
+  color: var(--color-from);
+  background: color-mix(in srgb, var(--color-from) 10%, var(--bg-surface));
+  animation: added-flash 0.4s ease;
+}
+
+@keyframes added-flash {
+  0% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+/* ── Waiting pulse on active step buttons ── */
+.step-waiting .chord-root-btn,
+.step-waiting .chord-tab,
+.step-waiting .chord-quality-btn {
+  animation: btn-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes btn-pulse {
+  0%, 100% {
+    border-color: var(--border);
+    box-shadow: 0 0 0 0 transparent;
+  }
+  50% {
+    border-color: var(--color-from);
+    box-shadow: 0 0 8px color-mix(in srgb, var(--color-from) 30%, transparent);
+  }
 }

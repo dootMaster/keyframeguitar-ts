@@ -82,8 +82,20 @@ export default function ChordSelector({
 
   const canAdd = lastChord && lastChord.name !== lastProgressionChord;
 
+  const isDuplicate = stepping && lastChord && lastChord.name === lastProgressionChord;
+
   const addLastToSong = () => {
-    if (canAdd) onAddToProgression(lastChord);
+    if (!canAdd) return;
+    onAddToProgression(lastChord);
+  };
+
+  const resetStepping = () => {
+    setRootPicked(false);
+    setTabPicked(false);
+    setLastQuality(null);
+    setSelected(null);
+    setActiveStep(1);
+    onPreview(null);
   };
 
   const handleRootClick = (i: number) => {
@@ -182,7 +194,7 @@ export default function ChordSelector({
     <div className={`chord-selector${stepping ? ' chord-selector-stepping' : ''}`}>
       <div className="stepping-row">
         {/* Step 1: Root */}
-        <div className="step-col" data-active={!stepping || activeStep === 1 ? '' : undefined}>
+        <div className={'step-col' + (stepping && activeStep === 1 && !rootPicked ? ' step-waiting' : '')} data-active={!stepping || activeStep === 1 ? '' : undefined}>
           {stepping && activeStep !== 1 && (
             <button className="step-summary" onClick={() => setActiveStep(1)}>
               <span className="step-summary-label">Root</span>
@@ -215,7 +227,7 @@ export default function ChordSelector({
         </div>
 
         {/* Step 2: Category */}
-        <div className="step-col" data-active={!stepping || activeStep === 2 ? '' : undefined}>
+        <div className={'step-col' + (stepping && activeStep === 2 && !tabPicked ? ' step-waiting' : '')} data-active={!stepping || activeStep === 2 ? '' : undefined}>
           {stepping && activeStep !== 2 && (
             <button className="step-summary" onClick={() => setActiveStep(2)}>
               <span className="step-summary-label">Category</span>
@@ -239,7 +251,7 @@ export default function ChordSelector({
         </div>
 
         {/* Step 3: Quality */}
-        <div className="step-col" data-active={!stepping || activeStep === 3 ? '' : undefined}>
+        <div className={'step-col' + (stepping && activeStep === 3 && !selected ? ' step-waiting' : '')} data-active={!stepping || activeStep === 3 ? '' : undefined}>
           {stepping && activeStep !== 3 && (
             <button className="step-summary" onClick={() => setActiveStep(3)}>
               <span className="step-summary-label">Quality</span>
@@ -260,13 +272,22 @@ export default function ChordSelector({
           <span className="hint-shift">shift-click: add to changes</span>
         </div>
       )}
-      <button
-        className="add-to-song-btn"
-        onClick={addLastToSong}
-        disabled={!canAdd}
-      >
-        {addLabel}
-      </button>
+      {isDuplicate ? (
+        <button
+          className="add-to-song-btn added-confirmation"
+          onClick={resetStepping}
+        >
+          Added {renotate(lastChord!.name, noteNames)} — tap to add another
+        </button>
+      ) : (
+        <button
+          className="add-to-song-btn"
+          onClick={addLastToSong}
+          disabled={!canAdd}
+        >
+          {addLabel}
+        </button>
+      )}
     </div>
   );
 }
