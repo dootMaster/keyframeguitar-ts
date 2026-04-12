@@ -1,5 +1,4 @@
-import { useEffect } from 'react';
-import FocusTrap from 'focus-trap-react';
+import * as Dialog from '@radix-ui/react-dialog';
 import '../../CSS/OptionsModal.css';
 
 export type ColorConfig = {
@@ -35,16 +34,6 @@ type OptionsModalProps = {
 export default function OptionsModal({
   show, handleClose, colors, setColors, colorblind, setColorblind
 }: OptionsModalProps) {
-  useEffect(() => {
-    const handleEsc = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') handleClose();
-    };
-    if (show) window.addEventListener('keydown', handleEsc);
-    return () => window.removeEventListener('keydown', handleEsc);
-  }, [show, handleClose]);
-
-  if (!show) return null;
-
   const handleColorblindToggle = () => {
     if (!colorblind) {
       setColorblind(true);
@@ -66,63 +55,64 @@ export default function OptionsModal({
   };
 
   return (
-    <FocusTrap focusTrapOptions={{ clickOutsideDeactivates: true }}>
-      <div className="save-overlay" onClick={handleClose}>
-        <div className="options-modal" role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
+    <Dialog.Root open={show} onOpenChange={(open) => { if (!open) handleClose(); }}>
+      <Dialog.Portal>
+        <Dialog.Overlay className="dialog-overlay" />
+        <Dialog.Content className="options-modal">
           <h4 className="options-title">Options</h4>
 
-        <div className="options-section">
-          <label className="options-toggle-label">
-            <input
-              type="checkbox"
-              checked={colorblind}
-              onChange={handleColorblindToggle}
-            />
-            <span>Colorblind-friendly palette</span>
-          </label>
-        </div>
-
-        <div className="options-section">
-          <span className="options-section-title">Colors</span>
-          <div className="options-colors">
-            <label className="options-color-row">
+          <div className="options-section">
+            <label className="options-toggle-label">
               <input
-                type="color"
-                value={colors.from}
-                onChange={(e) => updateColor('from', e.target.value)}
+                type="checkbox"
+                checked={colorblind}
+                onChange={handleColorblindToggle}
               />
-              <span>From</span>
-            </label>
-            <label className="options-color-row">
-              <input
-                type="color"
-                value={colors.to}
-                onChange={(e) => updateColor('to', e.target.value)}
-              />
-              <span>To</span>
-            </label>
-            <label className="options-color-row">
-              <input
-                type="color"
-                value={colors.peek}
-                onChange={(e) => updateColor('peek', e.target.value)}
-              />
-              <span>Peek</span>
-            </label>
-            <label className="options-color-row">
-              <input
-                type="color"
-                value={colors.preview}
-                onChange={(e) => updateColor('preview', e.target.value)}
-              />
-              <span>Preview</span>
+              <span>Colorblind-friendly palette</span>
             </label>
           </div>
-        </div>
+
+          <div className="options-section">
+            <span className="options-section-title">Colors</span>
+            <div className="options-colors">
+              <label className="options-color-row">
+                <input
+                  type="color"
+                  value={colors.from}
+                  onChange={(e) => updateColor('from', e.target.value)}
+                />
+                <span>From</span>
+              </label>
+              <label className="options-color-row">
+                <input
+                  type="color"
+                  value={colors.to}
+                  onChange={(e) => updateColor('to', e.target.value)}
+                />
+                <span>To</span>
+              </label>
+              <label className="options-color-row">
+                <input
+                  type="color"
+                  value={colors.peek}
+                  onChange={(e) => updateColor('peek', e.target.value)}
+                />
+                <span>Peek</span>
+              </label>
+              <label className="options-color-row">
+                <input
+                  type="color"
+                  value={colors.preview}
+                  onChange={(e) => updateColor('preview', e.target.value)}
+                />
+                <span>Preview</span>
+              </label>
+            </div>
+          </div>
 
           <button className="options-reset-btn" onClick={handleReset}>Reset to defaults</button>
-        </div>
-      </div>
-    </FocusTrap>
+        </Dialog.Content>
+      </Dialog.Portal>
+    </Dialog.Root>
   );
 }

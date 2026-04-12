@@ -248,3 +248,129 @@
   font-size: 0.6rem;
   color: var(--text-secondary);
 }
+
+/* ══════════════════════════════════════
+   Step wrappers — transparent in default mode
+   ══════════════════════════════════════ */
+.chord-selector:not(.chord-selector-stepping) .stepping-row,
+.chord-selector:not(.chord-selector-stepping) .step-col,
+.chord-selector:not(.chord-selector-stepping) .step-content {
+  display: contents;
+}
+
+/* ══════════════════════════════════════
+   Stepping mode (mobile drawer)
+   ══════════════════════════════════════ */
+.chord-selector-stepping {
+  gap: 0.5rem;
+}
+
+.chord-selector-stepping .stepping-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: stretch;
+}
+
+.chord-selector-stepping .step-col {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* Collapsed columns: narrow, auto width */
+.chord-selector-stepping .step-col:not([data-active]) {
+  flex: 0 0 auto;
+}
+
+/* Expanded column: fill remaining space */
+.chord-selector-stepping .step-col[data-active] {
+  flex: 1 1 0;
+}
+
+/* Hide step-content when collapsed */
+.chord-selector-stepping .step-col:not([data-active]) .step-content {
+  display: none;
+}
+
+/* Show step-content when active */
+.chord-selector-stepping .step-col[data-active] .step-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* ── Step summary (collapsed pill) ── */
+.step-summary {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  padding: 0.5rem 0.6rem;
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  background: var(--bg-surface);
+  cursor: pointer;
+  height: 100%;
+  min-width: 3.2rem;
+  font-family: 'Outfit', sans-serif;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.step-summary:hover {
+  background: var(--bg-hover);
+  border-color: var(--border);
+}
+
+.step-summary-label {
+  font-size: 0.5rem;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--text-faint);
+  letter-spacing: 0.03em;
+}
+
+.step-summary-value {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* ── Stepping touch targets ── */
+.chord-selector-stepping .chord-root-btn {
+  height: 2.6rem;
+  font-size: 0.9rem;
+  border-radius: 6px;
+}
+
+.chord-selector-stepping .chord-roots {
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.35rem;
+}
+
+.chord-selector-stepping .chord-tabs {
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.35rem;
+}
+
+.chord-selector-stepping .chord-tab {
+  height: 2.4rem;
+  font-size: 0.8rem;
+  border-radius: 6px;
+}
+
+.chord-selector-stepping .chord-quality-btn {
+  padding: 0.5rem 0.7rem;
+  font-size: 0.8rem;
+  border-radius: 5px;
+}
+
+.chord-selector-stepping .add-to-song-btn {
+  padding: 0.7rem;
+  font-size: 0.9rem;
+  border-radius: 8px;
+}
+
+.chord-selector-stepping .step-label {
+  font-size: 0.55rem;
+}

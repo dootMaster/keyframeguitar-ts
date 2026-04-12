@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import FocusTrap from 'focus-trap-react';
+import React from 'react';
+import * as Dialog from '@radix-ui/react-dialog';
 import SelectNote from './SelectNote';
 import '../../CSS/TuningModal.css';
 import { TuningModalProps } from './TuningModalTypes/TuningModalTypes';
@@ -38,24 +38,12 @@ const presets: { [key: number]: { name: string, tuning: number[] }[] } = {
   ],
 };
 
-// Default tuning for each string count (the "Standard" preset)
 function getDefaultTuning(count: number): number[] {
   const standard = presets[count];
   return standard ? standard[0].tuning : [4, 11, 7, 2, 9, 4];
 }
 
 const TuningModal = ({ handleClose, show, tuning, fretboard, setTuning, setFretboard, fromForm, toForm }: TuningModalProps) => {
-
-  useEffect(() => {
-    const handleEsc = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') handleClose();
-    };
-    if (show) window.addEventListener('keydown', handleEsc);
-    return () => window.removeEventListener('keydown', handleEsc);
-  }, [show, handleClose]);
-
-  if (!show) return null;
-
   const currentPresets = presets[tuning.length] || [];
 
   const applyTuning = (newTuning: number[]) => {
@@ -107,56 +95,57 @@ const TuningModal = ({ handleClose, show, tuning, fretboard, setTuning, setFretb
   const stringLabels = ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th', '9th'];
 
   return (
-    <FocusTrap focusTrapOptions={{ clickOutsideDeactivates: true }}>
-      <div className="tuning-overlay" onClick={() => handleClose()}>
-        <div className="tuning-modal" role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
-        <h4 className="tuning-title">Tuning</h4>
+    <Dialog.Root open={show} onOpenChange={(open) => { if (!open) handleClose(); }}>
+      <Dialog.Portal>
+        <Dialog.Overlay className="dialog-overlay" />
+        <Dialog.Content className="tuning-modal">
+          <h4 className="tuning-title">Tuning</h4>
 
-        <div className="tuning-string-count">
-          <span className="tuning-string-count-label">Strings</span>
-          <div className="tuning-string-count-btns">
-            {[4, 5, 6, 7, 8, 9].map((n) => (
-              <button
-                key={n}
-                className={'tuning-count-btn' + (tuning.length === n ? ' active' : '')}
-                onClick={() => changeStringCount(n)}
-              >
-                {n}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {currentPresets.length > 0 && (
-          <div className="tuning-presets">
-            {currentPresets.map((preset) => (
-              <button
-                key={preset.name}
-                className={'tuning-preset-btn' + (JSON.stringify(preset.tuning) === JSON.stringify(tuning) ? ' active' : '')}
-                onClick={() => applyTuning(preset.tuning)}
-              >
-                {preset.name}
-              </button>
-            ))}
-          </div>
-        )}
-
-        <div className="tuning-list">
-          {tuning.map((note, i) => (
-            <div className="tuning-row" key={i}>
-              <span className="tuning-label">{stringLabels[i]}</span>
-              <SelectNote
-                currentNote={note}
-                labels={flats}
-                position={i}
-                handleTuningChange={handleTuningChange}
-              />
+          <div className="tuning-string-count">
+            <span className="tuning-string-count-label">Strings</span>
+            <div className="tuning-string-count-btns">
+              {[4, 5, 6, 7, 8, 9].map((n) => (
+                <button
+                  key={n}
+                  className={'tuning-count-btn' + (tuning.length === n ? ' active' : '')}
+                  onClick={() => changeStringCount(n)}
+                >
+                  {n}
+                </button>
+              ))}
             </div>
-          ))}
-        </div>
-        </div>
-      </div>
-    </FocusTrap>
+          </div>
+
+          {currentPresets.length > 0 && (
+            <div className="tuning-presets">
+              {currentPresets.map((preset) => (
+                <button
+                  key={preset.name}
+                  className={'tuning-preset-btn' + (JSON.stringify(preset.tuning) === JSON.stringify(tuning) ? ' active' : '')}
+                  onClick={() => applyTuning(preset.tuning)}
+                >
+                  {preset.name}
+                </button>
+              ))}
+            </div>
+          )}
+
+          <div className="tuning-list">
+            {tuning.map((note, i) => (
+              <div className="tuning-row" key={i}>
+                <span className="tuning-label">{stringLabels[i]}</span>
+                <SelectNote
+                  currentNote={note}
+                  labels={flats}
+                  position={i}
+                  handleTuningChange={handleTuningChange}
+                />
+              </div>
+            ))}
+          </div>
+        </Dialog.Content>
+      </Dialog.Portal>
+    </Dialog.Root>
   );
 };
 

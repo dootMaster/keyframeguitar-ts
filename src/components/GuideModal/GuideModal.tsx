@@ -1,5 +1,4 @@
-import { useEffect } from 'react';
-import FocusTrap from 'focus-trap-react';
+import * as Dialog from '@radix-ui/react-dialog';
 import '../../CSS/GuideModal.css';
 
 type GuideModalProps = {
@@ -8,20 +7,11 @@ type GuideModalProps = {
 };
 
 export default function GuideModal({ show, handleClose }: GuideModalProps) {
-  useEffect(() => {
-    const handleEsc = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') handleClose();
-    };
-    if (show) window.addEventListener('keydown', handleEsc);
-    return () => window.removeEventListener('keydown', handleEsc);
-  }, [show, handleClose]);
-
-  if (!show) return null;
-
   return (
-    <FocusTrap focusTrapOptions={{ clickOutsideDeactivates: true }}>
-      <div className="save-overlay" onClick={handleClose}>
-        <div className="guide-modal" role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
+    <Dialog.Root open={show} onOpenChange={(open) => { if (!open) handleClose(); }}>
+      <Dialog.Portal>
+        <Dialog.Overlay className="dialog-overlay" />
+        <Dialog.Content className="guide-modal">
           <h4 className="guide-title">Usage Guide</h4>
 
         <div className="guide-section">
@@ -90,8 +80,8 @@ export default function GuideModal({ show, handleClose }: GuideModalProps) {
         </div>
 
           <button className="guide-close-btn" onClick={handleClose}>Got it</button>
-        </div>
-      </div>
-    </FocusTrap>
+        </Dialog.Content>
+      </Dialog.Portal>
+    </Dialog.Root>
   );
 }

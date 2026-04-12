@@ -1,4 +1,8 @@
 .guide-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   background: var(--bg-surface);
   color: var(--text);
   border-radius: 8px;
@@ -14,6 +18,8 @@
   font-family: 'Outfit', sans-serif;
   scrollbar-width: thin;
   scrollbar-color: var(--text-faint) transparent;
+  z-index: 2001;
+  outline: none;
 }
 
 .guide-modal::-webkit-scrollbar {

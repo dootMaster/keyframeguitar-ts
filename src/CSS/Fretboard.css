@@ -100,12 +100,16 @@
 }
 
 /* ── Dots row ── */
+.fret-dots {
+  height: 1px; /* prevent dots row from growing when table fills container */
+}
+
 .fret-dots td {
-  padding: 0.3rem 0;
+  padding: 0;
   text-align: center;
-  font-size: 1.3rem;
+  font-size: 0.9rem;
+  line-height: 0.9;
   color: var(--text-muted);
-  height: 1.4rem;
   border-right: 1px solid var(--border-faint);
 }
 
@@ -313,41 +317,38 @@
   margin-top: 0.3rem;
 }
 
-/* Landscape mobile — compact fretboard */
-@media (max-height: 500px) {
+/* Mobile — fretboard fills available height */
+@media (max-width: 768px), (max-height: 500px) {
+  .fret-dots {
+    display: none;
+  }
+
+  .fret.dot-col {
+    background-color: var(--bg-active);
+  }
+
   .fretboard-container {
     width: 100%;
     max-width: 100%;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
   }
 
   .fretboard-scroll {
     max-width: 100%;
-    scrollbar-width: none;
+    flex: 1;
+    min-height: 0;
   }
 
-  .fretboard-scroll::-webkit-scrollbar {
-    display: none;
-  }
-
-  .fret {
-    height: 1.6rem;
-  }
-
-  .fret::before,
-  .fret::after {
-    width: 1.3rem;
-    height: 1.3rem;
+  .fretboard {
+    height: 100%;
   }
 
   .fret-label {
-    font-size: 0.55rem;
-  }
-
-  .fret-dots td {
-    font-size: 0.8rem;
-    height: 0.8rem;
-    padding: 0.1rem 0;
+    font-size: 0.9rem;
   }
 
   .fretboard-hint {
@@ -355,15 +356,12 @@
   }
 }
 
-/* Portrait mobile — ensure fretboard fits */
-@media (max-width: 768px) {
-  .fretboard-container {
-    width: 100%;
-    max-width: 100%;
-    overflow: hidden;
+@media (max-height: 500px) {
+  .fretboard-scroll {
+    scrollbar-width: none;
   }
 
-  .fretboard-scroll {
-    max-width: 100%;
+  .fretboard-scroll::-webkit-scrollbar {
+    display: none;
   }
 }

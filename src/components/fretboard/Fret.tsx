@@ -4,6 +4,8 @@ export default function Fret({ flat, display, toggleFret, i, j, dictIndex, noteD
   const noteName = flat[dictIndex];
   const isNeutral = display === 'neutral';
   const isOctave = j > 0 && j % 12 === 0;
+  const mod = j % 12;
+  const isDotCol = mod === 3 || mod === 5 || mod === 7 || mod === 9 || (j > 0 && mod === 0);
   const peekClass = peek && isNeutral && !preview ? ' peek' : '';
   const peekShared = peek && !isNeutral && !preview ? ' peek-shared' : '';
   const previewClass = preview ? ' preview' : '';
@@ -28,7 +30,7 @@ export default function Fret({ flat, display, toggleFret, i, j, dictIndex, noteD
 
   return (
     <td
-      className={display + ' fret' + (isOctave ? ' octave-marker' : '') + peekClass + peekShared + previewClass + guideClass}
+      className={display + ' fret' + (isOctave ? ' octave-marker' : '') + (isDotCol ? ' dot-col' : '') + peekClass + peekShared + previewClass + guideClass}
       onClick={() => toggleFret(i, j, false)}
       onContextMenu={(e) => { e.preventDefault(); toggleFret(i, j, true); }}
       title={noteName}

@@ -17,7 +17,8 @@ import OptionsModal, { ColorConfig, DEFAULT_COLORS, COLORBLIND_COLORS } from './
 import GuideModal from './components/GuideModal/GuideModal';
 import { parseChordName, parseChordInfo, chordDegreeMap, guideToneMask } from './components/form/helpers/chords';
 import { NoteDisplayMode } from './components/fretboard/FretboardTypes/FretboardTypes';
-import FocusTrap from 'focus-trap-react';
+import * as Dialog from '@radix-ui/react-dialog';
+import { Drawer } from 'vaul';
 
 const SAVE_PREFIX = 'kfg:';
 
@@ -69,6 +70,7 @@ function App() {
   const [scrollResetKey, setScrollResetKey] = useState(0);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showAbout, setShowAbout] = useState(false);
+  const [showMoreTools, setShowMoreTools] = useState(false);
   const [notes, setNotes] = useState<string[]>([]);
   const [previewForm, setPreviewForm] = useState<boolean[] | null>(null);
   const [showOptionsModal, setShowOptionsModal] = useState(false);
@@ -264,6 +266,7 @@ function App() {
     setWindowIndex(0);
     setSoloIndex(null);
     setActiveName(null);
+    reset();
   };
 
   const loadPreset = (chords: ProgressionChord[], sharps?: boolean) => {
@@ -406,7 +409,7 @@ function App() {
   }
 
   return (
-    <div className="App" data-theme={theme} style={{
+    <div className="App" style={{
       '--color-from': rotatedColors.from,
       '--color-to': rotatedColors.to,
       '--color-peek': rotatedColors.peek,
@@ -423,10 +426,10 @@ function App() {
         <p className="subtitle">A simple tool for visualizing one chord change at a time.</p>
       </header>
       <div className="main">
-        <button className="sidebar-toggle" onClick={() => setSidebarOpen(!sidebarOpen)}>
-          {sidebarOpen ? 'Hide chords' : 'Show chords'}
+        <button className="sidebar-toggle" onClick={() => setSidebarOpen(true)}>
+          Select chords
         </button>
-        <aside className={'sidebar' + (sidebarOpen ? ' sidebar-open' : '')}>
+        <aside className="sidebar">
           <PresetSelector
             onLoadPreset={loadPreset}
             saveFileList={saveFileList}
@@ -445,6 +448,36 @@ function App() {
             setUseSharps={setUseSharps}
           />
         </aside>
+        <Drawer.Root open={sidebarOpen} onOpenChange={setSidebarOpen}>
+          <Drawer.Portal>
+            <Drawer.Overlay className="drawer-overlay" />
+            <Drawer.Content className="drawer-content">
+              <Drawer.Handle className="drawer-handle" />
+              <div className="drawer-body">
+                <PresetSelector
+                  onLoadPreset={(chords, sharps) => { loadPreset(chords, sharps); setSidebarOpen(false); }}
+                  saveFileList={saveFileList}
+                  onLoadSave={(name) => { load(name); setSidebarOpen(false); }}
+                  onDeleteSave={deleteData}
+                  activeName={activeName}
+                  setActiveName={setActiveName}
+                  noteNames={noteNames}
+                />
+                <div className="drawer-chord-selector">
+                  <ChordSelector
+                    onAddToProgression={(chord) => { addToProgression(chord); setSidebarOpen(false); }}
+                    lastProgressionChord={progression.length > 0 ? progression[progression.length - 1].name : null}
+                    onPreview={setPreviewForm}
+                    noteNames={noteNames}
+                    useSharps={useSharps}
+                    setUseSharps={setUseSharps}
+                    stepping
+                  />
+                </div>
+              </div>
+            </Drawer.Content>
+          </Drawer.Portal>
+        </Drawer.Root>
         <div className={'center' + (soloIndex !== null ? ' solo-active' : '') + (previewForm ? ' preview-active' : '')}>
           <Fretboard
             fretboard={fretboard}
@@ -471,6 +504,9 @@ function App() {
             soloIndex={soloIndex}
             onSolo={toggleSolo}
             noteNames={noteNames}
+            onSelectChords={() => setSidebarOpen(true)}
+            onUndo={undo}
+            canUndo={undoStack.current.length > 0}
           />
           {soloIndex !== null && progression.length >= 2 ? (
             <div className="chord-tones">
@@ -541,16 +577,19 @@ function App() {
               {noteDisplayMode === 'off' ? 'Notes' : noteDisplayMode === 'notes' ? 'Notes' : noteDisplayMode === 'degrees' ? 'Deg' : 'Deg+Notes'}<span className="cycle-icon"> ⟳</span>
             </button>
             <button className={'toolbar-btn' + (showGuideTones ? ' active' : '')} onClick={() => setShowGuideTones(!showGuideTones)}>3/7</button>
+            <button className={'toolbar-btn peek-btn' + (showPeek ? ' active peek-btn-active' : '')} onClick={() => setShowPeek(!showPeek)}>Peek</button>
             <span className="toolbar-tip-wrap">
-              <button className={'toolbar-btn' + (showPeek ? ' active peek-btn-active' : '')} onClick={() => setShowPeek(!showPeek)}>Peek</button>
               <button className="toolbar-info-btn" aria-label="What is Peek">?</button>
               <span className="toolbar-tip">Peek faintly shows the next chord after the current pair so you can plan ahead. Requires 3+ chords.</span>
             </span>
-            <button className='toolbar-btn' onClick={() => setShowTuningModal(true)}>Tuning</button>
             <button className='toolbar-btn' onClick={() => setShowSaveModal(true)}>Save</button>
+            <button className={'toolbar-btn' + (shareCopied ? ' share-copied' : '')} onClick={shareProgression} disabled={progression.length === 0}>{shareCopied ? 'Copied!' : 'Share'}</button>
+            <button className={'toolbar-btn toolbar-more-btn' + (showMoreTools ? ' active' : '')} onClick={() => setShowMoreTools(!showMoreTools)}>More</button>
+          </div>
+          <div className="toolbar toolbar-secondary">
+            <button className='toolbar-btn' onClick={() => setShowTuningModal(true)}>Tuning</button>
             <button className='toolbar-btn' onClick={() => setShowOptionsModal(true)}>Options</button>
             <button className='toolbar-btn' onClick={() => setScrollResetKey(k => k + 1)}>Center</button>
-            <button className={'toolbar-btn' + (shareCopied ? ' share-copied' : '')} onClick={shareProgression} disabled={progression.length === 0}>{shareCopied ? 'Copied!' : 'Share'}</button>
             <button className='toolbar-btn' onClick={() => window.print()}>Print</button>
             <button className='toolbar-btn reset-button' onClick={reset}>RESET</button>
           </div>
@@ -591,6 +630,35 @@ function App() {
         show={showGuide}
         handleClose={() => setShowGuide(false)}
       />
+      <Dialog.Root open={showMoreTools} onOpenChange={setShowMoreTools}>
+        <Dialog.Portal>
+          <Dialog.Overlay className="dialog-overlay" />
+          <Dialog.Content className="more-modal">
+            <div className="more-section">
+              <button className="more-btn" onClick={() => { setShowTuningModal(true); setShowMoreTools(false); }}>Tuning</button>
+              <button className="more-btn" onClick={() => { setShowOptionsModal(true); setShowMoreTools(false); }}>Options</button>
+              <button className="more-btn" onClick={() => { setScrollResetKey(k => k + 1); setShowMoreTools(false); }}>Center</button>
+              <button className="more-btn" onClick={() => { window.print(); setShowMoreTools(false); }}>Print</button>
+            </div>
+            <div className="more-section">
+              <button className="more-btn" onClick={() => { setTheme(theme === 'light' ? 'dark' : 'light'); setShowMoreTools(false); }}>
+                {theme === 'dark' ? 'Light mode' : 'Dark mode'}
+              </button>
+              <button className="more-btn" onClick={() => { setShowGuide(true); setShowMoreTools(false); }}>Guide</button>
+              <button className="more-btn" onClick={() => { setShowAbout(true); setShowMoreTools(false); }}>About</button>
+              <a className="more-btn more-link" href="https://venmo.com/u/Leslie-Ngo-1" target="_blank" rel="noopener noreferrer">Tip jar</a>
+            </div>
+            <div className="more-section more-section-notes">
+              <Notes
+                notes={notes}
+                onAdd={(note) => setNotes([...notes, note])}
+                onRemove={(i) => setNotes(notes.filter((_, idx) => idx !== i))}
+              />
+            </div>
+            <button className="more-btn more-reset" onClick={() => { reset(); setShowMoreTools(false); }}>RESET</button>
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
       <div className="bottom-bar">
         <button className="theme-toggle" onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
           {theme === 'dark' ? 'Light mode' : 'Dark mode'}
@@ -599,19 +667,18 @@ function App() {
         <button className="about-link" onClick={() => setShowAbout(true)}>About</button>
         <a className="tip-link" href="https://venmo.com/u/Leslie-Ngo-1" target="_blank" rel="noopener noreferrer">Tip jar</a>
       </div>
-      {showAbout && (
-        <FocusTrap focusTrapOptions={{ clickOutsideDeactivates: true }}>
-          <div className="save-overlay" onClick={() => setShowAbout(false)}>
-            <div className="about-modal" role="dialog" aria-modal="true" onClick={(e) => e.stopPropagation()}>
-              <p>I taught guitar for 7 years. Every tool I found online was either paywalled, cluttered with features, or full of ads. My students just needed something simple to see how two chords connect. So I made this.</p>
-              <p>I also tried to teach myself how to animate once. I have a huge appreciation for animators now. But that experience is how I came up with the idea for this tool. Keyframes.</p>
-              <p>I hope this makes your journey of exploring this ridiculous instrument a little easier.</p>
-              <p className="about-sign">— Leslie</p>
-              <a className="about-tip" href="https://venmo.com/u/Leslie-Ngo-1" target="_blank" rel="noopener noreferrer">Buy me a coffee</a>
-            </div>
-          </div>
-        </FocusTrap>
-      )}
+      <Dialog.Root open={showAbout} onOpenChange={setShowAbout}>
+        <Dialog.Portal>
+          <Dialog.Overlay className="dialog-overlay" />
+          <Dialog.Content className="about-modal">
+            <p>I taught guitar for 7 years. Every tool I found online was either paywalled, cluttered with features, or full of ads. My students just needed something simple to see how two chords connect. So I made this.</p>
+            <p>I also tried to teach myself how to animate once. I have a huge appreciation for animators now. But that experience is how I came up with the idea for this tool. Keyframes.</p>
+            <p>I hope this makes your journey of exploring this ridiculous instrument a little easier.</p>
+            <p className="about-sign">— Leslie</p>
+            <a className="about-tip" href="https://venmo.com/u/Leslie-Ngo-1" target="_blank" rel="noopener noreferrer">Buy me a coffee</a>
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
     </div>
   );
 }

@@ -13,16 +13,22 @@ type ProgressionProps = {
   soloIndex: number | null;
   onSolo: (index: number) => void;
   noteNames: string[];
+  onSelectChords?: () => void;
+  onUndo?: () => void;
+  canUndo?: boolean;
 };
 
 export default function Progression({
-  progression, windowIndex, onRemove, onNavigate, onClear, showPeek, soloIndex, onSolo, noteNames
+  progression, windowIndex, onRemove, onNavigate, onClear, showPeek, soloIndex, onSolo, noteNames, onSelectChords, onUndo, canUndo
 }: ProgressionProps) {
   const canNav = progression.length >= 2;
 
   if (progression.length === 0) {
     return (
       <div className="progression progression-empty">
+        {onSelectChords && (
+          <button className="progression-add-btn" onClick={onSelectChords} aria-label="Select chords">+</button>
+        )}
         <span className="progression-placeholder">Add two or more chords to visualize the transitions between them</span>
       </div>
     );
@@ -38,6 +44,9 @@ export default function Progression({
         <span className="progression-hint">Add one more chord to see the keyframes</span>
       )}
       <div className="progression-bar">
+        {onSelectChords && (
+          <button className="progression-add-btn" onClick={onSelectChords} aria-label="Select chords">+</button>
+        )}
         <button
           className="progression-nav"
           onClick={() => onNavigate(windowIndex - 1)}
@@ -83,6 +92,9 @@ export default function Progression({
           &rsaquo;
         </button>
       </div>
+      {onUndo && (
+        <button className="progression-undo-btn" onClick={onUndo} disabled={!canUndo} aria-label="Undo">↩</button>
+      )}
       <button className="progression-clear-btn" onClick={onClear}>Clear</button>
     </div>
   );
