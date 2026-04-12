@@ -19,7 +19,9 @@ const defaultProps = {
   noteNames,
 };
 
-function renderProgression(overrides: Partial<typeof defaultProps> = {}) {
+type Overrides = Partial<typeof defaultProps & { onSelectChords: () => void; onUndo: () => void; canUndo: boolean }>;
+
+function renderProgression(overrides: Overrides = {}) {
   const props = { ...defaultProps, ...overrides };
   return render(<Progression {...props} />);
 }
