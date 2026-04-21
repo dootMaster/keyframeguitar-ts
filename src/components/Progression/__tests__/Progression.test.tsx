@@ -14,7 +14,7 @@ const defaultProps = {
   onNavigate: noop,
   onClear: noop,
   showPeek: false,
-  soloIndex: null,
+  soloActive: false,
   onSolo: noop,
   noteNames,
 };

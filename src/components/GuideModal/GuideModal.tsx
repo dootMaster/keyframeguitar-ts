@@ -31,7 +31,7 @@ export default function GuideModal({ show, handleClose }: GuideModalProps) {
 
         <div className="guide-section">
           <span className="guide-heading">Solo</span>
-          <p>Click the first colored pill in the current pair to solo that chord, isolating it on the fretboard. Click it again to return to the pair view.</p>
+          <p>Toggle <strong>Solo</strong> in the toolbar to isolate the current <strong>from</strong> chord on the fretboard, hiding the <strong>to</strong> chord. You can also click the first colored pill in the current pair. Toggle again to return to the pair view.</p>
         </div>
 
         <div className="guide-section">

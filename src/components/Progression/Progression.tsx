@@ -10,8 +10,8 @@ type ProgressionProps = {
   onNavigate: (index: number) => void;
   onClear: () => void;
   showPeek: boolean;
-  soloIndex: number | null;
-  onSolo: (index: number) => void;
+  soloActive: boolean;
+  onSolo: () => void;
   noteNames: string[];
   onSelectChords?: () => void;
   onUndo?: () => void;
@@ -19,7 +19,7 @@ type ProgressionProps = {
 };
 
 export default function Progression({
-  progression, windowIndex, onRemove, onNavigate, onClear, showPeek, soloIndex, onSolo, noteNames, onSelectChords, onUndo, canUndo
+  progression, windowIndex, onRemove, onNavigate, onClear, showPeek, soloActive, onSolo, noteNames, onSelectChords, onUndo, canUndo
 }: ProgressionProps) {
   const canNav = progression.length >= 2;
 
@@ -60,17 +60,17 @@ export default function Progression({
             let pillClass = 'progression-pill';
             if (progression.length >= 2) {
               if (i === fromIdx) pillClass += ' pill-from';
-              else if (i === toIdx) pillClass += soloIndex !== null ? ' pill-to pill-to-faded' : ' pill-to';
-              else if (showPeek && soloIndex === null && i === peekIdx) pillClass += ' pill-peek';
+              else if (i === toIdx) pillClass += soloActive ? ' pill-to pill-to-faded' : ' pill-to';
+              else if (showPeek && !soloActive && i === peekIdx) pillClass += ' pill-peek';
             }
             return (
               <div key={i} className={pillClass}>
                 <span
                   className="pill-label"
-                  title={progression.length >= 2 && i === fromIdx ? (soloIndex !== null ? 'Click to unsolo' : 'Click to solo') : undefined}
+                  title={progression.length >= 2 && i === fromIdx ? (soloActive ? 'Click to unsolo' : 'Click to solo') : undefined}
                   onClick={() => {
                     if (progression.length >= 2 && i === fromIdx) {
-                      onSolo(i);
+                      onSolo();
                     } else {
                       onNavigate(i);
                     }

@@ -255,6 +255,21 @@ body.dark {
   color: var(--color-peek);
 }
 
+.toolbar-btn.solo-btn-active {
+  background-color: var(--color-from);
+  border-color: var(--color-from);
+  color: white;
+}
+
+.toolbar-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.toolbar-btn:disabled:hover {
+  background-color: var(--bg-surface);
+}
+
 .toolbar-btn.share-copied {
   background-color: var(--color-from);
   border-color: var(--color-from);
@@ -361,6 +376,21 @@ body.dark {
 
 .more-btn:hover {
   background: var(--bg-hover);
+}
+
+.more-btn.more-btn-active {
+  background-color: var(--color-from);
+  border-color: var(--color-from);
+  color: white;
+}
+
+.more-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.more-btn:disabled:hover {
+  background: var(--bg-surface);
 }
 
 .more-link {

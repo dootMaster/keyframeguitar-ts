@@ -76,7 +76,7 @@ function App() {
   const [showOptionsModal, setShowOptionsModal] = useState(false);
   const [colors, setColors] = useState<ColorConfig>(getInitialColors);
   const [colorblind, setColorblind] = useState(getInitialColorblind);
-  const [soloIndex, setSoloIndex] = useState<number | null>(null);
+  const [soloActive, setSoloActive] = useState<boolean>(false);
   const [showGuide, setShowGuide] = useState(false);
   const [useSharps, setUseSharps] = useState(() => localStorage.getItem('kfg:sharps') === 'true');
   const noteNames = useSharps ? sharps : flats;
@@ -95,7 +95,7 @@ function App() {
     if (!snapshot) return;
     setProgression(snapshot.progression);
     setActiveName(snapshot.activeName);
-    setSoloIndex(null);
+    setSoloActive(false);
     setPreviewForm(null);
     if (snapshot.progression.length >= 2) {
       applyWindowDirect(snapshot.windowIndex, snapshot.progression);
@@ -155,7 +155,7 @@ function App() {
     if (link) link.href = 'data:image/svg+xml,' + encodeURIComponent(svg);
   }, [rotatedColors.from, rotatedColors.to]);
 
-  const peekForm: boolean[] | null = showPeek && !previewForm && soloIndex === null && progression.length >= 3
+  const peekForm: boolean[] | null = showPeek && !previewForm && !soloActive && progression.length >= 3
     ? progression[(windowIndex + 2) % progression.length].form
     : null;
 
@@ -170,8 +170,8 @@ function App() {
     setWindowIndex(index);
   };
 
-  const toggleSolo = (index: number) => {
-    setSoloIndex(soloIndex === index ? null : index);
+  const toggleSolo = () => {
+    setSoloActive(!soloActive);
   };
 
   const addToProgression = (chord: ProgressionChord) => {
@@ -179,7 +179,7 @@ function App() {
     const newProg = [...progression, chord];
     setProgression(newProg);
     setPreviewForm(null);
-    setSoloIndex(null);
+    setSoloActive(false);
     if (newProg.length >= 2) {
       const idx = newProg.length === 2 ? 0 : windowIndex;
       applyWindowDirect(idx, newProg);
@@ -241,7 +241,7 @@ function App() {
     pushUndo();
     const newProg = progression.filter((_, i) => i !== index);
     setProgression(newProg);
-    setSoloIndex(null);
+    setSoloActive(false);
     if (newProg.length < 2) {
       if (newProg.length === 1) {
         applySingleChord(newProg[0]);
@@ -264,7 +264,7 @@ function App() {
     pushUndo();
     setProgression([]);
     setWindowIndex(0);
-    setSoloIndex(null);
+    setSoloActive(false);
     setActiveName(null);
     reset();
   };
@@ -277,7 +277,7 @@ function App() {
     setProgression(chords);
     setPreviewForm(null);
     setNotes([]);
-    setSoloIndex(null);
+    setSoloActive(false);
     if (sharps !== undefined) setUseSharps(sharps);
     if (chords.length >= 2) {
       applyWindowDirect(0, chords);
@@ -291,7 +291,6 @@ function App() {
   const navigateProgression = (index: number) => {
     if (progression.length < 2) return;
     const wrapped = ((index % progression.length) + progression.length) % progression.length;
-    setSoloIndex(null);
     applyWindow(wrapped);
   };
 
@@ -377,7 +376,7 @@ function App() {
     return [...tuning].reverse().map(n => (useSharps ? sharp : flat)[n]).join(' ');
   }, [tuning, useSharps]);
 
-  const commonTones: boolean[] = progression.length >= 2 && soloIndex === null
+  const commonTones: boolean[] = progression.length >= 2 && !soloActive
     ? progression[windowIndex].form.map((on, i) => on && progression[(windowIndex + 1) % progression.length].form[i])
     : new Array(12).fill(false);
 
@@ -478,7 +477,7 @@ function App() {
             </Drawer.Content>
           </Drawer.Portal>
         </Drawer.Root>
-        <div className={'center' + (soloIndex !== null ? ' solo-active' : '') + (previewForm ? ' preview-active' : '')}>
+        <div className={'center' + (soloActive ? ' solo-active' : '') + (previewForm ? ' preview-active' : '')}>
           <Fretboard
             fretboard={fretboard}
             flat={useSharps ? sharp : flat}
@@ -492,7 +491,7 @@ function App() {
             fromGuide={fromGuide}
             toGuide={toGuide}
             showGuideTones={showGuideTones}
-            soloActive={soloIndex !== null}
+            soloActive={soloActive}
           />
           <Progression
             progression={progression}
@@ -501,17 +500,17 @@ function App() {
             onNavigate={navigateProgression}
             onClear={clearProgression}
             showPeek={showPeek}
-            soloIndex={soloIndex}
+            soloActive={soloActive}
             onSolo={toggleSolo}
             noteNames={noteNames}
             onSelectChords={() => setSidebarOpen(true)}
             onUndo={undo}
             canUndo={undoStack.current.length > 0}
           />
-          {soloIndex !== null && progression.length >= 2 ? (
+          {soloActive && progression.length >= 2 ? (
             <div className="chord-tones">
-              <span className={soloIndex === windowIndex ? 'chord-tones-from' : 'chord-tones-to'}>
-                {formToNotes(progression[soloIndex].form, soloIndex === windowIndex ? fromDegrees : toDegrees, soloIndex === windowIndex ? fromGuide : toGuide).map((n, i, arr) => {
+              <span className="chord-tones-from">
+                {formToNotes(progression[windowIndex].form, fromDegrees, fromGuide).map((n, i, arr) => {
                   const label = (noteDisplayMode === 'degrees' || noteDisplayMode === 'both') && n.degree ? n.degree : n.name;
                   const dimmed = showGuideTones && !n.isGuide;
                   return <><span key={i} className={dimmed ? 'tone-dimmed' : ''}>{label}</span>{i < arr.length - 1 ? ' \u00B7 ' : ''}</>;
@@ -577,6 +576,13 @@ function App() {
               {noteDisplayMode === 'off' ? 'Notes' : noteDisplayMode === 'notes' ? 'Notes' : noteDisplayMode === 'degrees' ? 'Deg' : 'Deg+Notes'}<span className="cycle-icon"> ⟳</span>
             </button>
             <button className={'toolbar-btn' + (showGuideTones ? ' active' : '')} onClick={() => setShowGuideTones(!showGuideTones)}>3/7</button>
+            <button
+              className={'toolbar-btn solo-btn' + (soloActive ? ' active solo-btn-active' : '')}
+              onClick={toggleSolo}
+              disabled={progression.length < 2}
+            >
+              Solo
+            </button>
             <button className={'toolbar-btn peek-btn' + (showPeek ? ' active peek-btn-active' : '')} onClick={() => setShowPeek(!showPeek)}>Peek</button>
             <span className="toolbar-tip-wrap">
               <button className="toolbar-info-btn" aria-label="What is Peek">?</button>
@@ -635,6 +641,13 @@ function App() {
           <Dialog.Overlay className="dialog-overlay" />
           <Dialog.Content className="more-modal">
             <div className="more-section">
+              <button
+                className={'more-btn' + (soloActive ? ' more-btn-active' : '')}
+                onClick={() => { toggleSolo(); setShowMoreTools(false); }}
+                disabled={progression.length < 2}
+              >
+                {soloActive ? 'Unsolo' : 'Solo'}
+              </button>
               <button className="more-btn" onClick={() => { setShowTuningModal(true); setShowMoreTools(false); }}>Tuning</button>
               <button className="more-btn" onClick={() => { setShowOptionsModal(true); setShowMoreTools(false); }}>Options</button>
               <button className="more-btn" onClick={() => { setScrollResetKey(k => k + 1); setShowMoreTools(false); }}>Center</button>
