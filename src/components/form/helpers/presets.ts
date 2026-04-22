@@ -20,6 +20,8 @@ const MAJ7: number[] = [0, 4, 7, 11];
 const MIN7: number[] = [0, 3, 7, 10];
 const MIN7B5: number[] = [0, 3, 6, 10];
 const DIM7: number[] = [0, 3, 6, 9];
+const MMAJ7: number[] = [0, 3, 7, 11];
+const MAJ7S5: number[] = [0, 4, 8, 11];
 
 export const presets: Preset[] = [
   // ── Foundational ──
@@ -197,6 +199,51 @@ export const presets: Preset[] = [
       { interval: 11, quality: 'Min7b5', intervals: MIN7B5 },
       { interval: 4, quality: '7', intervals: DOM7 },
       { interval: 9, quality: 'Min', intervals: MIN },
+    ],
+  },
+  {
+    name: 'Melodic Minor',
+    category: 'song',
+    defaultKey: 9,
+    sharps: true,
+    chords: [
+      { interval: 0,  quality: 'mMaj7',  intervals: MMAJ7 },
+      { interval: 2,  quality: 'Min7',   intervals: MIN7 },
+      { interval: 3,  quality: 'Maj7#5', intervals: MAJ7S5 },
+      { interval: 5,  quality: '7',      intervals: DOM7 },
+      { interval: 7,  quality: '7',      intervals: DOM7 },
+      { interval: 9,  quality: 'Min7b5', intervals: MIN7B5 },
+      { interval: 11, quality: 'Min7b5', intervals: MIN7B5 },
+    ],
+  },
+  {
+    name: 'ii – V Descending Cycle',
+    category: 'song',
+    defaultKey: 0,
+    chords: [
+      { interval: 2,  quality: 'Min7', intervals: MIN7 },
+      { interval: 7,  quality: '7',    intervals: DOM7 },
+      { interval: 0,  quality: 'Min7', intervals: MIN7 },
+      { interval: 5,  quality: '7',    intervals: DOM7 },
+      { interval: 10, quality: 'Min7', intervals: MIN7 },
+      { interval: 3,  quality: '7',    intervals: DOM7 },
+      { interval: 8,  quality: 'Min7', intervals: MIN7 },
+      { interval: 1,  quality: '7',    intervals: DOM7 },
+      { interval: 6,  quality: 'Min7', intervals: MIN7 },
+      { interval: 11, quality: '7',    intervals: DOM7 },
+      { interval: 4,  quality: 'Min7', intervals: MIN7 },
+      { interval: 9,  quality: '7',    intervals: DOM7 },
+    ],
+  },
+  {
+    name: 'ii – V Up a Whole Step',
+    category: 'song',
+    defaultKey: 0,
+    chords: [
+      { interval: 2, quality: 'Min7', intervals: MIN7 },
+      { interval: 7, quality: '7',    intervals: DOM7 },
+      { interval: 4, quality: 'Min7', intervals: MIN7 },
+      { interval: 9, quality: '7',    intervals: DOM7 },
     ],
   },
 ];
