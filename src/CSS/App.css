@@ -198,6 +198,17 @@ body.dark {
   font-size: 0.8rem;
 }
 
+.app-version {
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 0.55rem;
+  font-family: 'Outfit', sans-serif;
+  color: var(--text-faint);
+  letter-spacing: 0.02em;
+  user-select: all;
+}
+
 .main {
   display: flex;
   gap: 1rem;
