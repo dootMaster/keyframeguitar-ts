@@ -813,6 +813,15 @@ body.dark {
 }
 
 @media print {
+  :root, html, body, body.dark, .App {
+    color-scheme: light;
+  }
+
+  html, body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+
   body, body.dark {
     --bg: #ffffff;
     --bg-surface: #ffffff;
