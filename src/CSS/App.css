@@ -814,12 +814,16 @@ body.dark {
 
 @media print {
   :root, html, body, body.dark, .App {
-    color-scheme: light;
+    color-scheme: only light;
   }
 
-  html, body {
+  html, body, .App {
     background: #ffffff !important;
+    background-color: #ffffff !important;
     color: #000000 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    forced-color-adjust: none;
   }
 
   body, body.dark {
