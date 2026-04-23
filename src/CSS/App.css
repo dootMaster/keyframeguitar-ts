@@ -802,13 +802,34 @@ body.dark {
 }
 
 @media print {
+  body, body.dark {
+    --bg: #ffffff;
+    --bg-surface: #ffffff;
+    --bg-hover: rgba(0, 0, 0, 0.05);
+    --bg-active: rgba(0, 0, 0, 0.1);
+    --bg-subtle: rgba(0, 0, 0, 0.02);
+    --text: #1e1e1e;
+    --text-secondary: rgba(0, 0, 0, 0.5);
+    --text-muted: rgba(0, 0, 0, 0.35);
+    --text-faint: rgba(0, 0, 0, 0.3);
+    --text-ghost: rgba(0, 0, 0, 0.15);
+    --border: rgba(0, 0, 0, 0.2);
+    --border-light: rgba(0, 0, 0, 0.12);
+    --border-faint: rgba(0, 0, 0, 0.06);
+    --string-line: rgba(0, 0, 0, 0.35);
+    --nut: rgba(0, 0, 0, 0.55);
+    --shadow: transparent;
+    --color-from: #1E1B4B;
+    --color-to: #047857;
+    background: white;
+    color: black;
+  }
+
   .App {
     height: 100vh;
     overflow: visible;
     padding: 0;
     justify-content: center;
-    --bg: #ffffff;
-    --text: #1e1e1e;
     background: white;
     color: black;
   }
@@ -819,7 +840,8 @@ body.dark {
   .toolbar-secondary,
   .bottom-bar,
   .sidebar-toggle,
-  .more-modal {
+  .more-modal,
+  .rotate-overlay {
     display: none !important;
   }
 
