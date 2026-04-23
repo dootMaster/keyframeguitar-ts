@@ -423,9 +423,7 @@ function App() {
       <header className="header">
         <h3>Keyframe Guitar</h3>
         <p className="subtitle">A simple tool for visualizing one chord change at a time.</p>
-        <span className="app-version" title={`commit ${__APP_COMMIT__}`}>
-          {__APP_VERSION__} · {__APP_COMMIT__}
-        </span>
+        <span className="app-version">v{__APP_VERSION__}</span>
       </header>
       <div className="main">
         <button className="sidebar-toggle" onClick={() => setSidebarOpen(true)}>
