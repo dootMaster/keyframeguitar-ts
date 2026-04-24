@@ -10,17 +10,8 @@ const StringQtySelect = ({ setTuning, setFretboard, fretboard, fromForm, toForm,
   let standardTuning = [4, 11, 7, 2, 9, 4]
 
   const changeStringAmount = (event:React.ChangeEvent<HTMLSelectElement>) => {
-    let newCount = parseInt(event.currentTarget.value);
     let defaultTuning = returnsCommonTuningForStringQty(event.currentTarget.value) || standardTuning;
-    let newTuning: number[];
-
-    if (newCount <= tuning.length) {
-      // Removing strings: keep the top ones (highest pitch)
-      newTuning = tuning.slice(0, newCount);
-    } else {
-      // Adding strings: keep current tuning, append new strings from standard
-      newTuning = [...tuning, ...defaultTuning.slice(tuning.length)];
-    }
+    let newTuning: number[] = defaultTuning;
 
     setTuning(newTuning);
 

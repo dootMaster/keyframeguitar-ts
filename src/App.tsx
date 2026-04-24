@@ -261,11 +261,6 @@ function App() {
   };
 
   const clearProgression = () => {
-    pushUndo();
-    setProgression([]);
-    setWindowIndex(0);
-    setSoloActive(false);
-    setActiveName(null);
     reset();
   };
 
@@ -401,10 +396,17 @@ function App() {
   const toNotes = progression.length >= 2 ? formToNotes(progression[(windowIndex + 1) % progression.length].form, toDegrees, toGuide) : null;
 
   const reset = () => {
+    pushUndo();
     let resetArray = new Array(12).fill(false);
     setFrom(resetArray);
     setTo(resetArray);
     setFretboard(createFretboard(tuning));
+    setProgression([]);
+    setWindowIndex(0);
+    setSoloActive(false);
+    setActiveName(null);
+    setNotes([]);
+    setPreviewForm(null);
   }
 
   return (
