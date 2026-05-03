@@ -54,15 +54,7 @@ const TuningModal = ({ handleClose, show, tuning, fretboard, setTuning, setFretb
   };
 
   const changeStringCount = (newCount: number) => {
-    let newTuning: number[];
-    let defaultTuning = getDefaultTuning(newCount);
-
-    if (newCount <= tuning.length) {
-      newTuning = tuning.slice(0, newCount);
-    } else {
-      newTuning = [...tuning, ...defaultTuning.slice(tuning.length)];
-    }
-
+    const newTuning = getDefaultTuning(newCount);
     setTuning(newTuning);
 
     let newFretboard = newTuning.map((note, i) => {
